@@ -1,0 +1,22 @@
+[
+  { "name": "kubectl get pods", "description": "Pod一覧を表示する", "syntax": "kubectl get pods [-n <namespace>] [-A]", "example": "kubectl get pods -n default", "tags": ["pod", "get"] },
+  { "name": "kubectl get pods -o wide", "description": "Pod一覧をIP・ノード情報付きで表示", "syntax": "kubectl get pods -o wide", "example": "kubectl get pods -o wide -n default", "tags": ["pod", "get"] },
+  { "name": "kubectl describe pod", "description": "Pod の詳細情報・イベントを表示", "syntax": "kubectl describe pod <pod-name> [-n <namespace>]", "example": "kubectl describe pod my-pod -n default", "tags": ["pod", "debug"] },
+  { "name": "kubectl logs", "description": "Pod のログを表示する", "syntax": "kubectl logs <pod-name> [-c <container>] [-f]", "example": "kubectl logs my-pod -f", "tags": ["pod", "debug", "logs"] },
+  { "name": "kubectl exec", "description": "Pod 内でコマンドを実行する", "syntax": "kubectl exec -it <pod-name> -- <command>", "example": "kubectl exec -it my-pod -- /bin/sh", "tags": ["pod", "debug"] },
+  { "name": "kubectl apply", "description": "マニフェストファイルを適用する", "syntax": "kubectl apply -f <file|dir>", "example": "kubectl apply -f deployment.yaml", "tags": ["manifest", "deploy"] },
+  { "name": "kubectl delete", "description": "リソースを削除する", "syntax": "kubectl delete <resource> <name> [-n <namespace>]", "example": "kubectl delete pod my-pod", "tags": ["delete"] },
+  { "name": "kubectl get deployments", "description": "Deployment一覧を表示", "syntax": "kubectl get deployments [-n <namespace>]", "example": "kubectl get deployments -n default", "tags": ["deployment", "get"] },
+  { "name": "kubectl rollout status", "description": "Deployment のロールアウト状態を確認", "syntax": "kubectl rollout status deployment/<name>", "example": "kubectl rollout status deployment/my-app", "tags": ["deployment", "rollout"] },
+  { "name": "kubectl rollout undo", "description": "Deployment を前バージョンにロールバック", "syntax": "kubectl rollout undo deployment/<name>", "example": "kubectl rollout undo deployment/my-app", "tags": ["deployment", "rollout"] },
+  { "name": "kubectl scale", "description": "Pod レプリカ数を変更する", "syntax": "kubectl scale deployment/<name> --replicas=<n>", "example": "kubectl scale deployment/my-app --replicas=3", "tags": ["deployment", "scale"] },
+  { "name": "kubectl get services", "description": "Service一覧を表示", "syntax": "kubectl get services [-n <namespace>]", "example": "kubectl get svc -n default", "tags": ["service", "get"] },
+  { "name": "kubectl get nodes", "description": "Node一覧を表示", "syntax": "kubectl get nodes", "example": "kubectl get nodes -o wide", "tags": ["node", "get"] },
+  { "name": "kubectl get namespaces", "description": "Namespace一覧を表示", "syntax": "kubectl get namespaces", "example": "kubectl get ns", "tags": ["namespace", "get"] },
+  { "name": "kubectl config get-contexts", "description": "利用可能なコンテキスト一覧を表示", "syntax": "kubectl config get-contexts", "example": "kubectl config get-contexts", "tags": ["config", "context"] },
+  { "name": "kubectl config use-context", "description": "使用するコンテキストを切り替える", "syntax": "kubectl config use-context <context-name>", "example": "kubectl config use-context argo-lab", "tags": ["config", "context"] },
+  { "name": "kubectl port-forward", "description": "ローカルポートを Pod にフォワードする", "syntax": "kubectl port-forward <pod-name> <local>:<remote>", "example": "kubectl port-forward my-pod 8080:80", "tags": ["pod", "debug", "network"] },
+  { "name": "kubectl top pods", "description": "Pod のCPU・メモリ使用量を表示", "syntax": "kubectl top pods [-n <namespace>]", "example": "kubectl top pods -n default", "tags": ["pod", "monitoring"] },
+  { "name": "kubectl get events", "description": "クラスターのイベント一覧を表示", "syntax": "kubectl get events [-n <namespace>] [--sort-by=.lastTimestamp]", "example": "kubectl get events --sort-by=.lastTimestamp", "tags": ["debug", "events"] },
+  { "name": "kubectl set image", "description": "Deployment のイメージを更新する", "syntax": "kubectl set image deployment/<name> <container>=<image>", "example": "kubectl set image deployment/my-app app=my-app:v2", "tags": ["deployment", "update"] }
+]

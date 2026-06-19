@@ -23,7 +23,7 @@ export function KnowledgeCard({ item, onClick, onProgressChange }: KnowledgeCard
       <CardActionArea onClick={onClick}>
         <CardContent>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
-            <Typography variant="body1" fontWeight={600}>{item.title}</Typography>
+            <Typography variant="body1" sx={{ fontWeight: 600 }}>{item.title}</Typography>
             <Box
               component="span"
               onClick={e => { e.stopPropagation(); onProgressChange(nextStatus) }}

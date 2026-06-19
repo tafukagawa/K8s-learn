@@ -1,6 +1,6 @@
 import { AppBar, Toolbar, Typography, Tabs, Tab, InputBase, Box } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
-import type { Category } from '../../../types'
+import type { Category } from '../../types'
 
 interface HeaderProps {
   categories: Category[]
@@ -21,7 +21,7 @@ export function Header({ categories, selectedCategoryId, onCategoryChange, searc
           value={selectedCategoryId}
           onChange={(_, v) => onCategoryChange(v)}
           textColor="inherit"
-          TabIndicatorProps={{ style: { backgroundColor: '#a435f0' } }}
+          slotProps={{ indicator: { style: { backgroundColor: '#a435f0' } } }}
           sx={{ flex: 1 }}
         >
           {categories.map(cat => (

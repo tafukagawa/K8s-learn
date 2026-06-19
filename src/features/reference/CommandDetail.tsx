@@ -13,11 +13,11 @@ interface CommandDetailProps {
 
 export function CommandDetail({ command, onClose, onEdit, onDelete }: CommandDetailProps) {
   return (
-    <Drawer anchor="right" open={!!command} onClose={onClose} PaperProps={{ sx: { width: 420, p: 3 } }}>
+    <Drawer anchor="right" open={!!command} onClose={onClose} slotProps={{ paper: { sx: { width: 420, p: 3 } } }}>
       {command && (
         <Box>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-            <Typography variant="h6" fontWeight={700}>コマンド詳細</Typography>
+            <Typography variant="h6" sx={{ fontWeight: 700 }}>コマンド詳細</Typography>
             <IconButton onClick={onClose} size="small"><CloseIcon /></IconButton>
           </Box>
 

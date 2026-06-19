@@ -39,7 +39,7 @@ export function Sidebar({ mode, section, onModeChange, onSectionChange, doneCoun
             onClick={() => onModeChange(m.key)}
             sx={{ borderRadius: 1, mb: 0.5, borderLeft: mode === m.key ? '3px solid' : '3px solid transparent', borderColor: mode === m.key ? 'primary.main' : 'transparent', bgcolor: mode === m.key ? 'primary.main' + '10' : undefined }}
           >
-            <ListItemText primary={m.label} primaryTypographyProps={{ fontSize: 12 }} />
+            <ListItemText primary={m.label} slotProps={{ primary: { sx: { fontSize: 12 } } }} />
           </ListItemButton>
         ))}
       </List>
@@ -55,7 +55,7 @@ export function Sidebar({ mode, section, onModeChange, onSectionChange, doneCoun
             onClick={() => onSectionChange(s.key)}
             sx={{ borderRadius: 1, mb: 0.5, bgcolor: section === s.key ? '#f1f5f9' : undefined }}
           >
-            <ListItemText primary={s.label} primaryTypographyProps={{ fontSize: 12, fontWeight: section === s.key ? 600 : 400 }} />
+            <ListItemText primary={s.label} slotProps={{ primary: { sx: { fontSize: 12, fontWeight: section === s.key ? 600 : 400 } } }} />
           </ListItemButton>
         ))}
       </List>

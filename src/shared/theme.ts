@@ -26,8 +26,10 @@ export const theme = createTheme({
     },
     MuiButton: {
       styleOverrides: {
-        containedPrimary: {
-          fontWeight: 600,
+        root: {
+          '&.MuiButton-containedPrimary': {
+            fontWeight: 600,
+          },
         },
       },
     },

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Box, Typography, Button, Grid2 as Grid } from '@mui/material'
+import { Box, Typography, Button, Grid } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import { CommandCard } from './CommandCard'
 import { TagFilter } from './TagFilter'
@@ -62,7 +62,7 @@ export function CommandList({ categoryId, searchQuery }: CommandListProps) {
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
         <Box>
-          <Typography variant="h6" fontWeight={700}>Kubernetes Commands</Typography>
+          <Typography variant="h6" sx={{ fontWeight: 700 }}>Kubernetes Commands</Typography>
           <Typography variant="caption" color="text.secondary">
             {commands.length} コマンド · {commands.filter(c => c.progress?.status === 'done').length} 完了
           </Typography>

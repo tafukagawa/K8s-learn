@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"cd \\\"C:\\\\Users\\\\fukagawa\\\\vault\\\\work\\\\k8s-learning-app\\\" && npx tsc --noEmit 2>&1\",\"description\":\"Re-run TypeScript compiler check\"}",
+  "error": "Exit code 2\nsrc/shared/components/Sidebar.tsx(42,69): error TS2353: Object literal may only specify known properties, and 'fontSize' does not exist in type 'TypographyProps<\"span\", { component?: \"span\" | undefined; }> | ((ownerState: ListItemTextOwnerState) => TypographyProps<\"span\", { component?: \"span\" | undefined; }>)'.\r\nsrc/shared/components/Sidebar.tsx(58,69): error TS2353: Object literal may only specify known properties, and 'fontSize' does not exist in type 'TypographyProps<\"span\", { com...",
+  "timestamp": "2026-06-19T02:56:23.018Z",
+  "retry_count": 1
+}

@@ -13,11 +13,11 @@ interface KnowledgeDetailProps {
 
 export function KnowledgeDetail({ item, onClose, onEdit, onDelete }: KnowledgeDetailProps) {
   return (
-    <Drawer anchor="right" open={!!item} onClose={onClose} PaperProps={{ sx: { width: 480, p: 3 } }}>
+    <Drawer anchor="right" open={!!item} onClose={onClose} slotProps={{ paper: { sx: { width: 480, p: 3 } } }}>
       {item && (
         <Box>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-            <Typography variant="h6" fontWeight={700}>{item.title}</Typography>
+            <Typography variant="h6" sx={{ fontWeight: 700 }}>{item.title}</Typography>
             <IconButton onClick={onClose} size="small"><CloseIcon /></IconButton>
           </Box>
 

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Box, Typography, Button, Grid2 as Grid } from '@mui/material'
+import { Box, Typography, Button, Grid } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import { KnowledgeCard } from './KnowledgeCard'
 import { KnowledgeDetail } from './KnowledgeDetail'
@@ -62,7 +62,7 @@ export function KnowledgeList({ categoryId, searchQuery }: KnowledgeListProps) {
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
         <Box>
-          <Typography variant="h6" fontWeight={700}>Kubernetes Knowledge</Typography>
+          <Typography variant="h6" sx={{ fontWeight: 700 }}>Kubernetes Knowledge</Typography>
           <Typography variant="caption" color="text.secondary">
             {items.length} 件 · {items.filter(i => i.progress?.status === 'done').length} 完了
           </Typography>

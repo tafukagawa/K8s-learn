@@ -7,7 +7,7 @@ import FilterListIcon from '@mui/icons-material/FilterList'
 import TrackChangesIcon from '@mui/icons-material/TrackChanges'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import BoltIcon from '@mui/icons-material/Bolt'
-import { alpha } from '@mui/material/styles'
+import { alpha, type Theme } from '@mui/material/styles'
 import { CommandCard } from './CommandCard'
 import { TagFilter } from './TagFilter'
 import { CommandDetail } from './CommandDetail'
@@ -49,7 +49,6 @@ export function CommandList({ categoryId, searchQuery, onStartLearning }: Comman
   const learningCount = commands.filter(c => c.progress?.status === 'learning').length
   const completion = commands.length > 0 ? Math.round((doneCount / commands.length) * 100) : 0
   const featured = commands.find(c => c.progress?.status === 'learning') ?? commands.find(c => c.progress?.status !== 'done') ?? commands[0]
-  const featuredProgress = featured?.progress?.status === 'done' ? 100 : featured?.progress?.status === 'learning' ? 60 : 15
 
   async function handleProgressChange(command: CommandWithProgress, status: ProgressStatus) {
     const updated = await api.progress.upsert('command', command.id, status)
@@ -126,10 +125,10 @@ export function CommandList({ categoryId, searchQuery, onStartLearning }: Comman
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25, mb: 2.5, maxWidth: 360 }}>
                 <LinearProgress
                   variant="determinate"
-                  value={featuredProgress}
+                  value={completion}
                   sx={{ flex: 1, height: 7, borderRadius: 999, bgcolor: 'rgba(148,163,184,0.16)', '& .MuiLinearProgress-bar': { borderRadius: 999 } }}
                 />
-                <Typography sx={{ fontWeight: 800, fontSize: 13 }}>{featuredProgress}%</Typography>
+                <Typography sx={{ fontWeight: 800, fontSize: 13 }}>{completion}%</Typography>
               </Box>
               <Box sx={{ display: 'flex', gap: 0.75, flexWrap: 'wrap', mb: 2.75 }}>
                 {featured?.tags.slice(0, 4).map(tag => (
@@ -233,12 +232,14 @@ export function CommandList({ categoryId, searchQuery, onStartLearning }: Comman
   )
 }
 
-const statCardSx = {
+const statCardSx = (theme: Theme) => ({
   minHeight: 122,
   p: 2,
   borderRadius: 2,
   border: '1px solid',
   borderColor: 'divider',
   bgcolor: 'background.paper',
-  backgroundImage: 'linear-gradient(135deg, rgba(24, 35, 58, 0.92), rgba(8, 15, 29, 0.96))',
-}
+  backgroundImage: theme.palette.mode === 'dark'
+    ? 'linear-gradient(135deg, rgba(24, 35, 58, 0.92), rgba(8, 15, 29, 0.96))'
+    : 'none',
+})

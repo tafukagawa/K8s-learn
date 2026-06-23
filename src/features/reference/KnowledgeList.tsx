@@ -7,7 +7,7 @@ import FilterListIcon from '@mui/icons-material/FilterList'
 import AutoStoriesIcon from '@mui/icons-material/AutoStories'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import BoltIcon from '@mui/icons-material/Bolt'
-import { alpha } from '@mui/material/styles'
+import { alpha, type Theme } from '@mui/material/styles'
 import { KnowledgeCard } from './KnowledgeCard'
 import { KnowledgeDetail } from './KnowledgeDetail'
 import { KnowledgeForm } from './KnowledgeForm'
@@ -49,7 +49,6 @@ export function KnowledgeList({ categoryId, searchQuery, onStartLearning }: Know
   const learningCount = items.filter(i => i.progress?.status === 'learning').length
   const completion = items.length > 0 ? Math.round((doneCount / items.length) * 100) : 0
   const featured = items.find(i => i.progress?.status === 'learning') ?? items.find(i => i.progress?.status !== 'done') ?? items[0]
-  const featuredProgress = featured?.progress?.status === 'done' ? 100 : featured?.progress?.status === 'learning' ? 60 : 15
 
   async function handleProgressChange(item: KnowledgeWithProgress, status: ProgressStatus) {
     const updated = await api.progress.upsert('knowledge', item.id, status)
@@ -124,10 +123,10 @@ export function KnowledgeList({ categoryId, searchQuery, onStartLearning }: Know
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25, mb: 2.5, maxWidth: 360 }}>
                 <LinearProgress
                   variant="determinate"
-                  value={featuredProgress}
+                  value={completion}
                   sx={{ flex: 1, height: 7, borderRadius: 999, bgcolor: 'rgba(148,163,184,0.16)', '& .MuiLinearProgress-bar': { borderRadius: 999 } }}
                 />
-                <Typography sx={{ fontWeight: 800, fontSize: 13 }}>{featuredProgress}%</Typography>
+                <Typography sx={{ fontWeight: 800, fontSize: 13 }}>{completion}%</Typography>
               </Box>
               <Box sx={{ display: 'flex', gap: 1.25, flexWrap: 'wrap' }}>
                 <Button variant="contained" startIcon={<PlayArrowIcon />} disabled={!featured} onClick={onStartLearning}>
@@ -198,12 +197,14 @@ export function KnowledgeList({ categoryId, searchQuery, onStartLearning }: Know
   )
 }
 
-const statCardSx = {
+const statCardSx = (theme: Theme) => ({
   minHeight: 112,
   p: 2,
   borderRadius: 2,
   border: '1px solid',
   borderColor: 'divider',
   bgcolor: 'background.paper',
-  backgroundImage: 'linear-gradient(135deg, rgba(24, 35, 58, 0.92), rgba(8, 15, 29, 0.96))',
-}
+  backgroundImage: theme.palette.mode === 'dark'
+    ? 'linear-gradient(135deg, rgba(24, 35, 58, 0.92), rgba(8, 15, 29, 0.96))'
+    : 'none',
+})

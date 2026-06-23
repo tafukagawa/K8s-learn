@@ -4,6 +4,7 @@ import { createAppTheme } from './shared/theme'
 import { Layout } from './shared/components/Layout'
 import { Header } from './shared/components/Header'
 import { Sidebar, type AppMode, type AppSection } from './shared/components/Sidebar'
+import { SplashScreen } from './shared/components/SplashScreen'
 import { ReferenceView } from './features/reference/ReferenceView'
 import { FlashcardView } from './features/flashcard/FlashcardView'
 import { api } from './shared/ipc'
@@ -23,6 +24,8 @@ export default function App() {
   const [progressStats, setProgressStats] = useState({ done: 0, total: 0 })
   const [darkMode, setDarkMode] = useState(true)
   const [flashcardConfig, setFlashcardConfig] = useState<FlashcardConfig>({ section: 'all', filter: 'all' })
+  const [splashVisible, setSplashVisible] = useState(true)
+  const [splashExiting, setSplashExiting] = useState(false)
 
   function handleStartLearning(sec: 'commands' | 'knowledge') {
     setFlashcardConfig({ section: sec, filter: 'unseen' })
@@ -32,9 +35,12 @@ export default function App() {
   const theme = useMemo(() => createAppTheme(darkMode ? 'dark' : 'light'), [darkMode])
 
   useEffect(() => {
-    api.categories.list().then(cats => {
+    const minDelay = new Promise(resolve => setTimeout(resolve, 1200))
+    Promise.all([api.categories.list(), minDelay]).then(([cats]) => {
       setCategories(cats)
       if (cats.length > 0) setSelectedCategoryId(cats[0].id)
+      setSplashExiting(true)
+      setTimeout(() => setSplashVisible(false), 400)
     })
   }, [])
 
@@ -55,6 +61,7 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      {splashVisible && <SplashScreen exiting={splashExiting} />}
       <Layout
         header={
           <Header

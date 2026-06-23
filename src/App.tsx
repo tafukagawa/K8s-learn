@@ -25,7 +25,7 @@ export default function App() {
   const [flashcardConfig, setFlashcardConfig] = useState<FlashcardConfig>({ section: 'all', filter: 'all' })
 
   function handleStartLearning(sec: 'commands' | 'knowledge') {
-    setFlashcardConfig({ section: sec, filter: 'learning' })
+    setFlashcardConfig({ section: sec, filter: 'unseen' })
     setMode('flashcard')
   }
 

@@ -48,7 +48,7 @@ export function createAppTheme(mode: PaletteMode) {
             transition: 'border-color 0.15s, box-shadow 0.15s, transform 0.12s',
             '&:hover': {
               borderColor: alpha(primary, isDark ? 0.4 : 0.3),
-              boxShadow: isDark ? `0 8px 32px ${alpha(primary, 0.12)}` : `0 4px 20px ${alpha(primary, 0.14)}`,
+              boxShadow: isDark ? '0 8px 24px rgba(0,0,0,0.36)' : `0 4px 20px ${alpha(primary, 0.12)}`,
               transform: 'translateY(-1px)',
             },
           },
@@ -65,7 +65,7 @@ export function createAppTheme(mode: PaletteMode) {
               background: `linear-gradient(135deg, ${primary}, #1D4ED8)`,
               '&:hover': {
                 background: 'linear-gradient(135deg, #60A5FA, #2563EB)',
-                boxShadow: `0 6px 20px ${alpha(primary, 0.28)}`,
+                boxShadow: isDark ? '0 4px 12px rgba(0,0,0,0.40)' : `0 4px 14px ${alpha(primary, 0.22)}`,
               },
             },
           },

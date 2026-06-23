@@ -44,7 +44,7 @@ export function Header({ categories, selectedCategoryId, onCategoryChange, searc
               border: '1px solid',
               borderColor: alpha(theme.palette.primary.light, 0.38),
               borderRadius: 1.2,
-              boxShadow: `0 12px 28px ${alpha(theme.palette.primary.main, 0.28)}`,
+              boxShadow: 'none',
             })}
           >
             <HubIcon fontSize="small" />

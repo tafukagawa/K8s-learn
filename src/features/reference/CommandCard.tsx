@@ -2,7 +2,6 @@ import { Card, CardContent, CardActionArea, Box, Typography, Chip, IconButton } 
 import TerminalIcon from '@mui/icons-material/Terminal'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import CheckIcon from '@mui/icons-material/Check'
-import { alpha } from '@mui/material/styles'
 import type { CommandWithProgress, ProgressStatus } from '../../types'
 
 const STATUS_CONFIG: Record<ProgressStatus, { label: string; color: string; bg: string }> = {
@@ -34,7 +33,7 @@ export function CommandCard({ command, onClick, onProgressChange }: CommandCardP
       <CardActionArea onClick={onClick} sx={{ height: '100%' }}>
         <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2, minHeight: 132, p: 2 }}>
           <Box
-            sx={theme => ({
+            sx={{
               width: 56,
               height: 72,
               flexShrink: 0,
@@ -47,8 +46,8 @@ export function CommandCard({ command, onClick, onProgressChange }: CommandCardP
                 : status === 'learning'
                   ? 'linear-gradient(135deg, #2563EB, #1D4ED8)'
                   : 'linear-gradient(135deg, #1971c2, #0b3d91)',
-              boxShadow: `0 16px 34px ${alpha(theme.palette.primary.main, 0.18)}`,
-            })}
+              boxShadow: '0 4px 10px rgba(0,0,0,0.32)',
+            }}
           >
             <TerminalIcon />
           </Box>

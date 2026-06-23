@@ -2,7 +2,6 @@ import { Card, CardActionArea, CardContent, Box, Typography, Chip, IconButton } 
 import AutoStoriesIcon from '@mui/icons-material/AutoStories'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import CheckIcon from '@mui/icons-material/Check'
-import { alpha } from '@mui/material/styles'
 import type { KnowledgeWithProgress, ProgressStatus } from '../../types'
 
 const STATUS_CONFIG: Record<ProgressStatus, { label: string; color: string; bg: string }> = {
@@ -34,7 +33,7 @@ export function KnowledgeCard({ item, onClick, onProgressChange }: KnowledgeCard
       <CardActionArea onClick={onClick} sx={{ height: '100%' }}>
         <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2, minHeight: 118, p: 2 }}>
           <Box
-            sx={theme => ({
+            sx={{
               width: 56,
               height: 66,
               flexShrink: 0,
@@ -47,8 +46,8 @@ export function KnowledgeCard({ item, onClick, onProgressChange }: KnowledgeCard
                 : status === 'learning'
                   ? 'linear-gradient(135deg, #38d9c6, #0f766e)'
                   : 'linear-gradient(135deg, #2563EB, #1D4ED8)',
-              boxShadow: `0 16px 34px ${alpha(theme.palette.secondary.main, 0.16)}`,
-            })}
+              boxShadow: '0 4px 10px rgba(0,0,0,0.32)',
+            }}
           >
             <AutoStoriesIcon />
           </Box>

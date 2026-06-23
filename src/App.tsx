@@ -36,12 +36,15 @@ export default function App() {
 
   useEffect(() => {
     const minDelay = new Promise(resolve => setTimeout(resolve, 1200))
-    Promise.all([api.categories.list(), minDelay]).then(([cats]) => {
-      setCategories(cats)
-      if (cats.length > 0) setSelectedCategoryId(cats[0].id)
-      setSplashExiting(true)
-      setTimeout(() => setSplashVisible(false), 400)
-    })
+    Promise.all([api.categories.list(), minDelay])
+      .then(([cats]) => {
+        setCategories(cats)
+        if (cats.length > 0) setSelectedCategoryId(cats[0].id)
+      })
+      .finally(() => {
+        setSplashExiting(true)
+        setTimeout(() => setSplashVisible(false), 400)
+      })
   }, [])
 
   useEffect(() => {

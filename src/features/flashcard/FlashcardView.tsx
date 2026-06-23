@@ -12,6 +12,8 @@ type FilterMode = 'all' | 'unseen' | 'learning'
 
 interface FlashcardViewProps {
   categoryId: number
+  initialFilter?: FilterMode
+  initialSection?: 'commands' | 'knowledge' | 'all'
 }
 
 function shuffleArray<T>(arr: T[]): T[] {
@@ -23,10 +25,10 @@ function shuffleArray<T>(arr: T[]): T[] {
   return a
 }
 
-export function FlashcardView({ categoryId }: FlashcardViewProps) {
+export function FlashcardView({ categoryId, initialFilter, initialSection }: FlashcardViewProps) {
   const [commands, setCommands] = useState<CommandWithProgress[]>([])
   const [knowledge, setKnowledge] = useState<KnowledgeWithProgress[]>([])
-  const [filter, setFilter] = useState<FilterMode>('all')
+  const [filter, setFilter] = useState<FilterMode>(initialFilter ?? 'all')
   const [deck, setDeck] = useState<FlashItem[]>([])
   const [index, setIndex] = useState(0)
   const [isFlipped, setIsFlipped] = useState(false)
@@ -46,11 +48,14 @@ export function FlashcardView({ categoryId }: FlashcardViewProps) {
   }, [categoryId])
 
   const filtered = useMemo<FlashItem[]>(() => {
-    const all: FlashItem[] = [...commands, ...knowledge]
-    if (filter === 'unseen') return all.filter(i => !i.progress || i.progress.status === 'unseen')
-    if (filter === 'learning') return all.filter(i => i.progress?.status === 'learning')
-    return all
-  }, [commands, knowledge, filter])
+    let base: FlashItem[]
+    if (initialSection === 'commands') base = [...commands]
+    else if (initialSection === 'knowledge') base = [...knowledge]
+    else base = [...commands, ...knowledge]
+    if (filter === 'unseen') return base.filter(i => !i.progress || i.progress.status === 'unseen')
+    if (filter === 'learning') return base.filter(i => i.progress?.status === 'learning')
+    return base
+  }, [commands, knowledge, filter, initialSection])
 
   const restart = useCallback(() => {
     setDeck(shuffleArray(filtered))

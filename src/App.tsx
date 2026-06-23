@@ -9,6 +9,11 @@ import { FlashcardView } from './features/flashcard/FlashcardView'
 import { api } from './shared/ipc'
 import type { Category } from './types'
 
+type FlashcardConfig = {
+  section: 'commands' | 'knowledge' | 'all'
+  filter: 'all' | 'unseen' | 'learning'
+}
+
 export default function App() {
   const [categories, setCategories] = useState<Category[]>([])
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null)
@@ -16,7 +21,13 @@ export default function App() {
   const [section, setSection] = useState<AppSection>('commands')
   const [searchQuery, setSearchQuery] = useState('')
   const [progressStats, setProgressStats] = useState({ done: 0, total: 0 })
-  const [darkMode, setDarkMode] = useState(false)
+  const [darkMode, setDarkMode] = useState(true)
+  const [flashcardConfig, setFlashcardConfig] = useState<FlashcardConfig>({ section: 'all', filter: 'all' })
+
+  function handleStartLearning(sec: 'commands' | 'knowledge') {
+    setFlashcardConfig({ section: sec, filter: 'learning' })
+    setMode('flashcard')
+  }
 
   const theme = useMemo(() => createAppTheme(darkMode ? 'dark' : 'light'), [darkMode])
 
@@ -72,10 +83,15 @@ export default function App() {
             categoryId={selectedCategoryId}
             section={section}
             searchQuery={searchQuery}
+            onStartLearning={handleStartLearning}
           />
         )}
         {selectedCategoryId && mode === 'flashcard' && (
-          <FlashcardView categoryId={selectedCategoryId} />
+          <FlashcardView
+            categoryId={selectedCategoryId}
+            initialSection={flashcardConfig.section}
+            initialFilter={flashcardConfig.filter}
+          />
         )}
       </Layout>
     </ThemeProvider>

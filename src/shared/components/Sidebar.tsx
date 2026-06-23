@@ -50,7 +50,7 @@ export function Sidebar({ mode, section, onModeChange, onSectionChange, doneCoun
         flexShrink: 0,
         overflowY: 'auto',
         backgroundImage: theme.palette.mode === 'dark'
-          ? 'linear-gradient(180deg, rgba(139, 61, 255, 0.08), transparent 240px)'
+          ? 'linear-gradient(180deg, rgba(59, 130, 246, 0.06), transparent 240px)'
           : undefined,
       })}
     >
@@ -71,7 +71,7 @@ export function Sidebar({ mode, section, onModeChange, onSectionChange, doneCoun
                   minHeight: 48,
                   border: '1px solid transparent',
                   bgcolor: mode === m.key ? alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.2 : 0.1) : undefined,
-                  backgroundImage: mode === m.key ? 'linear-gradient(135deg, rgba(139,61,255,0.34), rgba(139,61,255,0.12))' : undefined,
+                  backgroundImage: mode === m.key ? 'linear-gradient(135deg, rgba(59,130,246,0.24), rgba(59,130,246,0.08))' : undefined,
                   borderColor: mode === m.key ? alpha(theme.palette.primary.light, 0.28) : 'transparent',
                   '&.Mui-selected:hover': {
                     bgcolor: alpha(theme.palette.primary.main, 0.22),
@@ -163,7 +163,7 @@ export function Sidebar({ mode, section, onModeChange, onSectionChange, doneCoun
             borderRadius: 1.5,
             border: '1px solid',
             borderColor: alpha(theme.palette.primary.light, 0.24),
-            background: 'linear-gradient(135deg, rgba(139,61,255,0.28), rgba(91,33,182,0.16))',
+            background: 'linear-gradient(135deg, rgba(59,130,246,0.16), rgba(37,99,235,0.08))',
           })}
         >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>

@@ -40,7 +40,7 @@ export function Header({ categories, selectedCategoryId, onCategoryChange, searc
               display: 'grid',
               placeItems: 'center',
               color: '#fff',
-              background: 'linear-gradient(135deg, #8b3dff, #5b21b6)',
+              background: 'linear-gradient(135deg, #2563EB, #1D4ED8)',
               border: '1px solid',
               borderColor: alpha(theme.palette.primary.light, 0.38),
               borderRadius: 1.2,
@@ -57,7 +57,7 @@ export function Header({ categories, selectedCategoryId, onCategoryChange, searc
           value={selectedCategoryId}
           onChange={(_, v) => onCategoryChange(v)}
           textColor="inherit"
-          slotProps={{ indicator: { style: { backgroundColor: '#8b3dff' } } }}
+          slotProps={{ indicator: { style: { backgroundColor: '#3B82F6' } } }}
           sx={{ flex: 1, minHeight: 44, '& .MuiTabs-indicator': { height: 3, borderRadius: 999 } }}
         >
           {categories.map(cat => (

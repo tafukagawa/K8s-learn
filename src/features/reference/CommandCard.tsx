@@ -45,7 +45,7 @@ export function CommandCard({ command, onClick, onProgressChange }: CommandCardP
               background: status === 'done'
                 ? 'linear-gradient(135deg, #20c997, #087f5b)'
                 : status === 'learning'
-                  ? 'linear-gradient(135deg, #8b3dff, #4c1d95)'
+                  ? 'linear-gradient(135deg, #2563EB, #1D4ED8)'
                   : 'linear-gradient(135deg, #1971c2, #0b3d91)',
               boxShadow: `0 16px 34px ${alpha(theme.palette.primary.main, 0.18)}`,
             })}
@@ -85,7 +85,7 @@ export function CommandCard({ command, onClick, onProgressChange }: CommandCardP
               ml: 'auto',
               bgcolor: status === 'done' ? 'rgba(32, 201, 151, 0.14)' : 'rgba(148,163,184,0.14)',
               color: status === 'done' ? 'success.main' : 'text.primary',
-              '&:hover': { bgcolor: 'rgba(139,61,255,0.22)' },
+              '&:hover': { bgcolor: 'rgba(59,130,246,0.18)' },
             }}
           >
             {status === 'done' ? <CheckIcon fontSize="small" /> : <PlayArrowIcon fontSize="small" />}

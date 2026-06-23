@@ -68,6 +68,9 @@ export interface IpcApi {
   progress: {
     upsert: (itemType: 'command' | 'knowledge', itemId: number, status: ProgressStatus) => Promise<Progress>
   }
+  shell: {
+    openExternal: (url: string) => Promise<void>
+  }
 }
 
 declare global {

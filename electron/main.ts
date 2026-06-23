@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import path from 'path'
 import { getDb } from './db/client'
 import { applySchema, runMigrations } from './db/migrate'
@@ -34,6 +34,7 @@ function setupIpc() {
   ipcMain.handle('knowledge:delete', (_, id) => knowledgeHandlers.delete(id))
   ipcMain.handle('progress:upsert', (_, itemType, itemId, status) =>
     progressHandlers.upsert(itemType, itemId, status))
+  ipcMain.handle('shell:openExternal', (_, url: string) => shell.openExternal(url))
 }
 
 function createWindow() {

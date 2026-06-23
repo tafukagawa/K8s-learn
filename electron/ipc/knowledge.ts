@@ -13,6 +13,7 @@ function rowToKnowledge(row: any): Knowledge {
     body: row.body,
     tags: parseTags(row.tags),
     isCustom: row.is_custom === 1,
+    url: row.url ?? '',
   }
 }
 
@@ -42,10 +43,10 @@ export function createKnowledgeHandlers(db: Database.Database) {
 
     create(data: Omit<Knowledge, 'id' | 'isCustom'>): Knowledge {
       const row = db.prepare(`
-        INSERT INTO knowledge (category_id, title, body, tags, is_custom)
-        VALUES (?, ?, ?, ?, 1)
+        INSERT INTO knowledge (category_id, title, body, tags, url, is_custom)
+        VALUES (?, ?, ?, ?, ?, 1)
         RETURNING *
-      `).get(data.categoryId, data.title, data.body, JSON.stringify(data.tags)) as any
+      `).get(data.categoryId, data.title, data.body, JSON.stringify(data.tags), data.url ?? '') as any
       return rowToKnowledge(row)
     },
 
@@ -55,6 +56,7 @@ export function createKnowledgeHandlers(db: Database.Database) {
       if (data.title !== undefined) { fields.push('title = ?'); values.push(data.title) }
       if (data.body !== undefined) { fields.push('body = ?'); values.push(data.body) }
       if (data.tags !== undefined) { fields.push('tags = ?'); values.push(JSON.stringify(data.tags)) }
+      if (data.url !== undefined) { fields.push('url = ?'); values.push(data.url) }
       values.push(id)
       const row = db.prepare(`UPDATE knowledge SET ${fields.join(', ')} WHERE id = ? RETURNING *`).get(...values) as any
       return rowToKnowledge(row)

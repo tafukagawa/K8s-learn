@@ -21,6 +21,9 @@ const api: IpcApi = {
     upsert: (itemType, itemId, status) =>
       ipcRenderer.invoke('progress:upsert', itemType, itemId, status),
   },
+  shell: {
+    openExternal: (url: string) => ipcRenderer.invoke('shell:openExternal', url),
+  },
 }
 
 contextBridge.exposeInMainWorld('api', api)

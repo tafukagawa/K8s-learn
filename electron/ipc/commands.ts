@@ -15,6 +15,7 @@ function rowToCommand(row: any): Command {
     example: row.example,
     tags: parseTags(row.tags),
     isCustom: row.is_custom === 1,
+    url: row.url ?? '',
   }
 }
 
@@ -44,10 +45,10 @@ export function createCommandHandlers(db: Database.Database) {
 
     create(data: Omit<Command, 'id' | 'isCustom'>): Command {
       const row = db.prepare(`
-        INSERT INTO commands (category_id, name, description, syntax, example, tags, is_custom)
-        VALUES (?, ?, ?, ?, ?, ?, 1)
+        INSERT INTO commands (category_id, name, description, syntax, example, tags, url, is_custom)
+        VALUES (?, ?, ?, ?, ?, ?, ?, 1)
         RETURNING *
-      `).get(data.categoryId, data.name, data.description, data.syntax, data.example, JSON.stringify(data.tags)) as any
+      `).get(data.categoryId, data.name, data.description, data.syntax, data.example, JSON.stringify(data.tags), data.url ?? '') as any
       return rowToCommand(row)
     },
 
@@ -59,6 +60,7 @@ export function createCommandHandlers(db: Database.Database) {
       if (data.syntax !== undefined) { fields.push('syntax = ?'); values.push(data.syntax) }
       if (data.example !== undefined) { fields.push('example = ?'); values.push(data.example) }
       if (data.tags !== undefined) { fields.push('tags = ?'); values.push(JSON.stringify(data.tags)) }
+      if (data.url !== undefined) { fields.push('url = ?'); values.push(data.url) }
       values.push(id)
       const row = db.prepare(`UPDATE commands SET ${fields.join(', ')} WHERE id = ? RETURNING *`).get(...values) as any
       return rowToCommand(row)

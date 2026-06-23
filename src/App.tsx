@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { ThemeProvider, CssBaseline } from '@mui/material'
-import { theme } from './shared/theme'
+import { createAppTheme } from './shared/theme'
 import { Layout } from './shared/components/Layout'
 import { Header } from './shared/components/Header'
 import { Sidebar, type AppMode, type AppSection } from './shared/components/Sidebar'
 import { ReferenceView } from './features/reference/ReferenceView'
+import { FlashcardView } from './features/flashcard/FlashcardView'
 import { api } from './shared/ipc'
 import type { Category } from './types'
 
@@ -15,6 +16,9 @@ export default function App() {
   const [section, setSection] = useState<AppSection>('commands')
   const [searchQuery, setSearchQuery] = useState('')
   const [progressStats, setProgressStats] = useState({ done: 0, total: 0 })
+  const [darkMode, setDarkMode] = useState(false)
+
+  const theme = useMemo(() => createAppTheme(darkMode ? 'dark' : 'light'), [darkMode])
 
   useEffect(() => {
     api.categories.list().then(cats => {
@@ -48,6 +52,8 @@ export default function App() {
             onCategoryChange={setSelectedCategoryId}
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
+            darkMode={darkMode}
+            onToggleDark={() => setDarkMode(d => !d)}
           />
         }
         sidebar={
@@ -61,12 +67,15 @@ export default function App() {
           />
         }
       >
-        {selectedCategoryId && (
+        {selectedCategoryId && mode === 'reference' && (
           <ReferenceView
             categoryId={selectedCategoryId}
             section={section}
             searchQuery={searchQuery}
           />
+        )}
+        {selectedCategoryId && mode === 'flashcard' && (
+          <FlashcardView categoryId={selectedCategoryId} />
         )}
       </Layout>
     </ThemeProvider>

@@ -95,7 +95,7 @@ export function KnowledgeList({ categoryId, searchQuery, onStartLearning }: Know
               border: '1px solid',
               borderColor: alpha(theme.palette.secondary.light, 0.34),
               background: theme.palette.mode === 'dark'
-                ? 'radial-gradient(circle at 78% 34%, rgba(56,217,198,0.22), transparent 28%), linear-gradient(135deg, rgba(6,78,78,0.58), rgba(10,18,36,0.96) 58%, rgba(9,14,28,0.98))'
+                ? 'linear-gradient(135deg, rgba(6,78,78,0.58), rgba(10,18,36,0.96) 58%, rgba(9,14,28,0.98))'
                 : 'linear-gradient(135deg, #ffffff, #ecfeff)',
               display: 'flex',
               justifyContent: 'space-between',

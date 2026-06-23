@@ -95,7 +95,7 @@ export function CommandList({ categoryId, searchQuery, onStartLearning }: Comman
               border: '1px solid',
               borderColor: alpha(theme.palette.primary.light, 0.36),
               background: theme.palette.mode === 'dark'
-                ? 'radial-gradient(circle at 78% 34%, rgba(59,130,246,0.18), transparent 28%), linear-gradient(135deg, rgba(13,28,65,0.92), rgba(10,18,40,0.96) 58%, rgba(9,15,32,0.98))'
+                ? 'linear-gradient(135deg, rgba(13,28,65,0.92), rgba(9,15,32,0.98))'
                 : 'linear-gradient(135deg, #ffffff, #eef2ff)',
               boxShadow: theme.palette.mode === 'dark' ? '0 4px 24px rgba(0,0,0,0.40)' : '0 4px 20px rgba(56,71,112,0.10)',
               display: 'flex',

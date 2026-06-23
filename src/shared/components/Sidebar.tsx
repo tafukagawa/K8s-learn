@@ -50,7 +50,7 @@ export function Sidebar({ mode, section, onModeChange, onSectionChange, doneCoun
         flexShrink: 0,
         overflowY: 'auto',
         backgroundImage: theme.palette.mode === 'dark'
-          ? 'linear-gradient(180deg, rgba(59, 130, 246, 0.06), transparent 240px)'
+          ? undefined
           : undefined,
       })}
     >

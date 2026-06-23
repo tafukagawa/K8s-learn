@@ -15,9 +15,10 @@ interface HeaderProps {
   onSearchChange: (q: string) => void
   darkMode: boolean
   onToggleDark: () => void
+  onLogoClick: () => void
 }
 
-export function Header({ categories, selectedCategoryId, onCategoryChange, searchQuery, onSearchChange, darkMode, onToggleDark }: HeaderProps) {
+export function Header({ categories, selectedCategoryId, onCategoryChange, searchQuery, onSearchChange, darkMode, onToggleDark, onLogoClick }: HeaderProps) {
   return (
     <AppBar
       position="sticky"
@@ -31,7 +32,7 @@ export function Header({ categories, selectedCategoryId, onCategoryChange, searc
       })}
     >
       <Toolbar sx={{ gap: 2, minHeight: 68 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.1, minWidth: 210 }}>
+        <Box onClick={onLogoClick} sx={{ display: 'flex', alignItems: 'center', gap: 1.1, minWidth: 210, cursor: 'pointer' }}>
           <Box
             sx={theme => ({
               width: 36,

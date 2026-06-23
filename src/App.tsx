@@ -65,6 +65,7 @@ export default function App() {
             onSearchChange={setSearchQuery}
             darkMode={darkMode}
             onToggleDark={() => setDarkMode(d => !d)}
+            onLogoClick={() => setMode('reference')}
           />
         }
         sidebar={
@@ -91,6 +92,7 @@ export default function App() {
             categoryId={selectedCategoryId}
             initialSection={flashcardConfig.section}
             initialFilter={flashcardConfig.filter}
+            onBack={() => setMode('reference')}
           />
         )}
       </Layout>

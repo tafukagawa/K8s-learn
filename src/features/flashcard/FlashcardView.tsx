@@ -14,6 +14,7 @@ interface FlashcardViewProps {
   categoryId: number
   initialFilter?: FilterMode
   initialSection?: 'commands' | 'knowledge' | 'all'
+  onBack?: () => void
 }
 
 function shuffleArray<T>(arr: T[]): T[] {
@@ -25,7 +26,7 @@ function shuffleArray<T>(arr: T[]): T[] {
   return a
 }
 
-export function FlashcardView({ categoryId, initialFilter, initialSection }: FlashcardViewProps) {
+export function FlashcardView({ categoryId, initialFilter, initialSection, onBack }: FlashcardViewProps) {
   const [commands, setCommands] = useState<CommandWithProgress[]>([])
   const [knowledge, setKnowledge] = useState<KnowledgeWithProgress[]>([])
   const [filter, setFilter] = useState<FilterMode>(initialFilter ?? 'all')
@@ -128,6 +129,11 @@ export function FlashcardView({ categoryId, initialFilter, initialSection }: Fla
 
   return (
     <Box sx={{ p: 3, maxWidth: 720, mx: 'auto' }}>
+      {onBack && (
+        <Button startIcon={<ArrowBackIcon />} size="small" onClick={onBack} sx={{ mb: 2, color: 'text.secondary' }}>
+          リファレンスに戻る
+        </Button>
+      )}
       {/* ヘッダー：フィルター + 進捗 */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <ToggleButtonGroup

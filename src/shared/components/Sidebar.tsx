@@ -43,7 +43,7 @@ export function Sidebar({ mode, section, onModeChange, onSectionChange, doneCoun
     <Box
       sx={theme => ({
         width: 232,
-        bgcolor: theme.palette.mode === 'dark' ? '#050912' : '#ffffff',
+        bgcolor: theme.palette.mode === 'dark' ? '#111111' : '#ffffff',
         borderRight: '1px solid',
         borderColor: 'divider',
         p: 2,
@@ -70,9 +70,10 @@ export function Sidebar({ mode, section, onModeChange, onSectionChange, doneCoun
                   mb: 0.65,
                   minHeight: 48,
                   border: '1px solid transparent',
-                  bgcolor: mode === m.key ? alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.2 : 0.1) : undefined,
-                  backgroundImage: mode === m.key ? 'linear-gradient(135deg, rgba(59,130,246,0.24), rgba(59,130,246,0.08))' : undefined,
-                  borderColor: mode === m.key ? alpha(theme.palette.primary.light, 0.28) : 'transparent',
+                  bgcolor: mode === m.key
+                    ? (theme.palette.mode === 'dark' ? '#2A4A78' : alpha(theme.palette.primary.main, 0.12))
+                    : undefined,
+                  borderColor: mode === m.key ? alpha(theme.palette.primary.main, 0.5) : 'transparent',
                   '&.Mui-selected:hover': {
                     bgcolor: alpha(theme.palette.primary.main, 0.22),
                   },
@@ -118,7 +119,7 @@ export function Sidebar({ mode, section, onModeChange, onSectionChange, doneCoun
         <Box
           sx={theme => ({
             p: 1.5,
-            bgcolor: theme.palette.mode === 'dark' ? 'rgba(15, 23, 38, 0.78)' : '#f8fbff',
+            bgcolor: theme.palette.mode === 'dark' ? '#1E1E1E' : '#f8fbff',
             borderRadius: 1.5,
             border: '1px solid',
             borderColor: 'divider',
@@ -163,7 +164,7 @@ export function Sidebar({ mode, section, onModeChange, onSectionChange, doneCoun
             borderRadius: 1.5,
             border: '1px solid',
             borderColor: alpha(theme.palette.primary.light, 0.24),
-            background: 'linear-gradient(135deg, rgba(59,130,246,0.16), rgba(37,99,235,0.08))',
+            bgcolor: theme.palette.mode === 'dark' ? '#1E2A3A' : '#EFF6FF',
           })}
         >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>

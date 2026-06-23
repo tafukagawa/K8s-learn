@@ -7,7 +7,7 @@ import FilterListIcon from '@mui/icons-material/FilterList'
 import TrackChangesIcon from '@mui/icons-material/TrackChanges'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import BoltIcon from '@mui/icons-material/Bolt'
-import { alpha, type Theme } from '@mui/material/styles'
+import { alpha } from '@mui/material/styles'
 import { CommandCard } from './CommandCard'
 import { TagFilter } from './TagFilter'
 import { CommandDetail } from './CommandDetail'
@@ -94,9 +94,7 @@ export function CommandList({ categoryId, searchQuery, onStartLearning }: Comman
               borderRadius: 2,
               border: '1px solid',
               borderColor: alpha(theme.palette.primary.light, 0.36),
-              background: theme.palette.mode === 'dark'
-                ? 'linear-gradient(135deg, rgba(13,28,65,0.92), rgba(9,15,32,0.98))'
-                : 'linear-gradient(135deg, #ffffff, #eef2ff)',
+              bgcolor: theme.palette.mode === 'dark' ? '#1E2030' : '#F0F4FF',
               boxShadow: theme.palette.mode === 'dark' ? '0 4px 24px rgba(0,0,0,0.40)' : '0 4px 20px rgba(56,71,112,0.10)',
               display: 'flex',
               justifyContent: 'space-between',
@@ -232,14 +230,11 @@ export function CommandList({ categoryId, searchQuery, onStartLearning }: Comman
   )
 }
 
-const statCardSx = (theme: Theme) => ({
+const statCardSx = {
   minHeight: 122,
   p: 2,
   borderRadius: 2,
   border: '1px solid',
   borderColor: 'divider',
   bgcolor: 'background.paper',
-  backgroundImage: theme.palette.mode === 'dark'
-    ? 'linear-gradient(135deg, rgba(24, 35, 58, 0.92), rgba(8, 15, 29, 0.96))'
-    : 'none',
-})
+}

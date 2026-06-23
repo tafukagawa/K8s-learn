@@ -22,14 +22,7 @@ export function CommandCard({ command, onClick, onProgressChange }: CommandCardP
   const nextStatus: ProgressStatus = status === 'unseen' ? 'learning' : status === 'learning' ? 'done' : 'unseen'
 
   return (
-    <Card
-      sx={theme => ({
-        height: '100%',
-        backgroundImage: theme.palette.mode === 'dark'
-          ? 'linear-gradient(135deg, rgba(18, 27, 45, 0.98), rgba(9, 17, 30, 0.98))'
-          : undefined,
-      })}
-    >
+    <Card sx={{ height: '100%' }}>
       <CardActionArea onClick={onClick} sx={{ height: '100%' }}>
         <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2, minHeight: 132, p: 2 }}>
           <Box

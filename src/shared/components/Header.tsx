@@ -24,7 +24,7 @@ export function Header({ categories, selectedCategoryId, onCategoryChange, searc
       position="sticky"
       elevation={0}
       sx={theme => ({
-        bgcolor: theme.palette.mode === 'dark' ? 'rgba(7, 11, 20, 0.88)' : 'rgba(255,255,255,0.86)',
+        bgcolor: theme.palette.mode === 'dark' ? 'rgba(17,17,17,0.96)' : 'rgba(255,255,255,0.92)',
         backdropFilter: 'blur(16px)',
         borderBottom: '1px solid',
         borderColor: 'divider',
@@ -69,7 +69,7 @@ export function Header({ categories, selectedCategoryId, onCategoryChange, searc
             display: 'flex',
             alignItems: 'center',
             width: 340,
-            bgcolor: theme.palette.mode === 'dark' ? 'rgba(15, 23, 38, 0.92)' : '#ffffff',
+            bgcolor: theme.palette.mode === 'dark' ? '#222222' : '#ffffff',
             border: '1px solid',
             borderColor: theme.palette.mode === 'dark' ? 'rgba(148, 163, 184, 0.18)' : 'divider',
             borderRadius: 1.5,

@@ -7,7 +7,7 @@ import FilterListIcon from '@mui/icons-material/FilterList'
 import AutoStoriesIcon from '@mui/icons-material/AutoStories'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import BoltIcon from '@mui/icons-material/Bolt'
-import { alpha, type Theme } from '@mui/material/styles'
+import { alpha } from '@mui/material/styles'
 import { KnowledgeCard } from './KnowledgeCard'
 import { KnowledgeDetail } from './KnowledgeDetail'
 import { KnowledgeForm } from './KnowledgeForm'
@@ -95,8 +95,8 @@ export function KnowledgeList({ categoryId, searchQuery, onStartLearning }: Know
               border: '1px solid',
               borderColor: alpha(theme.palette.secondary.light, 0.34),
               background: theme.palette.mode === 'dark'
-                ? 'linear-gradient(135deg, rgba(6,78,78,0.58), rgba(10,18,36,0.96) 58%, rgba(9,14,28,0.98))'
-                : 'linear-gradient(135deg, #ffffff, #ecfeff)',
+                ? '#1A2424'
+                : '#F0FFFE',
               display: 'flex',
               justifyContent: 'space-between',
               gap: 2,
@@ -197,14 +197,11 @@ export function KnowledgeList({ categoryId, searchQuery, onStartLearning }: Know
   )
 }
 
-const statCardSx = (theme: Theme) => ({
+const statCardSx = {
   minHeight: 112,
   p: 2,
   borderRadius: 2,
   border: '1px solid',
   borderColor: 'divider',
   bgcolor: 'background.paper',
-  backgroundImage: theme.palette.mode === 'dark'
-    ? 'linear-gradient(135deg, rgba(24, 35, 58, 0.92), rgba(8, 15, 29, 0.96))'
-    : 'none',
-})
+}

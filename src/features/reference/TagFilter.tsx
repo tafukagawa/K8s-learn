@@ -1,4 +1,5 @@
-import { Box, Chip } from '@mui/material'
+import { Select, MenuItem, FormControl, InputLabel } from '@mui/material'
+import LocalOfferIcon from '@mui/icons-material/LocalOffer'
 
 interface TagFilterProps {
   allTags: string[]
@@ -8,24 +9,22 @@ interface TagFilterProps {
 
 export function TagFilter({ allTags, selectedTag, onTagChange }: TagFilterProps) {
   return (
-    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
-      <Chip
-        label="すべて"
-        size="small"
-        onClick={() => onTagChange(null)}
-        color={selectedTag === null ? 'primary' : 'default'}
-        sx={{ fontWeight: selectedTag === null ? 600 : 400 }}
-      />
-      {allTags.map(tag => (
-        <Chip
-          key={tag}
-          label={tag}
-          size="small"
-          variant="outlined"
-          onClick={() => onTagChange(tag === selectedTag ? null : tag)}
-          color={selectedTag === tag ? 'primary' : 'default'}
-        />
-      ))}
-    </Box>
+    <FormControl size="small" sx={{ minWidth: 180 }}>
+      <InputLabel id="tag-filter-label" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+        <LocalOfferIcon sx={{ fontSize: 14 }} /> タグで絞り込み
+      </InputLabel>
+      <Select
+        labelId="tag-filter-label"
+        label="タグで絞り込み"
+        value={selectedTag ?? ''}
+        onChange={e => onTagChange(e.target.value === '' ? null : e.target.value)}
+        sx={{ bgcolor: 'background.paper' }}
+      >
+        <MenuItem value="">すべて</MenuItem>
+        {allTags.map(tag => (
+          <MenuItem key={tag} value={tag}>{tag}</MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   )
 }

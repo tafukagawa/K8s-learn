@@ -15,6 +15,7 @@ export interface Command {
   example: string
   tags: string[]
   isCustom: boolean
+  url: string
 }
 
 export interface Knowledge {
@@ -24,6 +25,7 @@ export interface Knowledge {
   body: string
   tags: string[]
   isCustom: boolean
+  url: string
 }
 
 export type ProgressStatus = 'unseen' | 'learning' | 'done'

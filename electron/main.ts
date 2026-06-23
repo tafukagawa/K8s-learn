@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
 import path from 'path'
 import { getDb } from './db/client'
-import { applySchema } from './db/migrate'
+import { applySchema, runMigrations } from './db/migrate'
 import { importCategories } from './importer'
 import { createCategoryHandlers } from './ipc/categories'
 import { createCommandHandlers } from './ipc/commands'
@@ -11,6 +11,7 @@ import { createProgressHandlers } from './ipc/progress'
 function setupIpc() {
   const db = getDb()
   applySchema(db)
+  runMigrations(db)
 
   const categoriesDir = app.isPackaged
     ? path.join(process.resourcesPath, 'categories')
@@ -43,6 +44,7 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
+      sandbox: false,
     },
   })
 

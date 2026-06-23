@@ -1,0 +1,22 @@
+[
+  {
+    "title": "Dockerfile の書き方",
+    "body": "## Dockerfile の書き方\n\nDockerfileはイメージをビルドするための命令書。各命令が1つのレイヤーを生成する。\n\n### 主要命令\n\n| 命令 | 用途 |\n|------|------|\n| `FROM` | ベースイメージを指定（必須・最初に記述） |\n| `RUN` | ビルド時にシェルコマンドを実行 |\n| `COPY` | ホストからファイルをイメージにコピー |\n| `ADD` | COPYに加えURL取得やtar展開も可能（基本はCOPY推奨） |\n| `CMD` | コンテナ起動時のデフォルトコマンド（上書き可） |\n| `ENTRYPOINT` | コンテナの実行コマンド（上書き不可が基本） |\n| `ENV` | 環境変数を設定 |\n| `ARG` | ビルド時引数（`--build-arg`で渡す） |\n| `EXPOSE` | コンテナが使用するポートを宣言（実際の公開はdocker run -pで行う） |\n| `WORKDIR` | 作業ディレクトリを設定 |\n| `USER` | 実行ユーザーを指定（セキュリティのためrootを避ける） |\n\n### ベストプラクティス\n\n- `RUN` は `&&` で繋げてレイヤー数を減らす\n- `COPY` は変更頻度の低いファイルを先に記述してキャッシュを活用\n- `.dockerignore` で不要ファイルを除外する",
+    "tags": ["dockerfile", "build", "image"]
+  },
+  {
+    "title": "マルチステージビルド",
+    "body": "## マルチステージビルド\n\n1つのDockerfile内に複数の `FROM` を記述し、ビルド環境と実行環境を分離するテクニック。最終イメージにビルドツールや中間ファイルが含まれないため、イメージサイズを大幅に削減できる。\n\n### 基本構成\n\n```dockerfile\n# Stage 1: ビルド環境\nFROM golang:1.22 AS builder\nWORKDIR /app\nCOPY . .\nRUN go build -o myapp .\n\n# Stage 2: 実行環境\nFROM gcr.io/distroless/static\nCOPY --from=builder /app/myapp /myapp\nENTRYPOINT [\"/myapp\"]\n```\n\n### メリット\n\n- **イメージサイズ削減**: ビルドツール（コンパイラ・パッケージマネージャ等）を最終イメージに含めない\n- **セキュリティ向上**: 攻撃面を最小化できる\n- **ビルド依存関係の分離**: CI/CDでの中間ステージを個別にキャッシュ可能\n\n### 特定ステージだけビルド\n\n```bash\ndocker build --target builder -t myapp:build .\n```\n\nテストやデバッグ用途でビルドステージだけを取り出すことも可能。",
+    "tags": ["dockerfile", "multistage", "build", "image"]
+  },
+  {
+    "title": "イメージレイヤーとキャッシュ",
+    "body": "## イメージレイヤーとキャッシュ\n\nDockerイメージはレイヤーの積み重ね構造になっている。Dockerfile の各命令（`FROM`/`RUN`/`COPY` 等）が1つのレイヤーを生成し、変更がないレイヤーはキャッシュが再利用される。\n\n### キャッシュの仕組み\n\n- 上のレイヤーが変更されると、それ以降のすべてのレイヤーのキャッシュが無効になる\n- `COPY . .` を早い段階に書くと、ソースコード変更のたびにそれ以降が全再実行される\n\n### キャッシュを活用するDockerfileの順序\n\n```dockerfile\n# 変更頻度: 低 → 上に書く\nFROM node:20\nWORKDIR /app\nCOPY package*.json ./      # 依存関係定義ファイルだけ先にコピー\nRUN npm ci                 # キャッシュヒットしやすい\n\n# 変更頻度: 高 → 下に書く\nCOPY . .                   # ソースコードは後\nRUN npm run build\n```\n\n### キャッシュを無効化したいとき\n\n```bash\ndocker build --no-cache -t myapp .\n```\n\n### レイヤーの確認\n\n```bash\ndocker image history myapp:latest\n```",
+    "tags": ["image", "layer", "cache", "dockerfile"]
+  },
+  {
+    "title": "コンテナレジストリ",
+    "body": "## コンテナレジストリ\n\nDockerイメージを保存・配布するためのサービス。ビルドしたイメージをプッシュし、デプロイ先でプルして使用する。\n\n### 主要なレジストリ\n\n| レジストリ | 特徴 |\n|-----------|------|\n| **Docker Hub** | 最も普及したパブリックレジストリ。無料プランはプルレート制限あり |\n| **Amazon ECR** | AWS環境に最適。IAMで認証管理。プライベートリポジトリ |\n| **Google GCR / Artifact Registry** | GCP環境に最適。Artifact Registryが推奨 |\n| **GitHub Container Registry (GHCR)** | GitHub Actionsとの統合が容易。`ghcr.io/<org>/<image>` |\n\n### プライベートレジストリへのログイン\n\n```bash\n# Docker Hub\ndocker login\n\n# ECR\naws ecr get-login-password --region ap-northeast-1 | \\\n  docker login --username AWS --password-stdin <account>.dkr.ecr.ap-northeast-1.amazonaws.com\n\n# GHCR\necho $GITHUB_TOKEN | docker login ghcr.io -u <username> --password-stdin\n```\n\n### イメージ命名規則\n\n```\n<registry>/<namespace>/<repository>:<tag>\n例: ghcr.io/myorg/myapp:v1.2.3\n```",
+    "tags": ["registry", "image", "dockerhub", "ecr", "ghcr"]
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Sync Policy",
+    "body": "## Sync Policy\n\nArgoCD Application の同期動作を制御するポリシー設定。手動同期と自動同期を選択でき、自動同期の挙動を細かくカスタマイズできる。\n\n### 手動同期（デフォルト）\n`spec.syncPolicy` を未設定、または `automated` を省略すると手動同期。CLI・UI で明示的に sync を実行する必要がある。\n\n### 自動同期（automated）\n```yaml\nsyncPolicy:\n  automated:\n    prune: true\n    selfHeal: true\n```\n\n#### automated.prune\n`true` に設定すると、Git に存在しなくなったリソースをクラスタから自動削除する。デフォルトは `false`（安全のため）。\n\n#### automated.selfHeal\n`true` に設定すると、クラスタ上で手動変更（`kubectl edit` など）が行われた場合、Git の状態に自動的に戻す。ドリフトを防ぎ、Git を常に唯一の真実に保つ。",
+    "tags": ["argocd", "sync", "policy"],
+    "url": ""
+  },
+  {
+    "title": "Sync フェーズとウェーブ",
+    "body": "## Sync フェーズとウェーブ\n\nArgoCD の同期処理は複数のフェーズに分かれており、リソースの適用順序を制御できる。\n\n### 3 つの Sync フェーズ\n1. **PreSync**: 同期前に実行するフック（DB マイグレーションなど）\n2. **Sync**: メインの同期処理（マニフェストの適用）\n3. **PostSync**: 同期後に実行するフック（スモークテストなど）\n\nフックは `argocd.argoproj.io/hook: PreSync` アノテーションを付けた Job リソースで定義する。\n\n### Sync Wave\n同一フェーズ内でリソースの適用順序を指定する仕組み。`argocd.argoproj.io/sync-wave` アノテーションで数値を指定する。\n\n```yaml\nmetadata:\n  annotations:\n    argocd.argoproj.io/sync-wave: \"1\"\n```\n\n数値が小さいリソースから順に適用され、前のウェーブのリソースがヘルシーになってから次のウェーブへ進む。Namespace → ConfigMap → Deployment の順で適用したい場合などに有効。",
+    "tags": ["argocd", "sync", "wave", "hook"],
+    "url": ""
+  },
+  {
+    "title": "リソースヘルスステータス",
+    "body": "## リソースヘルスステータス\n\nArgoCD は管理下の各 Kubernetes リソースのヘルス状態を継続的に評価する。\n\n### ステータス一覧\n\n| ステータス | 意味 |\n|---|---|\n| **Healthy** | リソースが正常に動作している |\n| **Progressing** | リソースが目標状態に向かって変化中（例: Pod 起動中）|\n| **Degraded** | リソースが正常に動作していない（例: CrashLoopBackOff）|\n| **Missing** | クラスタにリソースが存在しない |\n| **Unknown** | ヘルス状態が判定できない |\n| **Suspended** | リソースが一時停止中（例: CronJob の suspend）|\n\n### Sync ステータスとの違い\n- **Sync ステータス**: Git の状態とクラスタの状態が一致しているか（Synced / OutOfSync）\n- **Health ステータス**: クラスタ上のリソースが正常に動作しているか\n\nApplication 全体の状態は Sync・Health の両方が正常であることが理想。カスタムヘルスチェックは Lua スクリプトで定義できる。",
+    "tags": ["argocd", "health", "status"],
+    "url": ""
+  },
+  {
+    "title": "Sync オプション",
+    "body": "## Sync オプション\n\nArgoCD の同期処理に関する詳細設定。Application の `spec.syncPolicy.syncOptions` または個別リソースのアノテーションで指定する。\n\n### 主要な Sync オプション\n\n#### ServerSideApply\n```yaml\nsyncOptions:\n  - ServerSideApply=true\n```\nKubernetes の Server-Side Apply を使用してリソースを適用する。大きなリソース（annotations が多いなど）や、複数のコントローラーが管理するフィールドがある場合に有効。\n\n#### Replace\n```yaml\nsyncOptions:\n  - Replace=true\n```\n`kubectl apply` の代わりに `kubectl replace` を使用してリソースを適用する。一部の immutable フィールドを変更する場合に必要。\n\n#### SkipDryRunOnMissingResource\n```yaml\nsyncOptions:\n  - SkipDryRunOnMissingResource=true\n```\nクラスタに存在しない CRD を参照するリソースのドライランをスキップする。CRD と CRD に依存するリソースを同時にデプロイする場合に有効。\n\n#### CreateNamespace\n```yaml\nsyncOptions:\n  - CreateNamespace=true\n```\nデプロイ先の Namespace が存在しない場合に自動作成する。",
+    "tags": ["argocd", "sync", "options"],
+    "url": ""
+  }
+]

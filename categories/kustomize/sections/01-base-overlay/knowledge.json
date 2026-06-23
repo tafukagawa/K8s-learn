@@ -1,0 +1,27 @@
+[
+  {
+    "title": "Kustomize とは",
+    "body": "## Kustomize とは\n\nKustomize はテンプレートエンジンを使わずに Kubernetes マニフェストをカスタマイズするツール。YAML をそのまま扱い、パッチや生成ルールを重ねることで環境ごとの差分を管理する。\n\n### 特徴\n- kubectl に標準組み込み（`kubectl apply -k` で直接利用可能）\n- Helm のようなテンプレート構文を覚える必要がない\n- 元の YAML を変更せずにカスタマイズを重ねられる\n- GitOps との親和性が高く、ArgoCD や Flux でも広く利用される\n\n### インストール\n```bash\n# kubectl 組み込み版（推奨）\nkubectl apply -k ./\n\n# スタンドアロン版\nkustomize build ./\n```\n\nKubernetes 1.14 以降は kubectl に同梱されているため、追加インストールなしで利用できる。",
+    "tags": ["kustomize", "basic", "overview"]
+  },
+  {
+    "title": "Base / Overlay 構造",
+    "body": "## Base / Overlay 構造\n\nKustomize の中核となる設計パターン。共通定義を base に置き、環境ごとの差分を overlay で上書きする。\n\n### ディレクトリ構成例\n```\nk8s/\n  base/\n    kustomization.yaml\n    deployment.yaml\n    service.yaml\n  overlays/\n    dev/\n      kustomization.yaml\n      replica-patch.yaml\n    prod/\n      kustomization.yaml\n      replica-patch.yaml\n```\n\n### base の役割\n- 全環境で共通のマニフェストを管理\n- 直接クラスタには適用せず、overlay から参照される\n\n### overlay の役割\n- `bases:` フィールドで base を参照\n- 環境固有のパッチ・設定を上書き\n- `kubectl apply -k overlays/prod` で環境を指定して適用",
+    "tags": ["kustomize", "base", "overlay", "structure"]
+  },
+  {
+    "title": "kustomization.yaml の基本構造",
+    "body": "## kustomization.yaml の基本構造\n\nKustomize の設定ファイル。すべてのカスタマイズルールをこのファイルに記述する。\n\n### 主要フィールド\n```yaml\napiVersion: kustomize.config.k8s.io/v1beta1\nkind: Kustomization\n\n# 管理するリソースファイルの一覧\nresources:\n  - deployment.yaml\n  - service.yaml\n\n# 全リソースに付与する共通ラベル\ncommonLabels:\n  app: my-app\n  env: production\n\n# リソース名の接頭辞\nnamePrefix: prod-\n\n# ConfigMap の自動生成\nconfigMapGenerator:\n  - name: app-config\n    literals:\n      - APP_ENV=production\n\n# パッチの適用\npatches:\n  - path: replica-patch.yaml\n```\n\n### overlay での base 参照\n```yaml\nresources:\n  - ../../base\n```",
+    "tags": ["kustomize", "kustomization.yaml", "config"]
+  },
+  {
+    "title": "環境別管理パターン",
+    "body": "## 環境別管理パターン\n\ndev / staging / prod の3環境を overlay で管理する典型的な構成例。\n\n### ディレクトリ構成\n```\nk8s/\n  base/\n    kustomization.yaml   # resources: [deployment.yaml, service.yaml]\n    deployment.yaml      # replicas: 1\n    service.yaml\n  overlays/\n    dev/\n      kustomization.yaml # resources: [../../base]\n      patch.yaml         # replicas: 1\n    staging/\n      kustomization.yaml # resources: [../../base]\n      patch.yaml         # replicas: 2\n    prod/\n      kustomization.yaml # resources: [../../base]\n      patch.yaml         # replicas: 5\n```\n\n### 適用コマンド\n```bash\nkubectl apply -k overlays/dev\nkubectl apply -k overlays/staging\nkubectl apply -k overlays/prod\n```\n\n### ポイント\n- base は環境に依存しない最小構成にとどめる\n- 環境ごとの差分だけを overlay に記述する\n- CI/CD パイプラインでブランチと overlay を対応させる運用が一般的",
+    "tags": ["kustomize", "overlay", "environment", "pattern"]
+  },
+  {
+    "title": "Helm との比較",
+    "body": "## Helm との比較\n\nKustomize と Helm はどちらも Kubernetes マニフェスト管理ツールだが、アプローチが異なる。\n\n### Helm の特徴\n- Go テンプレートでマニフェストを生成\n- `values.yaml` でパラメータを一元管理\n- Chart としてパッケージ化・配布が可能\n- 複雑なロジック（条件分岐・ループ）が書ける\n\n### Kustomize の特徴\n- テンプレートなし、素の YAML を直接管理\n- `kubectl` に組み込みで追加インストール不要\n- 既存マニフェストへの差分適用が得意\n- シンプルな構成変更に向いている\n\n### 組み合わせ利用\nKustomize の `HelmChartInflationGenerator` を使うと Helm チャートを Kustomize で管理できる。\n```yaml\nhelmCharts:\n  - name: nginx\n    repo: https://charts.bitnami.com/bitnami\n    version: 15.0.0\n    releaseName: my-nginx\n```\n\n### 使い分けの目安\n- 既存 YAML の環境別カスタマイズ → **Kustomize**\n- 複雑なパラメータ管理・再配布 → **Helm**",
+    "tags": ["kustomize", "helm", "comparison"]
+  }
+]

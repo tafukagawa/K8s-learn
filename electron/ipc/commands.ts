@@ -21,14 +21,22 @@ function rowToCommand(row: any): Command {
 
 export function createCommandHandlers(db: Database.Database) {
   return {
-    list(categoryId: number): CommandWithProgress[] {
-      const rows = db.prepare(`
-        SELECT c.*, p.status, p.correct_count, p.attempt_count, p.last_reviewed
-        FROM commands c
-        LEFT JOIN progress p ON p.item_type = 'command' AND p.item_id = c.id
-        WHERE c.category_id = ?
-        ORDER BY c.id
-      `).all(categoryId)
+    list(categoryId: number, sectionId?: number): CommandWithProgress[] {
+      const rows = sectionId != null
+        ? db.prepare(`
+            SELECT c.*, p.status, p.correct_count, p.attempt_count, p.last_reviewed
+            FROM commands c
+            LEFT JOIN progress p ON p.item_type = 'command' AND p.item_id = c.id
+            WHERE c.category_id = ? AND c.section_id = ?
+            ORDER BY c.id
+          `).all(categoryId, sectionId)
+        : db.prepare(`
+            SELECT c.*, p.status, p.correct_count, p.attempt_count, p.last_reviewed
+            FROM commands c
+            LEFT JOIN progress p ON p.item_type = 'command' AND p.item_id = c.id
+            WHERE c.category_id = ?
+            ORDER BY c.id
+          `).all(categoryId)
       return rows.map((row: any) => ({
         ...rowToCommand(row),
         progress: row.status ? {

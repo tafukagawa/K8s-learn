@@ -1,0 +1,12 @@
+[
+  { "name": "docker network create", "description": "カスタムネットワークを作成する", "syntax": "docker network create [options] <network>", "example": "docker network create mynetwork", "tags": ["network", "create"], "url": "" },
+  { "name": "docker network ls", "description": "Dockerネットワークの一覧を表示する", "syntax": "docker network ls", "example": "docker network ls", "tags": ["network", "list"], "url": "" },
+  { "name": "docker network inspect", "description": "ネットワークの詳細情報を表示する", "syntax": "docker network inspect <network>", "example": "docker network inspect mynetwork", "tags": ["network", "inspect"], "url": "" },
+  { "name": "docker network connect", "description": "実行中のコンテナを指定ネットワークに接続する", "syntax": "docker network connect <network> <container>", "example": "docker network connect mynetwork mycontainer", "tags": ["network", "connect"], "url": "" },
+  { "name": "docker volume create", "description": "名前付きボリュームを作成する", "syntax": "docker volume create <volume>", "example": "docker volume create mydata", "tags": ["volume", "create"], "url": "" },
+  { "name": "docker volume ls", "description": "Dockerボリュームの一覧を表示する", "syntax": "docker volume ls", "example": "docker volume ls", "tags": ["volume", "list"], "url": "" },
+  { "name": "docker volume inspect", "description": "ボリュームの詳細情報を表示する", "syntax": "docker volume inspect <volume>", "example": "docker volume inspect mydata", "tags": ["volume", "inspect"], "url": "" },
+  { "name": "docker run -v", "description": "コンテナ起動時にボリュームまたはbind mountをマウントする", "syntax": "docker run -v <volume-or-path>:<container-path> <image>", "example": "docker run -v mydata:/app/data nginx", "tags": ["volume", "mount", "run"], "url": "" },
+  { "name": "docker run --mount", "description": "mountフラグを使って明示的にボリュームやbind mountを指定する", "syntax": "docker run --mount type=<type>,source=<src>,target=<dst> <image>", "example": "docker run --mount type=volume,source=mydata,target=/app/data nginx", "tags": ["volume", "mount", "run"], "url": "" },
+  { "name": "docker system prune", "description": "停止コンテナ・未使用ネットワーク・ダングリングイメージ・ビルドキャッシュを一括削除する", "syntax": "docker system prune [options]", "example": "docker system prune -a --volumes", "tags": ["cleanup", "system"], "url": "" }
+]

@@ -1,0 +1,82 @@
+[
+  {
+    "name": "kubectl get pods",
+    "description": "Pod一覧を表示する",
+    "syntax": "kubectl get pods [-n <namespace>]",
+    "example": "kubectl get pods\nkubectl get pods -n kube-system",
+    "tags": ["pod", "list", "basic"],
+    "url": ""
+  },
+  {
+    "name": "kubectl get pods -o wide",
+    "description": "IP・ノード情報付きでPod一覧を表示する",
+    "syntax": "kubectl get pods -o wide [-n <namespace>]",
+    "example": "kubectl get pods -o wide\nkubectl get pods -o wide -n default",
+    "tags": ["pod", "list", "wide", "ip", "node"],
+    "url": ""
+  },
+  {
+    "name": "kubectl get pods -o yaml",
+    "description": "YAML形式でPodの詳細情報を出力する",
+    "syntax": "kubectl get pod <pod-name> -o yaml",
+    "example": "kubectl get pod my-pod -o yaml\nkubectl get pod my-pod -o yaml > pod.yaml",
+    "tags": ["pod", "yaml", "output", "detail"],
+    "url": ""
+  },
+  {
+    "name": "kubectl describe pod",
+    "description": "Podの詳細情報・イベントを表示する",
+    "syntax": "kubectl describe pod <pod-name> [-n <namespace>]",
+    "example": "kubectl describe pod my-pod\nkubectl describe pod my-pod -n default",
+    "tags": ["pod", "describe", "events", "debug"],
+    "url": ""
+  },
+  {
+    "name": "kubectl logs",
+    "description": "Podのログを表示する",
+    "syntax": "kubectl logs <pod-name> [-c <container>] [-f] [--tail=<n>]",
+    "example": "kubectl logs my-pod\nkubectl logs my-pod -c nginx -f\nkubectl logs my-pod --tail=100",
+    "tags": ["pod", "logs", "debug", "container"],
+    "url": ""
+  },
+  {
+    "name": "kubectl logs --previous",
+    "description": "前回クラッシュしたコンテナのログを表示する",
+    "syntax": "kubectl logs <pod-name> --previous [-c <container>]",
+    "example": "kubectl logs my-pod --previous\nkubectl logs my-pod --previous -c nginx",
+    "tags": ["pod", "logs", "previous", "crash", "debug"],
+    "url": ""
+  },
+  {
+    "name": "kubectl exec -it",
+    "description": "Pod内でインタラクティブシェルを実行する",
+    "syntax": "kubectl exec -it <pod-name> [-c <container>] -- <command>",
+    "example": "kubectl exec -it my-pod -- /bin/bash\nkubectl exec -it my-pod -c nginx -- /bin/sh",
+    "tags": ["pod", "exec", "shell", "interactive", "debug"],
+    "url": ""
+  },
+  {
+    "name": "kubectl cp",
+    "description": "ローカルとPod間でファイルをコピーする",
+    "syntax": "kubectl cp <src> <dest> [-c <container>]",
+    "example": "kubectl cp my-pod:/var/log/app.log ./app.log\nkubectl cp ./config.yaml my-pod:/etc/config.yaml",
+    "tags": ["pod", "copy", "file", "transfer"],
+    "url": ""
+  },
+  {
+    "name": "kubectl delete pod",
+    "description": "Podを削除する",
+    "syntax": "kubectl delete pod <pod-name> [-n <namespace>] [--grace-period=<seconds>]",
+    "example": "kubectl delete pod my-pod\nkubectl delete pod my-pod --grace-period=0 --force",
+    "tags": ["pod", "delete", "remove"],
+    "url": ""
+  },
+  {
+    "name": "kubectl run",
+    "description": "単発Podを素早く起動する",
+    "syntax": "kubectl run <name> --image=<image> [--rm] [-it] [-- <command>]",
+    "example": "kubectl run nginx --image=nginx\nkubectl run tmp --image=busybox --rm -it -- /bin/sh\nkubectl run debug --image=alpine --rm -it -- sh",
+    "tags": ["pod", "run", "create", "quick"],
+    "url": ""
+  }
+]

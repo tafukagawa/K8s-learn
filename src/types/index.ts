@@ -6,6 +6,14 @@ export interface Category {
   order: number
 }
 
+export interface Section {
+  id: number
+  categoryId: number
+  slug: string
+  title: string
+  order: number
+}
+
 export interface Command {
   id: number
   categoryId: number
@@ -18,6 +26,11 @@ export interface Command {
   url: string
 }
 
+export interface ClozeItem {
+  q: string
+  a: string
+}
+
 export interface Knowledge {
   id: number
   categoryId: number
@@ -26,6 +39,7 @@ export interface Knowledge {
   tags: string[]
   isCustom: boolean
   url: string
+  cloze: ClozeItem[] | null
 }
 
 export type ProgressStatus = 'unseen' | 'learning' | 'done'
@@ -53,14 +67,17 @@ export interface IpcApi {
   categories: {
     list: () => Promise<Category[]>
   }
+  sections: {
+    list: (categoryId: number) => Promise<Section[]>
+  }
   commands: {
-    list: (categoryId: number) => Promise<CommandWithProgress[]>
+    list: (categoryId: number, sectionId?: number) => Promise<CommandWithProgress[]>
     create: (data: Omit<Command, 'id' | 'isCustom'>) => Promise<Command>
     update: (id: number, data: Partial<Omit<Command, 'id'>>) => Promise<Command>
     delete: (id: number) => Promise<void>
   }
   knowledge: {
-    list: (categoryId: number) => Promise<KnowledgeWithProgress[]>
+    list: (categoryId: number, sectionId?: number) => Promise<KnowledgeWithProgress[]>
     create: (data: Omit<Knowledge, 'id' | 'isCustom'>) => Promise<Knowledge>
     update: (id: number, data: Partial<Omit<Knowledge, 'id'>>) => Promise<Knowledge>
     delete: (id: number) => Promise<void>
@@ -70,6 +87,10 @@ export interface IpcApi {
   }
   shell: {
     openExternal: (url: string) => Promise<void>
+  }
+  ai: {
+    checkOllama: () => Promise<{ ok: boolean; models: string[] }>
+    generateCloze: (knowledgeId: number) => Promise<ClozeItem[]>
   }
 }
 

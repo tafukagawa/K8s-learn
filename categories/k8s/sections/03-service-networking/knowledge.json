@@ -1,0 +1,32 @@
+[
+  {
+    "title": "Service とは",
+    "body": "## Service とは\n\nService は Pod への安定したネットワークアクセスを提供するリソースです。Pod はエフェメラルで IP アドレスが変わるため、Service がその前段に立ち、安定したエンドポイントを提供します。\n\n### Service の種類\n\n#### ClusterIP（デフォルト）\n\nクラスター内部からのみアクセス可能な仮想 IP を割り当てます。マイクロサービス間の内部通信に使用します。\n\n#### NodePort\n\n各ノードの特定ポート（30000-32767）を通じて外部からアクセス可能にします。`NodeIP:NodePort` でアクセスできます。開発・テスト環境向け。\n\n#### LoadBalancer\n\nクラウドプロバイダーのロードバランサー（AWS ELB、GCP GLB等）を自動的にプロビジョニングします。本番環境での外部公開に使用します。\n\n#### ExternalName\n\nService を外部 DNS 名にマッピングします。クラスター外のサービスを内部 DNS 名でアクセスしたい場合に使用します。\n\n```yaml\napiVersion: v1\nkind: Service\nmetadata:\n  name: my-service\nspec:\n  selector:\n    app: my-app\n  ports:\n  - port: 80\n    targetPort: 8080\n  type: ClusterIP\n```",
+    "tags": ["service", "clusterip", "nodeport", "loadbalancer", "networking"],
+    "url": ""
+  },
+  {
+    "title": "Ingress とは",
+    "body": "## Ingress とは\n\nIngress は HTTP および HTTPS トラフィックをクラスター内の Service にルーティングするリソースです。L7（アプリケーション層）での高度なルーティングを実現します。\n\n### Ingress の主な機能\n\n- **パスベースルーティング**: `/api` → API Service、`/app` → Frontend Service\n- **ホストベースルーティング**: `api.example.com` と `app.example.com` を別 Service に振り分け\n- **TLS 終端**: HTTPS 証明書を Ingress で処理し、バックエンドには HTTP で転送\n- **リダイレクト・リライト**: URL の変換処理\n\n### Ingress Controller が必要\n\nIngress リソースだけでは機能しません。実際にトラフィックを処理する **Ingress Controller** の導入が必要です。\n\n- **NGINX Ingress Controller**: 最も広く使われる\n- **Traefik**: 動的設定更新が得意\n- **AWS ALB Ingress Controller**: AWS 環境向け\n\n```yaml\napiVersion: networking.k8s.io/v1\nkind: Ingress\nmetadata:\n  name: my-ingress\nspec:\n  rules:\n  - host: app.example.com\n    http:\n      paths:\n      - path: /\n        pathType: Prefix\n        backend:\n          service:\n            name: my-service\n            port:\n              number: 80\n```",
+    "tags": ["ingress", "http", "https", "routing", "tls"],
+    "url": ""
+  },
+  {
+    "title": "Kubernetes DNS",
+    "body": "## Kubernetes DNS\n\nKubernetes はクラスター内 DNS を自動的に提供します（CoreDNS）。これにより Pod は IP アドレスを知らなくても Service 名でアクセスできます。\n\n### DNS 名の解決\n\n#### 同一 Namespace 内\n\n```\n<service-name>\n# 例: my-service → 10.96.0.100\n```\n\n#### 異なる Namespace 間\n\n```\n<service-name>.<namespace>\n# 例: my-service.production\n```\n\n#### FQDN（完全修飾ドメイン名）\n\n```\n<service-name>.<namespace>.svc.cluster.local\n# 例: my-service.production.svc.cluster.local\n```\n\n### Pod DNS\n\nPod 自体にも DNS 名が付与されます。\n\n```\n<pod-ip-dashes>.<namespace>.pod.cluster.local\n# 例: 10-244-0-5.default.pod.cluster.local\n```\n\n### DNS の確認\n\n```bash\n# Pod 内から DNS 解決を確認\nkubectl run tmp --image=busybox --rm -it -- nslookup my-service\nkubectl run tmp --image=busybox --rm -it -- nslookup my-service.production.svc.cluster.local\n```\n\nアプリケーション間の通信には IP アドレスでなく Service の DNS 名を使用することが推奨されます。",
+    "tags": ["dns", "networking", "service", "coredns", "fqdn"],
+    "url": ""
+  },
+  {
+    "title": "NetworkPolicy",
+    "body": "## NetworkPolicy\n\nNetworkPolicy は Pod 間のネットワーク通信を制限するリソースです。デフォルトでは全 Pod 間の通信が許可されているため、NetworkPolicy でホワイトリスト方式のアクセス制御を実装します。\n\n### 注意事項\n\nNetworkPolicy を有効にするには、対応した CNI プラグイン（Calico、Cilium、Weave Net 等）が必要です。標準の kindnet や flannel では NetworkPolicy が機能しません。\n\n### Ingress / Egress ルール\n\n- **Ingress**: Pod への受信トラフィックを制御\n- **Egress**: Pod からの送信トラフィックを制御\n\n### 設定例（特定 Pod からのみ受信許可）\n\n```yaml\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-frontend\nspec:\n  podSelector:\n    matchLabels:\n      app: backend\n  policyTypes:\n  - Ingress\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    ports:\n    - port: 8080\n```\n\n### 全トラフィック拒否（デフォルト拒否）\n\n```yaml\nspec:\n  podSelector: {}   # 全 Pod に適用\n  policyTypes:\n  - Ingress\n  - Egress\n  # ingress/egress ルールなし = 全拒否\n```",
+    "tags": ["networkpolicy", "security", "ingress", "egress", "cni"],
+    "url": ""
+  },
+  {
+    "title": "Headless Service",
+    "body": "## Headless Service\n\nHeadless Service は `clusterIP: None` を指定することで、仮想 IP を持たない特殊な Service です。DNS が各 Pod の IP アドレスを直接返します。\n\n### 通常の Service との違い\n\n| 項目 | 通常の Service | Headless Service |\n|------|---------------|------------------|\n| ClusterIP | あり（仮想IP） | なし（None） |\n| DNS 解決 | Service の IP を返す | 各 Pod の IP を返す |\n| ロードバランシング | kube-proxy が実施 | クライアント側で実施 |\n\n### 主な用途：StatefulSet\n\nStatefulSet と組み合わせることで、各 Pod に固定の DNS 名を付与できます。\n\n```\n<pod-name>.<headless-service-name>.<namespace>.svc.cluster.local\n# 例: mysql-0.mysql.default.svc.cluster.local\n```\n\nMySQL レプリケーション、Cassandra クラスター、Kafka ブローカーなど、各ノードを個別に識別する必要がある分散データベースで活用されます。\n\n```yaml\napiVersion: v1\nkind: Service\nmetadata:\n  name: mysql\nspec:\n  clusterIP: None\n  selector:\n    app: mysql\n  ports:\n  - port: 3306\n```",
+    "tags": ["service", "headless", "statefulset", "dns", "database"],
+    "url": ""
+  }
+]

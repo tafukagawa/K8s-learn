@@ -1,0 +1,22 @@
+[
+  {
+    "title": "namePrefix / nameSuffix",
+    "body": "## namePrefix / nameSuffix\n\n`kustomization.yaml` に設定することで、管理下にある全リソースの名前に一括で接頭辞・接尾辞を付与するトランスフォーマー。\n\n### 設定例\n```yaml\nnamePrefix: prod-\nnameSuffix: -v2\n```\n\n適用後のリソース名:\n```\nDeployment: my-app  →  prod-my-app-v2\nService:    my-svc  →  prod-my-svc-v2\n```\n\n### 主な用途\n- **環境分離**: `dev-`、`staging-`、`prod-` を付けて同一クラスタ内で複数環境を管理\n- **バージョン管理**: `-v1`、`-v2` のサフィックスでバージョンを区別\n- **チーム分離**: チーム名をプレフィックスとして付与\n\n### 参照先の自動更新\nnamePrefix/nameSuffix を設定すると、Deployment の `selector.matchLabels` や Service の `selector` など、リソース間の参照も自動的に更新される。手動で参照先を書き換える必要はない。\n\n### 設定コマンド\n```bash\nkustomize edit set nameprefix prod-\nkustomize edit set namesuffix -v2\n```",
+    "tags": ["kustomize", "nameprefix", "namesuffix", "transformer"]
+  },
+  {
+    "title": "commonLabels / commonAnnotations",
+    "body": "## commonLabels / commonAnnotations\n\n管理下にある全リソースに共通のラベルまたはアノテーションを一括付与するトランスフォーマー。\n\n### 設定例\n```yaml\ncommonLabels:\n  app.kubernetes.io/managed-by: kustomize\n  env: production\n  team: backend\n\ncommonAnnotations:\n  contact: backend-team@example.com\n  version: \"1.2.0\"\n```\n\n### commonLabels の挙動\n- Deployment の `spec.template.metadata.labels` にも付与される\n- `spec.selector.matchLabels` にも追加されるため、**既存の Deployment に後から追加すると selector が変わり再作成が必要になる場合がある**\n\n### commonAnnotations の挙動\n- `metadata.annotations` にのみ付与される\n- selector には影響しないため、既存リソースへの追加が安全\n\n### 主な用途\n- リソースのオーナーシップ管理（どのチーム・環境が管理しているか）\n- コスト配賦のためのラベリング\n- 監視・アラートのフィルタリング条件\n\n```bash\nkustomize edit set label env:production team:backend\n```",
+    "tags": ["kustomize", "labels", "annotations", "transformer"]
+  },
+  {
+    "title": "images トランスフォーマー",
+    "body": "## images トランスフォーマー\n\nマニフェスト内のコンテナイメージ名・タグを一括で置換するトランスフォーマー。CI/CD パイプラインでの自動デプロイに特に有効。\n\n### kustomization.yaml の設定例\n```yaml\nimages:\n  - name: nginx\n    newTag: \"1.25.0\"\n  - name: my-app\n    newName: registry.example.com/my-app\n    newTag: \"v2.3.1\"\n  - name: redis\n    digest: sha256:abc123...\n```\n\n### フィールドの説明\n- `name`: 置換対象のイメージ名（完全一致）\n- `newName`: 新しいイメージ名（レジストリ変更に使用）\n- `newTag`: 新しいタグ\n- `digest`: タグの代わりに digest で固定\n\n### CI/CD での活用例\n```bash\n# ビルド後にイメージタグを更新してコミット\nkustomize edit set image my-app=registry.example.com/my-app:${GIT_COMMIT_SHA}\ngit add kustomization.yaml\ngit commit -m \"chore: update image tag to ${GIT_COMMIT_SHA}\"\n```\n\nGitOps では、CI がイメージタグを更新してコミット → CD ツール（ArgoCD 等）が検知して自動デプロイ、というフローが一般的。",
+    "tags": ["kustomize", "images", "transformer", "cicd"]
+  },
+  {
+    "title": "Patches（patchesStrategicMerge vs patchesJson6902）",
+    "body": "## Patches\n\nKustomize では2種類のパッチ方式を使って既存マニフェストを部分的に上書きできる。\n\n### patchesStrategicMerge（ストラテジックマージパッチ）\n元のマニフェストと同じ構造で差分のみ記述する。Kubernetes 標準の merge strategy に従って適用される。\n\n```yaml\n# replica-patch.yaml\napiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: my-app\nspec:\n  replicas: 5\n```\n\n```yaml\n# kustomization.yaml\npatches:\n  - path: replica-patch.yaml\n```\n\n**向いているケース**: フィールドの追加・更新、リスト要素のマージ\n\n### patchesJson6902（JSON Patch / RFC 6902）\nJSON Patch 形式で操作（add/remove/replace/move/copy/test）を明示的に指定する。\n\n```yaml\n# kustomization.yaml\npatches:\n  - target:\n      kind: Deployment\n      name: my-app\n    patch: |-\n      - op: replace\n        path: /spec/replicas\n        value: 5\n      - op: add\n        path: /spec/template/spec/containers/0/env/-\n        value:\n          name: NEW_VAR\n          value: \"hello\"\n```\n\n**向いているケース**: リスト要素の削除、パスを明示した精密な操作\n\n### 使い分けの目安\n| 操作 | StrategicMerge | Json6902 |\n|------|---------------|----------|\n| フィールド更新 | ○ | ○ |\n| リスト要素追加 | ○ | ○ |\n| リスト要素削除 | △ | ○ |\n| 精密なパス指定 | △ | ○ |",
+    "tags": ["kustomize", "patch", "strategic-merge", "json6902", "transformer"]
+  }
+]

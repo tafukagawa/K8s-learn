@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Box, Typography, Button, Grid, Chip, LinearProgress } from '@mui/material'
+import { Box, Typography, Button, Grid, Chip, LinearProgress, Dialog, DialogContent, DialogTitle, DialogActions } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
@@ -13,24 +13,28 @@ import { KnowledgeDetail } from './KnowledgeDetail'
 import { KnowledgeForm } from './KnowledgeForm'
 import { TagFilter } from './TagFilter'
 import { api } from '../../shared/ipc'
-import type { KnowledgeWithProgress, ProgressStatus } from '../../types'
+import type { KnowledgeWithProgress, ProgressStatus, ClozeItem } from '../../types'
 
 interface KnowledgeListProps {
   categoryId: number
+  sectionId: number
   searchQuery: string
   onStartLearning: () => void
 }
 
-export function KnowledgeList({ categoryId, searchQuery, onStartLearning }: KnowledgeListProps) {
+export function KnowledgeList({ categoryId, sectionId, searchQuery, onStartLearning }: KnowledgeListProps) {
   const [items, setItems] = useState<KnowledgeWithProgress[]>([])
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
   const [detailItem, setDetailItem] = useState<KnowledgeWithProgress | null>(null)
   const [formOpen, setFormOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<KnowledgeWithProgress | null>(null)
+  const [generatingId, setGeneratingId] = useState<number | null>(null)
+  const [ollamaGuideOpen, setOllamaGuideOpen] = useState(false)
 
   useEffect(() => {
-    api.knowledge.list(categoryId).then(setItems)
-  }, [categoryId])
+    api.knowledge.list(categoryId, sectionId).then(setItems)
+    setSelectedTag(null)
+  }, [categoryId, sectionId])
 
   const allTags = useMemo(() => {
     const tags = new Set(items.flatMap(i => i.tags))
@@ -59,6 +63,18 @@ export function KnowledgeList({ categoryId, searchQuery, onStartLearning }: Know
     await api.knowledge.delete(id)
     setItems(prev => prev.filter(i => i.id !== id))
     setDetailItem(null)
+  }
+
+  async function handleGenerateCloze(item: KnowledgeWithProgress) {
+    const { ok } = await api.ai.checkOllama()
+    if (!ok) { setOllamaGuideOpen(true); return }
+    setGeneratingId(item.id)
+    try {
+      const cloze: ClozeItem[] = await api.ai.generateCloze(item.id)
+      setItems(prev => prev.map(i => i.id === item.id ? { ...i, cloze } : i))
+    } finally {
+      setGeneratingId(null)
+    }
   }
 
   function handleFormSuccess(updatedItem: KnowledgeWithProgress) {
@@ -174,6 +190,8 @@ export function KnowledgeList({ categoryId, searchQuery, onStartLearning }: Know
               item={item}
               onClick={() => setDetailItem(item)}
               onProgressChange={status => handleProgressChange(item, status)}
+              onGenerateCloze={() => handleGenerateCloze(item)}
+              generating={generatingId === item.id}
             />
           </Grid>
         ))}
@@ -193,6 +211,25 @@ export function KnowledgeList({ categoryId, searchQuery, onStartLearning }: Know
         onClose={() => { setFormOpen(false); setEditingItem(null) }}
         onSuccess={handleFormSuccess}
       />
+
+      {/* Ollama 未起動時ガイド */}
+      <Dialog open={ollamaGuideOpen} onClose={() => setOllamaGuideOpen(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>Ollama が起動していません</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" sx={{ mb: 2 }}>
+            穴埋め問題の生成には Ollama のローカル AI が必要です。以下の手順で起動してください。
+          </Typography>
+          <Box component="ol" sx={{ pl: 2.5, fontSize: 14, lineHeight: 2 }}>
+            <li>Ollama がインストール済みであることを確認</li>
+            <li>ターミナルで <Box component="code" sx={{ bgcolor: 'action.hover', px: 0.75, borderRadius: 0.5 }}>ollama serve</Box> を実行</li>
+            <li>初回のみ: <Box component="code" sx={{ bgcolor: 'action.hover', px: 0.75, borderRadius: 0.5 }}>ollama pull qwen2.5:3b</Box> でモデルを取得</li>
+            <li>起動後、もう一度「穴埋め生成」ボタンを押す</li>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOllamaGuideOpen(false)}>閉じる</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   )
 }

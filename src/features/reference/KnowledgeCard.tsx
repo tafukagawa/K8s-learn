@@ -1,7 +1,8 @@
-import { Card, CardActionArea, CardContent, Box, Typography, Chip, IconButton } from '@mui/material'
+import { Card, CardActionArea, CardContent, Box, Typography, Chip, IconButton, CircularProgress, Tooltip, Button } from '@mui/material'
 import AutoStoriesIcon from '@mui/icons-material/AutoStories'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import CheckIcon from '@mui/icons-material/Check'
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 import type { KnowledgeWithProgress, ProgressStatus } from '../../types'
 
 const STATUS_CONFIG: Record<ProgressStatus, { label: string; color: string; bg: string }> = {
@@ -14,9 +15,11 @@ interface KnowledgeCardProps {
   item: KnowledgeWithProgress
   onClick: () => void
   onProgressChange: (status: ProgressStatus) => void
+  onGenerateCloze?: () => void
+  generating?: boolean
 }
 
-export function KnowledgeCard({ item, onClick, onProgressChange }: KnowledgeCardProps) {
+export function KnowledgeCard({ item, onClick, onProgressChange, onGenerateCloze, generating }: KnowledgeCardProps) {
   const status = item.progress?.status ?? 'unseen'
   const cfg = STATUS_CONFIG[status]
   const nextStatus: ProgressStatus = status === 'unseen' ? 'learning' : status === 'learning' ? 'done' : 'unseen'
@@ -56,10 +59,27 @@ export function KnowledgeCard({ item, onClick, onProgressChange }: KnowledgeCard
                 {cfg.label}
               </Box>
             </Box>
-            <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
-              {item.tags.slice(0, 4).map(tag => (
+            <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', alignItems: 'center' }}>
+              {item.tags.slice(0, 3).map(tag => (
                 <Chip key={tag} label={tag} size="small" sx={{ fontSize: 10, height: 22, bgcolor: 'rgba(148,163,184,0.13)' }} />
               ))}
+              {item.cloze ? (
+                <Chip label="穴埋め✓" size="small" color="secondary" variant="outlined" sx={{ fontSize: 10, height: 22 }} />
+              ) : (
+                <Tooltip title="Ollamaで穴埋め問題を自動生成">
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    color="secondary"
+                    startIcon={generating ? <CircularProgress size={11} color="inherit" /> : <AutoFixHighIcon sx={{ fontSize: 13 }} />}
+                    onClick={e => { e.stopPropagation(); onGenerateCloze?.() }}
+                    disabled={generating}
+                    sx={{ fontSize: 11, height: 24, px: 1, py: 0, minWidth: 0, borderRadius: 999 }}
+                  >
+                    AI生成
+                  </Button>
+                </Tooltip>
+              )}
             </Box>
           </Box>
 

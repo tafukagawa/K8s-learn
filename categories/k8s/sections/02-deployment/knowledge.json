@@ -1,0 +1,32 @@
+[
+  {
+    "title": "Deployment とは",
+    "body": "## Deployment とは\n\nDeployment は Pod の宣言的管理を実現するリソースです。望ましい状態（desired state）を定義すると、Kubernetes コントローラーが現在の状態（current state）をその望ましい状態に近づけるよう自動的に調整します。\n\n### ReplicaSet との関係\n\nDeployment は内部的に ReplicaSet を管理します。\n\n- **Deployment** → ロールアウト戦略・更新履歴を管理\n- **ReplicaSet** → 指定数の Pod レプリカが常に稼働するよう管理\n- **Pod** → 実際のコンテナが稼働する単位\n\nDeployment を更新すると新しい ReplicaSet が作成され、古い ReplicaSet のレプリカ数が徐々に 0 に減らされます。ロールバック時は古い ReplicaSet のレプリカ数を元に戻します。\n\n### 主な機能\n\n- **自己修復**: Pod が削除・クラッシュしても自動的に再作成\n- **スケーリング**: レプリカ数を簡単に変更可能\n- **ローリングアップデート**: ダウンタイムなしでイメージ更新\n- **ロールバック**: 問題発生時に前バージョンへ即座に戻せる\n\n```yaml\napiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: my-app\nspec:\n  replicas: 3\n  selector:\n    matchLabels:\n      app: my-app\n  template:\n    metadata:\n      labels:\n        app: my-app\n    spec:\n      containers:\n      - name: app\n        image: myapp:1.0\n```",
+    "tags": ["deployment", "replicaset", "pod", "declarative"],
+    "url": ""
+  },
+  {
+    "title": "ローリングアップデート",
+    "body": "## ローリングアップデート\n\nローリングアップデートは、Pod を一度に全て入れ替えるのではなく段階的に更新することで、サービスを止めずにデプロイを行う手法です。\n\n### maxSurge と maxUnavailable\n\n`spec.strategy.rollingUpdate` で2つのパラメーターを制御します。\n\n| パラメーター | 説明 | デフォルト |\n|------------|------|----------|\n| `maxSurge` | 更新中に desired 数を超えて存在できる Pod の最大数（数値または%） | 25% |\n| `maxUnavailable` | 更新中に利用不可になってよい Pod の最大数（数値または%） | 25% |\n\n### ゼロダウンタイム更新のポイント\n\n- `maxUnavailable: 0` に設定すると全 Pod が常に稼働（ただし余分な Pod を一時的に起動）\n- Readiness Probe を設定して、新 Pod が正常に起動してから旧 Pod を停止する\n- `minReadySeconds` で新 Pod が安定したと判定するまでの待機時間を設定可能\n\n```yaml\nspec:\n  strategy:\n    type: RollingUpdate\n    rollingUpdate:\n      maxSurge: 1\n      maxUnavailable: 0\n```\n\n### 確認コマンド\n\n```bash\nkubectl rollout status deployment/my-app\nkubectl rollout history deployment/my-app\n```",
+    "tags": ["deployment", "rolling-update", "maxSurge", "maxUnavailable", "zero-downtime"],
+    "url": ""
+  },
+  {
+    "title": "HPA - Horizontal Pod Autoscaler",
+    "body": "## HPA - Horizontal Pod Autoscaler\n\nHPA（Horizontal Pod Autoscaler）は、CPU 使用率やメモリ使用量などのメトリクスに基づいて、Deployment のレプリカ数を自動的にスケールアウト・スケールインするリソースです。\n\n### 仕組み\n\n1. metrics-server が各 Pod のリソース使用量を収集\n2. HPA コントローラーが定期的にメトリクスを取得（デフォルト15秒間隔）\n3. 目標値との差分を計算してレプリカ数を調整\n\n**計算式**: `desiredReplicas = ceil(currentReplicas × (currentMetric / desiredMetric))`\n\n### 設定例\n\n```yaml\napiVersion: autoscaling/v2\nkind: HorizontalPodAutoscaler\nmetadata:\n  name: my-app-hpa\nspec:\n  scaleTargetRef:\n    apiVersion: apps/v1\n    kind: Deployment\n    name: my-app\n  minReplicas: 2\n  maxReplicas: 10\n  metrics:\n  - type: Resource\n    resource:\n      name: cpu\n      target:\n        type: Utilization\n        averageUtilization: 70\n```\n\n### 注意点\n\n- CPU/メモリメトリクスを使う場合、Pod に `resources.requests` の設定が必須\n- スケールダウンは急激な変動を防ぐためデフォルトで遅延あり（5分程度）\n- カスタムメトリクス（RPS等）にも対応可能",
+    "tags": ["deployment", "hpa", "autoscaling", "metrics", "cpu"],
+    "url": ""
+  },
+  {
+    "title": "Deployment Strategy",
+    "body": "## Deployment Strategy\n\nDeployment の更新戦略には `RollingUpdate` と `Recreate` の2種類があります。用途に応じて使い分けます。\n\n### RollingUpdate（デフォルト）\n\n旧 Pod を段階的に新 Pod へ入れ替えます。\n\n**メリット**:\n- サービスを止めずに更新可能（ゼロダウンタイム）\n- 問題発生時に即座にロールバック可能\n\n**デメリット**:\n- 更新中に旧バージョンと新バージョンが混在する\n- DB スキーマ変更など後方互換性がない変更には注意が必要\n\n### Recreate\n\n全ての旧 Pod を削除してから新 Pod を作成します。\n\n**メリット**:\n- 旧バージョンと新バージョンが同時に稼働しない\n- 後方互換性のない変更でも安全に更新できる\n\n**デメリット**:\n- Pod の削除から新 Pod 起動完了までダウンタイムが発生する\n\n```yaml\nspec:\n  strategy:\n    type: Recreate  # または RollingUpdate\n```\n\n### 選択の指針\n\n- 通常の Web アプリ → `RollingUpdate`\n- DB マイグレーションが必要・単一インスタンス必須 → `Recreate`\n- Blue/Green デプロイ → Service のセレクターを切り替える手法で実現",
+    "tags": ["deployment", "strategy", "rolling-update", "recreate"],
+    "url": ""
+  },
+  {
+    "title": "ReplicaSet との関係",
+    "body": "## ReplicaSet との関係\n\nReplicaSet は指定した数の Pod レプリカが常に稼働するように管理するリソースです。Deployment は ReplicaSet を管理することで、Pod の宣言的更新とロールバック機能を実現します。\n\n### Deployment と ReplicaSet の役割分担\n\n- **ReplicaSet**: 現在稼働中の Pod 数を管理・維持する。セレクターに一致する Pod が少なければ作成し、多ければ削除する\n- **Deployment**: ReplicaSet を管理し、更新時に新しい ReplicaSet を作成して段階的に切り替える。旧 ReplicaSet は履歴として保持される\n\n### なぜ ReplicaSet を直接操作しないか\n\n```bash\n# ReplicaSet 一覧（Deployment 配下の RS が確認できる）\nkubectl get replicasets\n```\n\n直接 ReplicaSet を操作した場合の問題点:\n\n1. **ロールアウト履歴が失われる**: Deployment 経由でないと `rollout history` が追跡できない\n2. **更新戦略が適用されない**: `maxSurge`/`maxUnavailable` の制御が効かない\n3. **ラベルの不整合**: Deployment のセレクターと ReplicaSet のラベルがずれる可能性がある\n\n基本的に ReplicaSet は Deployment によって自動管理されるものとして、直接操作は避けるべきです。",
+    "tags": ["deployment", "replicaset", "relationship", "management"],
+    "url": ""
+  }
+]

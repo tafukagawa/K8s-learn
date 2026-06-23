@@ -1,0 +1,12 @@
+[
+  { "name": "argocd login", "description": "ArgoCDサーバーにログインする", "syntax": "argocd login <server> [--username <user>] [--password <pass>]", "example": "argocd login argocd.example.com --username admin --password mypassword", "tags": ["login", "auth"], "url": "" },
+  { "name": "argocd logout", "description": "ArgoCDサーバーからログアウトする", "syntax": "argocd logout <server>", "example": "argocd logout argocd.example.com", "tags": ["logout", "auth"], "url": "" },
+  { "name": "argocd repo add", "description": "HTTPSでリポジトリを登録する", "syntax": "argocd repo add <repo-url> [--username <user>] [--password <pass>]", "example": "argocd repo add https://github.com/org/repo.git --username myuser --password mytoken", "tags": ["repo", "add"], "url": "" },
+  { "name": "argocd repo add --ssh-private-key-path", "description": "SSH秘密鍵を使ってリポジトリを登録する", "syntax": "argocd repo add <repo-url> --ssh-private-key-path <key-path>", "example": "argocd repo add git@github.com:org/repo.git --ssh-private-key-path ~/.ssh/id_rsa", "tags": ["repo", "add", "ssh"], "url": "" },
+  { "name": "argocd repo list", "description": "登録済みリポジトリの一覧を表示する", "syntax": "argocd repo list", "example": "argocd repo list", "tags": ["repo", "list"], "url": "" },
+  { "name": "argocd repo rm", "description": "登録済みリポジトリを削除する", "syntax": "argocd repo rm <repo-url>", "example": "argocd repo rm https://github.com/org/repo.git", "tags": ["repo", "delete"], "url": "" },
+  { "name": "argocd cluster add", "description": "外部クラスタをArgoCDに追加する", "syntax": "argocd cluster add <context-name>", "example": "argocd cluster add staging-cluster", "tags": ["cluster", "add"], "url": "" },
+  { "name": "argocd cluster list", "description": "登録済みクラスタの一覧を表示する", "syntax": "argocd cluster list", "example": "argocd cluster list", "tags": ["cluster", "list"], "url": "" },
+  { "name": "argocd proj create", "description": "ArgoCDのProjectを作成する", "syntax": "argocd proj create <project-name>", "example": "argocd proj create my-project", "tags": ["project", "create"], "url": "" },
+  { "name": "argocd proj list", "description": "ArgoCDのProject一覧を表示する", "syntax": "argocd proj list", "example": "argocd proj list", "tags": ["project", "list"], "url": "" }
+]

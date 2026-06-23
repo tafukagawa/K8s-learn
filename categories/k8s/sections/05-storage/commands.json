@@ -1,0 +1,50 @@
+[
+  {
+    "name": "kubectl get pv",
+    "description": "PersistentVolume一覧を表示する",
+    "syntax": "kubectl get pv",
+    "example": "kubectl get pv\nkubectl get pv -o wide\nkubectl describe pv my-pv",
+    "tags": ["storage", "pv", "persistentvolume", "list"],
+    "url": ""
+  },
+  {
+    "name": "kubectl get pvc",
+    "description": "PersistentVolumeClaim一覧を表示する",
+    "syntax": "kubectl get pvc [-n <namespace>]",
+    "example": "kubectl get pvc\nkubectl get pvc -n production\nkubectl get pvc my-claim -o yaml",
+    "tags": ["storage", "pvc", "persistentvolumeclaim", "list"],
+    "url": ""
+  },
+  {
+    "name": "kubectl describe pv",
+    "description": "PersistentVolumeの詳細情報を表示する",
+    "syntax": "kubectl describe pv <name>",
+    "example": "kubectl describe pv my-pv",
+    "tags": ["storage", "pv", "describe", "detail"],
+    "url": ""
+  },
+  {
+    "name": "kubectl describe pvc",
+    "description": "PersistentVolumeClaimの詳細情報・バインド状態を表示する",
+    "syntax": "kubectl describe pvc <name> [-n <namespace>]",
+    "example": "kubectl describe pvc my-claim\nkubectl describe pvc my-claim -n production",
+    "tags": ["storage", "pvc", "describe", "detail"],
+    "url": ""
+  },
+  {
+    "name": "kubectl get storageclass",
+    "description": "StorageClass一覧を表示する（scエイリアス使用可）",
+    "syntax": "kubectl get storageclass\nkubectl get sc",
+    "example": "kubectl get storageclass\nkubectl get sc\nkubectl describe sc standard",
+    "tags": ["storage", "storageclass", "list", "provisioner"],
+    "url": ""
+  },
+  {
+    "name": "kubectl delete pvc",
+    "description": "PersistentVolumeClaimを削除する（PVのreclaim policyに注意）",
+    "syntax": "kubectl delete pvc <name> [-n <namespace>]",
+    "example": "kubectl delete pvc my-claim\nkubectl delete pvc my-claim -n production",
+    "tags": ["storage", "pvc", "delete", "reclaim"],
+    "url": ""
+  }
+]

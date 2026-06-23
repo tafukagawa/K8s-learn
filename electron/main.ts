@@ -7,6 +7,8 @@ import { createCategoryHandlers } from './ipc/categories'
 import { createCommandHandlers } from './ipc/commands'
 import { createKnowledgeHandlers } from './ipc/knowledge'
 import { createProgressHandlers } from './ipc/progress'
+import { createSectionHandlers } from './ipc/sections'
+import { createAiHandlers } from './ipc/ai'
 
 function setupIpc() {
   const db = getDb()
@@ -22,19 +24,24 @@ function setupIpc() {
   const commandHandlers = createCommandHandlers(db)
   const knowledgeHandlers = createKnowledgeHandlers(db)
   const progressHandlers = createProgressHandlers(db)
+  const sectionHandlers = createSectionHandlers(db)
+  const aiHandlers = createAiHandlers(db)
 
   ipcMain.handle('categories:list', () => categoryHandlers.list())
-  ipcMain.handle('commands:list', (_, categoryId) => commandHandlers.list(categoryId))
+  ipcMain.handle('sections:list', (_, categoryId) => sectionHandlers.list(categoryId))
+  ipcMain.handle('commands:list', (_, categoryId, sectionId) => commandHandlers.list(categoryId, sectionId))
   ipcMain.handle('commands:create', (_, data) => commandHandlers.create(data))
   ipcMain.handle('commands:update', (_, id, data) => commandHandlers.update(id, data))
   ipcMain.handle('commands:delete', (_, id) => commandHandlers.delete(id))
-  ipcMain.handle('knowledge:list', (_, categoryId) => knowledgeHandlers.list(categoryId))
+  ipcMain.handle('knowledge:list', (_, categoryId, sectionId) => knowledgeHandlers.list(categoryId, sectionId))
   ipcMain.handle('knowledge:create', (_, data) => knowledgeHandlers.create(data))
   ipcMain.handle('knowledge:update', (_, id, data) => knowledgeHandlers.update(id, data))
   ipcMain.handle('knowledge:delete', (_, id) => knowledgeHandlers.delete(id))
   ipcMain.handle('progress:upsert', (_, itemType, itemId, status) =>
     progressHandlers.upsert(itemType, itemId, status))
   ipcMain.handle('shell:openExternal', (_, url: string) => shell.openExternal(url))
+  ipcMain.handle('ai:checkOllama', () => aiHandlers.checkOllama())
+  ipcMain.handle('ai:generateCloze', (_, knowledgeId: number) => aiHandlers.generateCloze(knowledgeId))
 }
 
 function createWindow() {

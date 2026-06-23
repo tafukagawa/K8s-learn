@@ -17,11 +17,12 @@ import type { CommandWithProgress, ProgressStatus } from '../../types'
 
 interface CommandListProps {
   categoryId: number
+  sectionId: number
   searchQuery: string
   onStartLearning: () => void
 }
 
-export function CommandList({ categoryId, searchQuery, onStartLearning }: CommandListProps) {
+export function CommandList({ categoryId, sectionId, searchQuery, onStartLearning }: CommandListProps) {
   const [commands, setCommands] = useState<CommandWithProgress[]>([])
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
   const [detailCommand, setDetailCommand] = useState<CommandWithProgress | null>(null)
@@ -29,8 +30,9 @@ export function CommandList({ categoryId, searchQuery, onStartLearning }: Comman
   const [editingCommand, setEditingCommand] = useState<CommandWithProgress | null>(null)
 
   useEffect(() => {
-    api.commands.list(categoryId).then(setCommands)
-  }, [categoryId])
+    api.commands.list(categoryId, sectionId).then(setCommands)
+    setSelectedTag(null)
+  }, [categoryId, sectionId])
 
   const allTags = useMemo(() => {
     const tags = new Set(commands.flatMap(c => c.tags))

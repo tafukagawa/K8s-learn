@@ -1,0 +1,8 @@
+[
+  { "name": "kustomize build", "description": "transformers適用後のマニフェストを確認する", "syntax": "kustomize build <dir>", "example": "kustomize build overlays/prod", "tags": ["kustomize", "build", "transformer"], "url": "" },
+  { "name": "kustomize edit set nameprefix", "description": "全リソース名に付与するnamePrefixを設定する", "syntax": "kustomize edit set nameprefix <prefix>", "example": "kustomize edit set nameprefix prod-", "tags": ["kustomize", "nameprefix", "transformer"], "url": "" },
+  { "name": "kustomize edit set namesuffix", "description": "全リソース名に付与するnameSuffixを設定する", "syntax": "kustomize edit set namesuffix <suffix>", "example": "kustomize edit set namesuffix -v2", "tags": ["kustomize", "namesuffix", "transformer"], "url": "" },
+  { "name": "kustomize edit set label", "description": "全リソースに付与するcommonLabelsを設定する", "syntax": "kustomize edit set label <key>:<value>", "example": "kustomize edit set label env:production", "tags": ["kustomize", "label", "transformer"], "url": "" },
+  { "name": "kustomize edit add patch", "description": "kustomization.yamlにパッチファイルを追加する", "syntax": "kustomize edit add patch --path <patch-file>", "example": "kustomize edit add patch --path replica-patch.yaml", "tags": ["kustomize", "patch", "transformer"], "url": "" },
+  { "name": "kustomize edit set replicas", "description": "指定リソースのレプリカ数を設定する", "syntax": "kustomize edit set replicas <name>=<count>", "example": "kustomize edit set replicas my-deployment=3", "tags": ["kustomize", "replicas", "transformer"], "url": "" }
+]

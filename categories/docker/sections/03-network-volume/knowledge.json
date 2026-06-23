@@ -1,0 +1,22 @@
+[
+  {
+    "title": "Docker ネットワークモード",
+    "body": "## Docker ネットワークモード\n\nDockerには複数のネットワークドライバが用意されており、コンテナの通信方法を柔軟に選択できる。\n\n### 主要なネットワークドライバ\n\n| ドライバ | 特徴 | 用途 |\n|---------|------|------|\n| **bridge** | デフォルト。仮想ブリッジを経由してNATで通信 | 単一ホスト上のコンテナ間通信 |\n| **host** | ホストのネットワーク名前空間を共有。NATなし | 高パフォーマンスが必要な場合（Linuxのみ） |\n| **none** | ネットワークインターフェースなし（loopbackのみ） | 完全に隔離したいコンテナ |\n| **overlay** | 複数ホスト間のコンテナを接続 | Docker Swarm / マルチホスト環境 |\n| **macvlan** | コンテナにMACアドレスを割り当て物理ネットワークに直接接続 | レガシーアプリ統合 |\n\n### デフォルトbridgeとカスタムbridgeの違い\n\n- **デフォルトbridge**: コンテナ名によるDNS解決不可（IPアドレス指定が必要）\n- **カスタムbridge**: コンテナ名でDNS解決可能。同一ネットワーク内のコンテナ間通信が簡単\n\n```bash\n# カスタムbridgeネットワーク作成と利用\ndocker network create mynet\ndocker run -d --name web --network mynet nginx\ndocker run -it --network mynet alpine curl http://web\n```",
+    "tags": ["network", "bridge", "host", "overlay", "driver"]
+  },
+  {
+    "title": "Named volumes vs Bind mounts",
+    "body": "## Named volumes vs Bind mounts\n\nDockerでデータを永続化する主な方法は2つ。用途に応じて使い分ける。\n\n### Named volumes（名前付きボリューム）\n\nDockerが管理するストレージ領域（`/var/lib/docker/volumes/` 以下）。\n\n```bash\ndocker volume create mydata\ndocker run -v mydata:/app/data myapp\n```\n\n**メリット**\n- Dockerが管理するためポータブル\n- `docker volume` コマンドでライフサイクル管理\n- Linux環境でパフォーマンスが高い\n- バックアップ・移行が容易\n\n### Bind mounts（バインドマウント）\n\nホストの任意のディレクトリをコンテナにマウント。\n\n```bash\ndocker run -v /host/path:/container/path myapp\n# または\ndocker run --mount type=bind,source=/host/path,target=/container/path myapp\n```\n\n**メリット**\n- 開発時にソースコードをリアルタイム同期できる\n- ホスト側から直接ファイルを編集・確認できる\n\n**注意点**\n- ホストのパーミッション・UID/GIDの不一致でアクセスエラーが起きやすい\n- コンテナの移植性が下がる（ホスト依存）\n\n### tmpfs mounts\n\nメモリ上にマウントするため、コンテナ停止でデータが消える。機密データの一時保存に適している。",
+    "tags": ["volume", "bind-mount", "storage", "persistent"]
+  },
+  {
+    "title": "ボリュームマウントとデータ永続化",
+    "body": "## ボリュームマウントとデータ永続化\n\nコンテナは基本的にステートレスであり、コンテナを削除するとコンテナ内のデータは失われる。ボリュームマウントによってデータをコンテナのライフサイクルから切り離して永続化できる。\n\n### データ永続化の必要性\n\n- データベース（MySQL/PostgreSQL等）のデータファイル\n- アプリケーションが生成するファイル（ログ・アップロード等）\n- 設定ファイルの外部化\n\n### コンテナ間データ共有\n\n```bash\n# 同一ボリュームを複数コンテナでマウント\ndocker run -d -v shareddata:/data --name writer myapp-writer\ndocker run -d -v shareddata:/data --name reader myapp-reader\n```\n\n### ボリュームのバックアップ\n\n```bash\n# ボリュームの内容をtar.gzでバックアップ\ndocker run --rm \\\n  -v mydata:/data \\\n  -v $(pwd):/backup \\\n  alpine tar czf /backup/backup.tar.gz -C /data .\n```\n\n### ボリュームの確認・削除\n\n```bash\ndocker volume ls           # 一覧\ndocker volume inspect mydata  # 詳細（マウントポイントのパス確認）\ndocker volume rm mydata    # 削除（使用中のコンテナがない場合のみ）\ndocker volume prune        # 未使用ボリュームを一括削除\n```",
+    "tags": ["volume", "storage", "persistent", "backup"]
+  },
+  {
+    "title": "コンテナ間通信",
+    "body": "## コンテナ間通信\n\n同一Dockerホスト上のコンテナ間で通信するには、同じカスタムbridgeネットワークに接続するのが推奨方法。\n\n### カスタムネットワーク上のDNS解決\n\n同一カスタムbridgeネットワークに接続されたコンテナは、**コンテナ名でDNS解決**できる。\n\n```bash\ndocker network create appnet\ndocker run -d --name db --network appnet postgres:15\ndocker run -d --name app --network appnet \\\n  -e DATABASE_URL=postgres://db:5432/mydb \\\n  myapp:latest\n# appコンテナから \"db\" というホスト名でPostgreSQLに接続できる\n```\n\n### `--link` フラグ（非推奨）\n\n旧来の `--link` フラグによるコンテナ間接続は**非推奨**。カスタムネットワークを使用すること。\n\n### Docker Compose での通信\n\nDocker Composeは自動的にカスタムネットワークを作成し、すべてのサービスを接続する。サービス名がそのままDNS名になる。\n\n```yaml\nservices:\n  app:\n    image: myapp\n    environment:\n      - DATABASE_URL=postgres://db:5432/mydb\n  db:\n    image: postgres:15\n# appからは \"db\" でアクセス可能\n```\n\n### 外部ネットワークとの接続\n\n```bash\n# 既存ネットワークに実行中コンテナを追加\ndocker network connect appnet mycontainer\n```",
+    "tags": ["network", "container", "dns", "bridge", "compose"]
+  }
+]

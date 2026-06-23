@@ -1,0 +1,12 @@
+[
+  { "name": "docker build", "description": "DockerfileからDockerイメージをビルドする", "syntax": "docker build [options] <path>", "example": "docker build -t myapp:latest .", "tags": ["build", "image"], "url": "" },
+  { "name": "docker build --no-cache", "description": "キャッシュを使わずにイメージをビルドする", "syntax": "docker build --no-cache -t <name> <path>", "example": "docker build --no-cache -t myapp:latest .", "tags": ["build", "image", "cache"], "url": "" },
+  { "name": "docker build --target", "description": "マルチステージビルドの特定ステージでビルドを停止する", "syntax": "docker build --target <stage> -t <name> <path>", "example": "docker build --target builder -t myapp:build .", "tags": ["build", "image", "multistage"], "url": "" },
+  { "name": "docker tag", "description": "イメージに新しいタグを付与する", "syntax": "docker tag <source> <target>", "example": "docker tag myapp:latest myrepo/myapp:v1.0", "tags": ["image", "tag"], "url": "" },
+  { "name": "docker push", "description": "イメージをコンテナレジストリにプッシュする", "syntax": "docker push <image>", "example": "docker push myrepo/myapp:v1.0", "tags": ["image", "registry", "push"], "url": "" },
+  { "name": "docker pull", "description": "コンテナレジストリからイメージをプルする", "syntax": "docker pull <image>", "example": "docker pull nginx:latest", "tags": ["image", "registry", "pull"], "url": "" },
+  { "name": "docker images", "description": "ローカルのイメージ一覧を表示する（docker image ls と同等）", "syntax": "docker images [options]", "example": "docker images", "tags": ["image", "list"], "url": "" },
+  { "name": "docker rmi", "description": "イメージを削除する（docker image rm と同等）", "syntax": "docker rmi <image> [image...]", "example": "docker rmi myapp:latest", "tags": ["image", "delete"], "url": "" },
+  { "name": "docker image prune", "description": "タグなし（dangling）など未使用のイメージを一括削除する", "syntax": "docker image prune [options]", "example": "docker image prune -a", "tags": ["image", "cleanup"], "url": "" },
+  { "name": "docker image inspect", "description": "イメージの詳細情報をJSON形式で表示する", "syntax": "docker image inspect <image>", "example": "docker image inspect nginx:latest", "tags": ["image", "inspect"], "url": "" }
+]

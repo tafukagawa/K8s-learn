@@ -1,0 +1,66 @@
+[
+  {
+    "name": "kubectl get configmap",
+    "description": "ConfigMap一覧を表示する（cmエイリアス使用可）",
+    "syntax": "kubectl get configmap [-n <namespace>]\nkubectl get cm [-n <namespace>]",
+    "example": "kubectl get configmap\nkubectl get cm -n production\nkubectl get cm my-config -o yaml",
+    "tags": ["configmap", "config", "list"],
+    "url": ""
+  },
+  {
+    "name": "kubectl describe configmap",
+    "description": "ConfigMapの詳細情報・データを表示する",
+    "syntax": "kubectl describe configmap <name> [-n <namespace>]",
+    "example": "kubectl describe configmap my-config\nkubectl describe cm my-config -n production",
+    "tags": ["configmap", "config", "describe", "detail"],
+    "url": ""
+  },
+  {
+    "name": "kubectl create configmap --from-literal",
+    "description": "リテラル値からConfigMapを作成する",
+    "syntax": "kubectl create configmap <name> --from-literal=<key>=<value> [--from-literal=<key>=<value>...]",
+    "example": "kubectl create configmap my-config --from-literal=DB_HOST=localhost --from-literal=DB_PORT=5432",
+    "tags": ["configmap", "config", "create", "literal"],
+    "url": ""
+  },
+  {
+    "name": "kubectl create configmap --from-file",
+    "description": "ファイルまたはディレクトリからConfigMapを作成する",
+    "syntax": "kubectl create configmap <name> --from-file=<path>",
+    "example": "kubectl create configmap my-config --from-file=config.properties\nkubectl create configmap my-config --from-file=./configs/",
+    "tags": ["configmap", "config", "create", "file"],
+    "url": ""
+  },
+  {
+    "name": "kubectl get secret",
+    "description": "Secret一覧を表示する",
+    "syntax": "kubectl get secret [-n <namespace>]",
+    "example": "kubectl get secret\nkubectl get secret -n production\nkubectl get secret my-secret -o yaml",
+    "tags": ["secret", "security", "list"],
+    "url": ""
+  },
+  {
+    "name": "kubectl create secret generic",
+    "description": "汎用Secretをリテラル値またはファイルから作成する",
+    "syntax": "kubectl create secret generic <name> --from-literal=<key>=<value>\nkubectl create secret generic <name> --from-file=<path>",
+    "example": "kubectl create secret generic my-secret --from-literal=password=mysecretpassword\nkubectl create secret generic my-secret --from-file=./secret.txt",
+    "tags": ["secret", "security", "create"],
+    "url": ""
+  },
+  {
+    "name": "kubectl create secret docker-registry",
+    "description": "コンテナレジストリ認証用のSecretを作成する",
+    "syntax": "kubectl create secret docker-registry <name> --docker-server=<server> --docker-username=<user> --docker-password=<pass>",
+    "example": "kubectl create secret docker-registry regcred --docker-server=registry.example.com --docker-username=myuser --docker-password=mypassword",
+    "tags": ["secret", "docker", "registry", "auth"],
+    "url": ""
+  },
+  {
+    "name": "kubectl get serviceaccount",
+    "description": "ServiceAccount一覧を表示する（saエイリアス使用可）",
+    "syntax": "kubectl get serviceaccount [-n <namespace>]\nkubectl get sa [-n <namespace>]",
+    "example": "kubectl get serviceaccount\nkubectl get sa -n kube-system\nkubectl describe sa default",
+    "tags": ["serviceaccount", "rbac", "security"],
+    "url": ""
+  }
+]

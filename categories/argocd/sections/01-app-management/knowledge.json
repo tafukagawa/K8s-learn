@@ -1,0 +1,26 @@
+[
+  {
+    "title": "ArgoCD とは",
+    "body": "## ArgoCD とは\n\nArgoCD は Kubernetes 向けの宣言的 GitOps 継続的デリバリー（CD）ツール。Argo Project の一部として開発され、CNCF（Cloud Native Computing Foundation）のインキュベーティングプロジェクト。\n\n### 主な特徴\n- **宣言的 CD**: アプリケーションの望ましい状態を Git リポジトリに定義し、クラスタに自動適用する\n- **Git が唯一の真実**: すべての設定変更は Git を通じて行い、手動の `kubectl apply` に依存しない\n- **自動同期**: Git の変更を検知して自動デプロイ、または手動トリガーも選択可能\n- **ロールバック**: Git の履歴を利用して任意のリビジョンへ即時ロールバック\n\n### アーキテクチャ\nArgoCD は Kubernetes クラスタ内で動作する。Application Controller が継続的に Git リポジトリとクラスタの状態を比較し、差分（Out of Sync）を検知すると同期を行う。Web UI・CLI・API を通じて操作できる。",
+    "tags": ["argocd", "gitops", "basic"],
+    "url": ""
+  },
+  {
+    "title": "Application リソース",
+    "body": "## Application リソース\n\nArgoCD の中心となるカスタムリソース（CRD）。どのリポジトリのどのパスを、どのクラスタ・Namespace にデプロイするかを定義する。\n\n### 主要フィールド\n\n#### spec.source\nデプロイするマニフェストの取得元を定義する。\n- `repoURL`: Git リポジトリの URL\n- `targetRevision`: ブランチ・タグ・コミットハッシュ\n- `path`: リポジトリ内のマニフェストパス\n\n#### spec.destination\nデプロイ先を定義する。\n- `server`: 対象クラスタの API サーバー URL\n- `namespace`: デプロイ先 Namespace\n\n#### spec.syncPolicy\n同期の自動化設定。\n- `automated.prune`: Git に存在しないリソースを自動削除\n- `automated.selfHeal`: クラスタ上の手動変更を自動的に元に戻す\n- `syncOptions`: ServerSideApply などの詳細オプション",
+    "tags": ["argocd", "application", "crd"],
+    "url": ""
+  },
+  {
+    "title": "GitOps とは",
+    "body": "## GitOps とは\n\nGitOps は Git をシステム状態の唯一の真実（Single Source of Truth）として扱う運用モデル。Weaveworks 社が提唱し、Kubernetes 運用の標準的なプラクティスとして普及した。\n\n### 4 つの原則\n1. **宣言的**: システムの望ましい状態を宣言的に記述する（マニフェスト）\n2. **バージョン管理**: 全状態を Git で管理し、変更履歴を保持する\n3. **自動承認**: 承認された変更は自動的にシステムに適用される\n4. **継続的な調整**: エージェントが常に望ましい状態と実際の状態を比較・修正する\n\n### メリット\n- Git の PR/レビュープロセスで変更を管理できる\n- 障害時に Git の履歴からロールバックが容易\n- 監査ログとして Git 履歴を活用できる\n- クラスタへの直接アクセス権限を最小化できる",
+    "tags": ["gitops", "argocd", "basic"],
+    "url": ""
+  },
+  {
+    "title": "App of Apps パターン",
+    "body": "## App of Apps パターン\n\nArgoCD の Application リソース自体を管理する Application を作成するパターン。大規模・マルチテナント環境で多数のアプリケーションを効率的に管理するために使われる。\n\n### 構成\n- **Root Application**: 他の Application マニフェストを持つリポジトリを参照する親アプリ\n- **Child Application**: 実際のアプリケーションを管理する各 Application\n\n### メリット\n- 新しいアプリケーションの追加は Git にマニフェストを追加するだけ\n- すべての Application を一元的に管理・監視できる\n- 環境ごと（dev/staging/prod）に Root Application を分けることも可能\n\n### ApplicationSet との比較\nArgoCD v2.0 以降では ApplicationSet CRD を使うとより柔軟なテンプレート管理が可能。クラスタ一覧やリポジトリのディレクトリ構造から Application を自動生成できる。",
+    "tags": ["argocd", "app-of-apps", "pattern"],
+    "url": ""
+  }
+]

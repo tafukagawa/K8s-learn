@@ -1,0 +1,26 @@
+[
+  {
+    "title": "PersistentVolume / PVC とは",
+    "body": "## PersistentVolume / PVC とは\n\nKubernetes のストレージは管理者と利用者の関心事を分離する設計になっています。\n\n### 登場人物\n\n- **PersistentVolume (PV)**: クラスター管理者が用意する実際のストレージリソース（NFS、AWS EBS、GCE PD 等）\n- **PersistentVolumeClaim (PVC)**: アプリ開発者がストレージを要求するためのリソース\n- **StorageClass**: 動的プロビジョニングのテンプレート\n\n### 利用フロー\n\n1. 管理者が PV を作成（または StorageClass で自動作成）\n2. 開発者が必要なサイズ・アクセスモードを指定して PVC を作成\n3. Kubernetes が条件に合う PV を見つけて PVC にバインド（`Bound` 状態）\n4. Pod の `volumes` セクションで PVC を参照してマウント\n\n```yaml\n# PVC の例\napiVersion: v1\nkind: PersistentVolumeClaim\nmetadata:\n  name: my-pvc\nspec:\n  accessModes:\n  - ReadWriteOnce\n  resources:\n    requests:\n      storage: 10Gi\n  storageClassName: standard\n---\n# Pod での使用\nspec:\n  volumes:\n  - name: data\n    persistentVolumeClaim:\n      claimName: my-pvc\n  containers:\n  - name: app\n    volumeMounts:\n    - mountPath: /data\n      name: data\n```",
+    "tags": ["storage", "pv", "pvc", "persistentvolume", "binding"],
+    "url": ""
+  },
+  {
+    "title": "StorageClass とは",
+    "body": "## StorageClass とは\n\nStorageClass は動的プロビジョニングを実現するリソースです。管理者が事前に PV を手動で作成しなくても、PVC が作成されると自動的に PV が作成されます。\n\n### 仕組み\n\n1. 管理者が StorageClass を作成（provisioner と パラメーターを設定）\n2. 開発者が `storageClassName` を指定して PVC を作成\n3. 対応するプロビジョナーが自動的に PV を作成してバインド\n\n### 主な Provisioner\n\n| 環境 | Provisioner |\n|------|-------------|\n| AWS | `kubernetes.io/aws-ebs` / `ebs.csi.aws.com` |\n| GCP | `kubernetes.io/gce-pd` / `pd.csi.storage.gke.io` |\n| Azure | `disk.csi.azure.com` |\n| オンプレ | `rancher.io/local-path`、NFS プロビジョナー等 |\n\n### 設定例\n\n```yaml\napiVersion: storage.k8s.io/v1\nkind: StorageClass\nmetadata:\n  name: fast-ssd\n  annotations:\n    storageclass.kubernetes.io/is-default-class: \"true\"  # デフォルトに設定\nprovisioner: ebs.csi.aws.com\nparameters:\n  type: gp3\n  iops: \"3000\"\nreclaimPolicy: Delete\nvolumeBindingMode: WaitForFirstConsumer\n```\n\n`WaitForFirstConsumer` を設定すると、Pod がスケジュールされるまで PV の作成を遅延させ、Pod と同じアベイラビリティゾーンにストレージを作成できます。",
+    "tags": ["storage", "storageclass", "provisioner", "dynamic", "pvc"],
+    "url": ""
+  },
+  {
+    "title": "Volume アクセスモード",
+    "body": "## Volume アクセスモード\n\nアクセスモードは PV および PVC がどのようにマウントされるかを定義します。PV と PVC のアクセスモードは一致している必要があります。\n\n### 3つのアクセスモード\n\n| モード | 略称 | 説明 |\n|--------|------|------|\n| **ReadWriteOnce** | RWO | 単一ノードから読み書き可能。最も一般的 |\n| **ReadOnlyMany** | ROX | 複数ノードから読み取り専用でマウント可能 |\n| **ReadWriteMany** | RWX | 複数ノードから読み書き可能。NFS等が必要 |\n\n### ストレージタイプとアクセスモードの対応\n\n| ストレージタイプ | RWO | ROX | RWX |\n|----------------|-----|-----|-----|\n| AWS EBS | ✓ | - | - |\n| GCE PD | ✓ | ✓ | - |\n| NFS | ✓ | ✓ | ✓ |\n| Azure Disk | ✓ | - | - |\n| CephFS | ✓ | ✓ | ✓ |\n\n### 使い分けの指針\n\n- **RWO**: データベース、ステートフルアプリ（単一 Pod）\n- **ROX**: 設定ファイルや静的コンテンツを複数 Pod で読み取り\n- **RWX**: 複数 Pod から同時書き込みが必要なケース（共有ファイルストレージ）\n\nRWX が必要な場合は NFS や CephFS など対応したストレージバックエンドを選択する必要があります。",
+    "tags": ["storage", "accessmode", "rwx", "rwo", "rox"],
+    "url": ""
+  },
+  {
+    "title": "Reclaim Policy",
+    "body": "## Reclaim Policy\n\nReclaim Policy は PVC が削除されたときに PV（および実際のストレージ）をどう扱うかを定義します。データの扱いに直結する重要な設定です。\n\n### 3つのポリシー\n\n#### Retain（保持）\n\nPVC を削除しても PV とデータは保持されます。PV の状態は `Released` になり、再利用するには手動での操作が必要です。\n\n- **用途**: 重要なデータを誤削除から守りたい場合\n- **注意**: `Released` 状態の PV は新しい PVC にバインドされないため、手動で PV を再作成か `claimRef` を削除する必要がある\n\n#### Delete（削除）\n\nPVC を削除すると PV も自動的に削除されます。動的プロビジョニングでのデフォルト値。\n\n- **用途**: 一時的なデータ、開発・テスト環境\n- **注意**: データが完全に失われる。本番データには慎重に\n\n#### Recycle（非推奨）\n\nボリューム内のデータを削除（`rm -rf /volume/*`）して再利用可能な状態に戻します。現在は非推奨で、将来のバージョンで削除予定。\n\n### StorageClass での設定\n\n```yaml\napiVersion: storage.k8s.io/v1\nkind: StorageClass\nmetadata:\n  name: safe-storage\nprovisioner: ebs.csi.aws.com\nreclaimPolicy: Retain   # PVC削除後もデータ保持\n```\n\n本番データベースのストレージには `Retain` ポリシーを推奨します。",
+    "tags": ["storage", "reclaim", "policy", "retain", "delete"],
+    "url": ""
+  }
+]

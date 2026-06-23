@@ -4,6 +4,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import type { KnowledgeWithProgress } from '../../types'
 
 interface KnowledgeDetailProps {
@@ -45,7 +46,7 @@ export function KnowledgeDetail({ item, onClose, onEdit, onDelete }: KnowledgeDe
               '& ul, & ol': { pl: 2.5, mb: 1 },
               '& h1, & h2, & h3': { mt: 1.5, mb: 0.5 },
             }}>
-              <ReactMarkdown>{item.body}</ReactMarkdown>
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{item.body}</ReactMarkdown>
             </Box>
 
             {item.url && (

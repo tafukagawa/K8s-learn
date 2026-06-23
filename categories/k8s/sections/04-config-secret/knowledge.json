@@ -1,0 +1,26 @@
+[
+  {
+    "title": "ConfigMap とは",
+    "body": "## ConfigMap とは\n\nConfigMap は設定情報をコンテナイメージから分離して管理するリソースです。環境ごとに異なる設定値（データベースホスト名、ログレベル等）をアプリケーションコードに埋め込まずに管理できます。\n\n### 使い方1: 環境変数として注入\n\n```yaml\nspec:\n  containers:\n  - name: app\n    image: myapp:1.0\n    envFrom:\n    - configMapRef:\n        name: my-config\n    # または特定キーのみ\n    env:\n    - name: DB_HOST\n      valueFrom:\n        configMapKeyRef:\n          name: my-config\n          key: database.host\n```\n\n### 使い方2: ボリュームマウント\n\n設定ファイルとしてコンテナにマウントします。ConfigMap を更新すると、マウントされたファイルも自動的に更新されます（反映まで最大1分程度）。\n\n```yaml\nspec:\n  volumes:\n  - name: config-volume\n    configMap:\n      name: my-config\n  containers:\n  - name: app\n    volumeMounts:\n    - name: config-volume\n      mountPath: /etc/config\n```\n\n### 注意点\n\n- ConfigMap のサイズ上限は 1MiB\n- 機密情報（パスワード、APIキー）は ConfigMap ではなく Secret に格納する",
+    "tags": ["configmap", "config", "environment", "volume", "mount"],
+    "url": ""
+  },
+  {
+    "title": "Secret とは",
+    "body": "## Secret とは\n\nSecret はパスワード・APIキー・証明書などの機密情報を管理するリソースです。ConfigMap と似た仕組みですが、機密データ専用の扱いを受けます。\n\n### base64 エンコードと暗号化の違い\n\nSecret の値は base64 エンコードされて保存されますが、**これは暗号化ではありません**。`kubectl get secret my-secret -o yaml` で誰でもデコードできます。\n\n```bash\necho 'bXlwYXNzd29yZA==' | base64 --decode\n# → mypassword\n```\n\n### セキュリティの強化\n\n- **etcd の暗号化**: `EncryptionConfiguration` で etcd に保存される Secret を暗号化する\n- **SealedSecrets**: Bitnami の OSS。公開鍵で暗号化し Git に安全にコミット可能\n- **External Secrets Operator**: AWS Secrets Manager / HashiCorp Vault と連携\n- **Vault Agent Injector**: Pod 起動時に Vault から自動的に Secret を注入\n\n### 使用例\n\n```yaml\nspec:\n  containers:\n  - name: app\n    env:\n    - name: DB_PASSWORD\n      valueFrom:\n        secretKeyRef:\n          name: my-secret\n          key: password\n```\n\n本番環境では Secret を Git リポジトリに直接コミットせず、SealedSecrets や外部シークレット管理ツールの使用を強く推奨します。",
+    "tags": ["secret", "security", "base64", "vault", "sealedsecrets"],
+    "url": ""
+  },
+  {
+    "title": "ServiceAccount とは",
+    "body": "## ServiceAccount とは\n\nServiceAccount は Pod が Kubernetes API サーバーにアクセスする際のアイデンティティ（身元）を提供するリソースです。人間ユーザー向けの UserAccount とは別に、Pod・アプリケーション向けに設計されています。\n\n### デフォルト ServiceAccount\n\n各 Namespace に `default` という ServiceAccount が自動作成されます。明示的に指定しない Pod はこの `default` ServiceAccount を使用します。デフォルトでは最小限の権限のみ持ちます。\n\n### Pod への割り当て\n\n```yaml\nspec:\n  serviceAccountName: my-service-account\n  automountServiceAccountToken: false  # トークン自動マウントを無効化\n  containers:\n  - name: app\n    image: myapp:1.0\n```\n\n### トークンのマウント\n\nデフォルトでは ServiceAccount のトークンが `/var/run/secrets/kubernetes.io/serviceaccount/token` に自動マウントされます。アプリケーションはこのトークンを使って API サーバーに認証します。\n\n### 最小権限の原則\n\nアプリケーションが必要とする権限のみを持つ専用 ServiceAccount を作成し、RBAC で権限を絞ることが推奨されます。Kubernetes API へのアクセスが不要なアプリには `automountServiceAccountToken: false` を設定します。",
+    "tags": ["serviceaccount", "rbac", "security", "api", "token"],
+    "url": ""
+  },
+  {
+    "title": "RBAC 基礎",
+    "body": "## RBAC 基礎\n\nRBAC（Role-Based Access Control）は Kubernetes のアクセス制御の仕組みです。「誰が」「何のリソースに」「何の操作をできるか」を定義します。\n\n### 4つのリソース\n\n| リソース | スコープ | 説明 |\n|---------|---------|------|\n| **Role** | Namespace | 特定 Namespace 内のリソース権限を定義 |\n| **ClusterRole** | クラスター全体 | 全 Namespace またはクラスター全体のリソース権限を定義 |\n| **RoleBinding** | Namespace | Role/ClusterRole を Subject（User/Group/SA）に紐付け |\n| **ClusterRoleBinding** | クラスター全体 | ClusterRole をクラスター全体で Subject に紐付け |\n\n### 設定例\n\n```yaml\n# Role: default namespace 内の Pod 読み取り権限\napiVersion: rbac.authorization.k8s.io/v1\nkind: Role\nmetadata:\n  namespace: default\n  name: pod-reader\nrules:\n- apiGroups: [\"\"]\n  resources: [\"pods\"]\n  verbs: [\"get\", \"list\", \"watch\"]\n---\n# RoleBinding: my-sa に pod-reader Role を付与\napiVersion: rbac.authorization.k8s.io/v1\nkind: RoleBinding\nmetadata:\n  name: read-pods\n  namespace: default\nsubjects:\n- kind: ServiceAccount\n  name: my-sa\n  namespace: default\nroleRef:\n  kind: Role\n  name: pod-reader\n  apiGroup: rbac.authorization.k8s.io\n```\n\n### 権限確認\n\n```bash\nkubectl auth can-i list pods --as=system:serviceaccount:default:my-sa\n```",
+    "tags": ["rbac", "role", "clusterrole", "rolebinding", "security"],
+    "url": ""
+  }
+]

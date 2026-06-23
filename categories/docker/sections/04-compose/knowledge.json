@@ -1,0 +1,22 @@
+[
+  {
+    "title": "docker-compose.yml の書き方",
+    "body": "## docker-compose.yml の書き方\n\nDocker ComposeはマルチコンテナアプリケーションをYAMLファイルで定義・管理するツール。`docker-compose.yml`（または`compose.yaml`）に構成を記述する。\n\n### 基本構造\n\n```yaml\nservices:       # コンテナ（サービス）の定義（必須）\n  web:\n    image: nginx:latest\n  db:\n    image: postgres:15\n\nnetworks:       # カスタムネットワークの定義（省略可）\n  appnet:\n    driver: bridge\n\nvolumes:        # 名前付きボリュームの定義（省略可）\n  pgdata:\n```\n\n### version フィールドについて\n\n旧来は `version: \"3.8\"` のような指定が必要だったが、Compose Spec（現行仕様）では省略推奨。\n\n### ファイル名の優先順位\n\nDocker Composeは以下の順でファイルを探す：\n1. `compose.yaml`\n2. `compose.yml`\n3. `docker-compose.yaml`\n4. `docker-compose.yml`\n\n### 複数ファイルの結合\n\n```bash\n# -f で複数ファイルをマージ\ndocker compose -f docker-compose.yml -f docker-compose.override.yml up\n```",
+    "tags": ["compose", "yaml", "structure"]
+  },
+  {
+    "title": "Services 設定",
+    "body": "## Services 設定\n\n`services` セクションでは各コンテナの詳細設定を行う。主要なキーを理解することでほとんどのユースケースに対応できる。\n\n### 主要なサービス設定\n\n```yaml\nservices:\n  app:\n    image: myapp:latest          # 既存イメージを使用\n    build:                        # Dockerfileからビルド\n      context: ./app\n      dockerfile: Dockerfile\n    ports:\n      - \"8080:80\"                 # hostPort:containerPort\n    volumes:\n      - ./src:/app/src            # バインドマウント\n      - nodemodules:/app/node_modules  # 名前付きボリューム\n    environment:\n      - NODE_ENV=production\n      - DATABASE_URL=postgres://db:5432/mydb\n    env_file:\n      - .env\n    depends_on:\n      db:\n        condition: service_healthy  # healthcheckと組み合わせ\n    restart: unless-stopped       # 再起動ポリシー\n    networks:\n      - appnet\n    command: [\"node\", \"server.js\"]  # CMDの上書き\n```\n\n### restart ポリシー\n\n| 値 | 挙動 |\n|----|------|\n| `no` | 再起動しない（デフォルト） |\n| `always` | 常に再起動 |\n| `on-failure` | 非ゼロ終了時のみ再起動 |\n| `unless-stopped` | 手動停止しない限り再起動 |",
+    "tags": ["compose", "services", "yaml", "configuration"]
+  },
+  {
+    "title": "依存関係と起動順序",
+    "body": "## 依存関係と起動順序\n\nマルチコンテナ環境では、サービスの起動順序が重要。アプリがDBより先に起動してしまうと接続エラーが発生する。\n\n### depends_on の基本\n\n```yaml\nservices:\n  app:\n    depends_on:\n      - db     # dbが起動してからappを起動\n  db:\n    image: postgres:15\n```\n\n**注意**: `depends_on` だけではコンテナの起動（`running` 状態）を待つだけで、サービスの準備完了（DBが接続を受け付ける状態）は保証しない。\n\n### healthcheck と組み合わせた確実な制御\n\n```yaml\nservices:\n  app:\n    depends_on:\n      db:\n        condition: service_healthy   # dbがhealthyになるまで待つ\n  db:\n    image: postgres:15\n    healthcheck:\n      test: [\"CMD-SHELL\", \"pg_isready -U postgres\"]\n      interval: 5s\n      timeout: 5s\n      retries: 5\n      start_period: 10s\n```\n\n### condition の種類\n\n| 値 | 意味 |\n|----|------|\n| `service_started` | コンテナが起動した（デフォルト） |\n| `service_healthy` | healthcheckがhealthyになった |\n| `service_completed_successfully` | コンテナが終了コード0で完了した |\n\n### アプリ側での対策\n\nhealthcheckに加えて、アプリ側でもリトライロジックを実装するのがベストプラクティス。",
+    "tags": ["compose", "depends-on", "healthcheck", "startup-order"]
+  },
+  {
+    "title": "環境変数管理",
+    "body": "## 環境変数管理\n\nDocker Composeでは複数の方法で環境変数を管理できる。適切に組み合わせることで、開発・本番環境の差異を安全に吸収できる。\n\n### 方法1: .env ファイル（Compose自体の変数）\n\ncompose.ymlと同じディレクトリの `.env` は自動的に読み込まれ、`${VAR}` として参照できる。\n\n```bash\n# .env\nPOSTGRES_VERSION=15\nAPP_PORT=8080\n```\n\n```yaml\n# compose.yml\nservices:\n  db:\n    image: postgres:${POSTGRES_VERSION}\n  app:\n    ports:\n      - \"${APP_PORT}:3000\"\n```\n\n### 方法2: environment キー（コンテナへの注入）\n\n```yaml\nservices:\n  app:\n    environment:\n      NODE_ENV: production\n      DATABASE_URL: postgres://db:5432/mydb\n```\n\n### 方法3: env_file キー（ファイルからコンテナに注入）\n\n```yaml\nservices:\n  app:\n    env_file:\n      - .env.production\n```\n\n### 変数の優先順位（高い順）\n\n1. `docker compose run -e VAR=value`（コマンドラインフラグ）\n2. compose.yml の `environment` キー\n3. compose.yml の `env_file` キー\n4. Dockerfile の `ENV` 命令\n\n### セキュリティ注意\n\n- `.env` ファイルは `.gitignore` に追加する\n- 本番環境ではDocker Secrets（Swarm）やKubernetes Secretsの利用を検討する",
+    "tags": ["compose", "env", "configuration", "security", "dotenv"]
+  }
+]

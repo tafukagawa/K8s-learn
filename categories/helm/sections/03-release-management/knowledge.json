@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Release とは",
+    "body": "## Release とは\n\nRelease は Chart をクラスターにインストールした実体です。同一の Chart から複数の Release を異なる名前で作成でき、それぞれ独立した設定・履歴を持ちます。\n\n### Release の状態管理\n\nHelm は Release の状態を Kubernetes の **Secret** リソースとして同一 Namespace に保存します（`helm.sh/release.v1` という形式）。これにより：\n\n- `helm history` でリビジョン履歴を確認できる\n- `helm rollback` で過去のリビジョンに戻せる\n- クラスターを再作成しても Secret が残っていれば Helm で管理を継続できる\n\n### リビジョン番号\n\n`helm install` でリビジョン1が作成され、`helm upgrade` のたびに番号が増加する。`helm rollback` も新しいリビジョンとして記録される（履歴は消えない）。\n\n### Namespace との関係\n\nRelease は特定の Namespace に紐付く。`-n` オプションで指定しない場合は `default` Namespace に作成される。`helm list -A` で全 Namespace の Release を確認できる。",
+    "tags": ["release", "secret", "revision", "basic"],
+    "url": ""
+  },
+  {
+    "title": "--set vs -f values.yaml",
+    "body": "## --set vs -f values.yaml\n\nHelm でデフォルト値をオーバーライドする主な2つの方法の使い分けを理解することが重要です。\n\n### --set\n\n```bash\nhelm install my-app ./chart --set replicaCount=3 --set image.tag=v2.0\n```\n\n- 単一の値を素早く上書きしたいときに便利\n- ネストした値はドット記法（`image.tag`）、配列はカンマ区切り（`list={a,b,c}`）\n- コマンドが長くなりすぎるため、多数の値変更には不向き\n- `--set-string`: 数値を文字列として強制する（例: ポート番号が数値に解釈されるのを防ぐ）\n\n### -f / --values\n\n```bash\nhelm install my-app ./chart -f values-prod.yaml\n```\n\n- 環境ごとに YAML ファイルを用意して管理する\n- 複数の `-f` を組み合わせて適用できる（後の方が優先）\n- GitOps と相性がよく、変更履歴も追いやすい\n\n### 優先順位（高い順）\n\n1. `--set` / `--set-string`\n2. `-f` / `--values`（後に指定したものが優先）\n3. Chart の `values.yaml`（デフォルト値）",
+    "tags": ["values", "set", "override", "configuration"],
+    "url": ""
+  },
+  {
+    "title": "Helm Hooks",
+    "body": "## Helm Hooks\n\nHelm Hooks は Release のライフサイクルの特定タイミングで Kubernetes Job などを実行する仕組みです。マニフェストに `helm.sh/hook` アノテーションを付けることで有効になります。\n\n### 主なフック種別\n\n| フック | 実行タイミング |\n|--------|---------------|\n| `pre-install` | リソース作成前 |\n| `post-install` | リソース作成後 |\n| `pre-upgrade` | アップグレード前 |\n| `post-upgrade` | アップグレード後 |\n| `pre-rollback` | ロールバック前 |\n| `post-rollback` | ロールバック後 |\n| `pre-delete` | 削除前 |\n| `post-delete` | 削除後 |\n| `test` | `helm test` 実行時 |\n\n### 使用例\n\n```yaml\napiVersion: batch/v1\nkind: Job\nmetadata:\n  name: db-migrate\n  annotations:\n    \"helm.sh/hook\": pre-upgrade\n    \"helm.sh/hook-weight\": \"-5\"\n    \"helm.sh/hook-delete-policy\": hook-succeeded\n```\n\n`hook-weight` で実行順を制御し、`hook-delete-policy` でフック完了後のリソース削除ポリシーを指定できる。",
+    "tags": ["hooks", "lifecycle", "job"],
+    "url": ""
+  },
+  {
+    "title": "Atomic フラグ",
+    "body": "## Atomic フラグ（--atomic）\n\n`--atomic` は `helm install` / `helm upgrade` 時に付けられるフラグで、デプロイが失敗した場合に自動的に直前の状態へロールバックします。CI/CD パイプラインで安全なデプロイを実現するために重要です。\n\n### 動作\n\n```bash\nhelm upgrade --install my-app ./chart --atomic --timeout 5m\n```\n\n1. Helm がリソースを適用する\n2. `--timeout` で指定した時間内に Pod が Ready にならない場合、失敗と判定\n3. 自動的に直前のリビジョンへロールバック\n4. コマンドは非ゼロの終了コードで終了する\n\n### --wait との違い\n\n- `--wait`: Pod が Ready になるまで待機するが、失敗してもロールバックしない\n- `--atomic`: `--wait` の機能に加えて、失敗時の自動ロールバックも行う（`--atomic` は内部的に `--wait` を含む）\n\n### 注意点\n\n- `--timeout` のデフォルトは5分。大規模なアプリや遅いクラスターでは延長が必要\n- ロールバック自体も失敗する可能性があるため、本番環境では `helm history` で状態確認を忘れずに",
+    "tags": ["atomic", "rollback", "cicd", "deploy"],
+    "url": ""
+  }
+]

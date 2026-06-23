@@ -1,24 +1,19 @@
-import { AppBar, Toolbar, Typography, Tabs, Tab, InputBase, Box, IconButton, Tooltip } from '@mui/material'
+import { AppBar, Toolbar, Typography, InputBase, Box, IconButton, Tooltip } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 import LightModeIcon from '@mui/icons-material/LightMode'
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
 import HubIcon from '@mui/icons-material/Hub'
 import { alpha } from '@mui/material/styles'
-import type { Category } from '../../types'
 
 interface HeaderProps {
-  categories: Category[]
-  selectedCategoryId: number | null
-  onCategoryChange: (id: number) => void
   searchQuery: string
   onSearchChange: (q: string) => void
   darkMode: boolean
   onToggleDark: () => void
-  onLogoClick: () => void
 }
 
-export function Header({ categories, selectedCategoryId, onCategoryChange, searchQuery, onSearchChange, darkMode, onToggleDark, onLogoClick }: HeaderProps) {
+export function Header({ searchQuery, onSearchChange, darkMode, onToggleDark }: HeaderProps) {
   return (
     <AppBar
       position="sticky"
@@ -31,68 +26,44 @@ export function Header({ categories, selectedCategoryId, onCategoryChange, searc
         zIndex: 1200,
       })}
     >
-      <Toolbar sx={{ gap: 2, minHeight: 68 }}>
-        <Box onClick={onLogoClick} sx={{ display: 'flex', alignItems: 'center', gap: 1.1, minWidth: 210, cursor: 'pointer' }}>
-          <Box
-            sx={theme => ({
-              width: 36,
-              height: 36,
-              display: 'grid',
-              placeItems: 'center',
-              color: '#fff',
-              background: 'linear-gradient(135deg, #2563EB, #1D4ED8)',
-              border: '1px solid',
-              borderColor: alpha(theme.palette.primary.light, 0.38),
-              borderRadius: 1.2,
-              boxShadow: 'none',
-            })}
-          >
+      <Toolbar sx={{ gap: 2, minHeight: 60 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.1, minWidth: 210 }}>
+          <Box sx={theme => ({
+            width: 34, height: 34, display: 'grid', placeItems: 'center',
+            color: '#fff',
+            background: 'linear-gradient(135deg, #2563EB, #1D4ED8)',
+            border: '1px solid', borderColor: alpha(theme.palette.primary.light, 0.38),
+            borderRadius: 1.2,
+          })}>
             <HubIcon fontSize="small" />
           </Box>
-          <Typography variant="h6" sx={{ color: 'text.primary', fontWeight: 850, whiteSpace: 'nowrap' }}>
+          <Typography variant="h6" sx={{ color: 'text.primary', fontWeight: 850, whiteSpace: 'nowrap', fontSize: 15 }}>
             k8s Learn
           </Typography>
         </Box>
-        <Tabs
-          value={selectedCategoryId}
-          onChange={(_, v) => onCategoryChange(v)}
-          textColor="inherit"
-          slotProps={{ indicator: { style: { backgroundColor: '#3B82F6' } } }}
-          sx={{ flex: 1, minHeight: 44, '& .MuiTabs-indicator': { height: 3, borderRadius: 999 } }}
-        >
-          {categories.map(cat => (
-            <Tab key={cat.id} value={cat.id} label={cat.name} sx={{ color: selectedCategoryId === cat.id ? 'primary.light' : 'text.secondary', fontSize: 13, fontWeight: 700, minHeight: 44 }} />
-          ))}
-        </Tabs>
-        <Box
-          sx={theme => ({
-            display: 'flex',
-            alignItems: 'center',
-            width: 340,
-            bgcolor: theme.palette.mode === 'dark' ? '#222222' : '#ffffff',
-            border: '1px solid',
-            borderColor: theme.palette.mode === 'dark' ? 'rgba(148, 163, 184, 0.18)' : 'divider',
-            borderRadius: 1.5,
-            px: 1.5,
-            py: 0.75,
-            boxShadow: theme.palette.mode === 'dark' ? 'inset 0 1px 0 rgba(255,255,255,0.04)' : '0 8px 24px rgba(36,51,83,0.08)',
-            '&:focus-within': {
-              borderColor: 'primary.main',
-              boxShadow: `0 0 0 3px ${alpha(theme.palette.primary.main, 0.16)}`,
-            },
-          })}
-        >
-          <SearchIcon sx={{ color: 'text.secondary', fontSize: 18, mr: 0.75 }} />
+
+        <Box sx={{ flex: 1 }} />
+
+        <Box sx={theme => ({
+          display: 'flex', alignItems: 'center', width: 320,
+          bgcolor: theme.palette.mode === 'dark' ? '#222222' : '#ffffff',
+          border: '1px solid',
+          borderColor: theme.palette.mode === 'dark' ? 'rgba(148, 163, 184, 0.18)' : 'divider',
+          borderRadius: 1.5, px: 1.5, py: 0.75,
+          '&:focus-within': {
+            borderColor: 'primary.main',
+            boxShadow: `0 0 0 3px ${alpha(theme.palette.primary.main, 0.16)}`,
+          },
+        })}>
+          <SearchIcon sx={{ color: 'text.secondary', fontSize: 17, mr: 0.75 }} />
           <InputBase
             value={searchQuery}
             onChange={e => onSearchChange(e.target.value)}
             placeholder="検索（コマンド名・説明）"
             sx={{ color: 'text.primary', fontSize: 13, flex: 1 }}
           />
-          <Box sx={{ color: 'text.secondary', fontSize: 11, border: '1px solid', borderColor: 'divider', borderRadius: 0.8, px: 0.75, py: 0.1 }}>
-            ⌘K
-          </Box>
         </Box>
+
         <Tooltip title="通知">
           <IconButton size="small" disabled sx={{ border: '1px solid', borderColor: 'divider', bgcolor: 'background.paper' }}>
             <NotificationsNoneIcon fontSize="small" />

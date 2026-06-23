@@ -38,6 +38,15 @@ CREATE TABLE IF NOT EXISTS progress (
   UNIQUE(item_type, item_id)
 );
 
+CREATE TABLE IF NOT EXISTS sections (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  category_id INTEGER NOT NULL REFERENCES categories(id),
+  slug        TEXT    NOT NULL,
+  title       TEXT    NOT NULL,
+  "order"     INTEGER NOT NULL DEFAULT 0,
+  UNIQUE(category_id, slug)
+);
+
 CREATE TABLE IF NOT EXISTS roadmap_steps (
   id          INTEGER PRIMARY KEY AUTOINCREMENT,
   category_id INTEGER NOT NULL REFERENCES categories(id),

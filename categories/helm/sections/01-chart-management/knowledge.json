@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Helm とは",
+    "body": "## Helm とは\n\nHelm は Kubernetes のパッケージマネージャーです。アプリケーションのデプロイに必要なマニフェスト群を一つの単位としてまとめ、バージョン管理・共有・再利用を可能にします。\n\n### 3つの中心概念\n\n- **Chart**: アプリケーションのデプロイに必要なKubernetesリソースをまとめたパッケージ。テンプレートとデフォルト値（values.yaml）で構成される\n- **Release**: Chart をクラスターにインストールした実体。同一Chartから複数のReleaseを作成でき、それぞれ独立した設定・履歴を持つ\n- **Repository**: Chartを配布・検索するためのHTTPサーバー。`helm repo add` でローカルに登録し、`helm search repo` で検索する\n\n### なぜ Helm を使うのか\n\n素のkubectlでは複数のマニフェストを個別に管理する必要があるが、Helmを使うと1コマンドでアプリ全体のインストール・アップグレード・ロールバック・削除が可能になる。また、values.yamlで環境差分（dev/staging/prod）を吸収できる。",
+    "tags": ["helm", "basic", "concept"],
+    "url": ""
+  },
+  {
+    "title": "Chart 構造",
+    "body": "## Chart 構造\n\n`helm create` で生成されるChartの標準ディレクトリ構成を理解することは、Helmを使いこなす第一歩です。\n\n```\nmy-app/\n├── Chart.yaml          # Chartのメタデータ（名前・バージョン・説明）\n├── values.yaml         # テンプレートで使うデフォルト値\n├── charts/             # 依存Chartを格納するディレクトリ\n├── templates/          # KubernetesマニフェストのGoテンプレート\n│   ├── deployment.yaml\n│   ├── service.yaml\n│   ├── ingress.yaml\n│   ├── _helpers.tpl    # 名前付きテンプレート（再利用可能な断片）\n│   └── NOTES.txt       # インストール後に表示されるメッセージ\n└── .helmignore         # パッケージ時に除外するファイルのパターン\n```\n\n### 重要なポイント\n\n- `templates/` 内のファイルはGoテンプレート構文で書かれ、`helm install` 時にレンダリングされる\n- `_helpers.tpl` はアンダースコアで始まるためマニフェストとして出力されない。共通ラベルなどを定義する場所\n- `charts/` ディレクトリには `helm dependency update` で依存Chartがダウンロードされる",
+    "tags": ["chart", "structure", "directory"],
+    "url": ""
+  },
+  {
+    "title": "values.yaml の役割",
+    "body": "## values.yaml の役割\n\n`values.yaml` はChartのデフォルト設定値を定義するファイルです。テンプレート内で `{{ .Values.xxx }}` として参照されます。\n\n### 値のオーバーライド方法\n\n| 方法 | コマンド例 | 用途 |\n|------|-----------|------|\n| `--set` | `--set image.tag=v2.0` | 単一の値を素早く上書き |\n| `-f` / `--values` | `-f prod-values.yaml` | 環境別設定ファイルで上書き |\n| `--set-string` | `--set-string port=\"8080\"` | 数値を文字列として強制 |\n| `--set-file` | `--set-file config=./app.conf` | ファイル内容を値として渡す |\n\n### 優先順位\n\n`--set` は `-f` より優先度が高い。複数の `-f` を指定した場合、後に指定したものが優先される。\n\n### ベストプラクティス\n\n- `values.yaml` には本番でも安全なデフォルト値を設定する\n- 環境差分は `values-dev.yaml` / `values-prod.yaml` に分離する\n- シークレットは values.yaml に直書きせず、外部シークレット管理ツールと組み合わせる",
+    "tags": ["values", "configuration", "override"],
+    "url": ""
+  },
+  {
+    "title": "Chart.yaml の主要フィールド",
+    "body": "## Chart.yaml の主要フィールド\n\n`Chart.yaml` はChartのメタデータを定義するファイルです。`helm show chart` で内容を確認できます。\n\n### 必須フィールド\n\n```yaml\napiVersion: v2          # Helm 3 では v2 を指定\nname: my-app            # Chart名（ディレクトリ名と一致させる）\nversion: 1.0.0          # ChartのSemVer（リリースごとに更新）\n```\n\n### よく使うオプションフィールド\n\n```yaml\nappVersion: \"2.5.1\"     # デプロイするアプリのバージョン（情報のみ）\ndescription: \"My application chart\"\ntype: application        # application（デフォルト）または library\nkeywords:\n  - web\n  - nginx\ndependencies:            # 依存Chartの定義\n  - name: postgresql\n    version: \"12.x.x\"\n    repository: \"https://charts.bitnami.com/bitnami\"\n```\n\n### version と appVersion の違い\n\n- `version`: ChartパッケージそのもののSemVer。テンプレートを修正したら上げる\n- `appVersion`: Chart がデプロイするアプリのバージョン。参照用であり、Helmの動作には影響しない",
+    "tags": ["chart", "chart-yaml", "metadata", "dependencies"],
+    "url": ""
+  }
+]

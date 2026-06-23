@@ -1,0 +1,66 @@
+[
+  {
+    "name": "helm repo add",
+    "description": "Helmリポジトリをローカルに追加する",
+    "syntax": "helm repo add <name> <url>",
+    "example": "helm repo add bitnami https://charts.bitnami.com/bitnami",
+    "tags": ["repo", "add"],
+    "url": ""
+  },
+  {
+    "name": "helm repo list",
+    "description": "追加済みのリポジトリ一覧を表示する",
+    "syntax": "helm repo list",
+    "example": "helm repo list",
+    "tags": ["repo", "list"],
+    "url": ""
+  },
+  {
+    "name": "helm repo update",
+    "description": "リポジトリのインデックス情報を最新化する",
+    "syntax": "helm repo update [<name>...]",
+    "example": "helm repo update",
+    "tags": ["repo", "update"],
+    "url": ""
+  },
+  {
+    "name": "helm repo remove",
+    "description": "リポジトリをローカルから削除する",
+    "syntax": "helm repo remove <name>",
+    "example": "helm repo remove bitnami",
+    "tags": ["repo", "remove", "delete"],
+    "url": ""
+  },
+  {
+    "name": "helm search repo",
+    "description": "追加済みローカルリポジトリからChartを検索する",
+    "syntax": "helm search repo <keyword> [--versions]",
+    "example": "helm search repo nginx --versions",
+    "tags": ["repo", "search"],
+    "url": ""
+  },
+  {
+    "name": "helm search hub",
+    "description": "ArtifactHubからChartを検索する",
+    "syntax": "helm search hub <keyword> [--max-col-width <n>]",
+    "example": "helm search hub nginx --max-col-width 80",
+    "tags": ["repo", "search", "artifacthub"],
+    "url": ""
+  },
+  {
+    "name": "helm pull --untar",
+    "description": "リモートからChartをダウンロードして展開する",
+    "syntax": "helm pull <repo>/<chart> --untar [--untardir <dir>]",
+    "example": "helm pull bitnami/nginx --untar --untardir ./charts",
+    "tags": ["chart", "pull", "download"],
+    "url": ""
+  },
+  {
+    "name": "helm registry login",
+    "description": "OCIレジストリに認証ログインする",
+    "syntax": "helm registry login <host> -u <user> -p <password>",
+    "example": "helm registry login registry.example.com -u myuser -p mypassword",
+    "tags": ["oci", "registry", "login"],
+    "url": ""
+  }
+]

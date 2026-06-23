@@ -1,0 +1,82 @@
+[
+  {
+    "name": "kubectl get deployments",
+    "description": "Deployment一覧を表示する",
+    "syntax": "kubectl get deployments [-n <namespace>]",
+    "example": "kubectl get deployments\nkubectl get deploy -n production",
+    "tags": ["deployment", "list", "basic"],
+    "url": ""
+  },
+  {
+    "name": "kubectl describe deployment",
+    "description": "Deploymentの詳細情報を表示する",
+    "syntax": "kubectl describe deployment <name> [-n <namespace>]",
+    "example": "kubectl describe deployment my-app\nkubectl describe deploy my-app -n production",
+    "tags": ["deployment", "describe", "detail"],
+    "url": ""
+  },
+  {
+    "name": "kubectl create deployment",
+    "description": "Deploymentを作成する",
+    "syntax": "kubectl create deployment <name> --image=<image> [--replicas=<n>]",
+    "example": "kubectl create deployment nginx --image=nginx\nkubectl create deployment my-app --image=myapp:1.0 --replicas=3",
+    "tags": ["deployment", "create", "basic"],
+    "url": ""
+  },
+  {
+    "name": "kubectl apply -f",
+    "description": "マニフェストファイルを適用してリソースを作成・更新する",
+    "syntax": "kubectl apply -f <file.yaml> | -f <directory>",
+    "example": "kubectl apply -f deployment.yaml\nkubectl apply -f ./manifests/\nkubectl apply -f https://example.com/app.yaml",
+    "tags": ["deployment", "apply", "manifest", "declarative"],
+    "url": ""
+  },
+  {
+    "name": "kubectl rollout status",
+    "description": "ロールアウトの状態を確認する",
+    "syntax": "kubectl rollout status deployment/<name> [-n <namespace>]",
+    "example": "kubectl rollout status deployment/my-app\nkubectl rollout status deployment/my-app -n production",
+    "tags": ["deployment", "rollout", "status", "update"],
+    "url": ""
+  },
+  {
+    "name": "kubectl rollout history",
+    "description": "ロールアウト履歴を表示する",
+    "syntax": "kubectl rollout history deployment/<name> [--revision=<n>]",
+    "example": "kubectl rollout history deployment/my-app\nkubectl rollout history deployment/my-app --revision=2",
+    "tags": ["deployment", "rollout", "history", "revision"],
+    "url": ""
+  },
+  {
+    "name": "kubectl rollout undo",
+    "description": "前バージョンへロールバックする",
+    "syntax": "kubectl rollout undo deployment/<name> [--to-revision=<n>]",
+    "example": "kubectl rollout undo deployment/my-app\nkubectl rollout undo deployment/my-app --to-revision=2",
+    "tags": ["deployment", "rollout", "undo", "rollback"],
+    "url": ""
+  },
+  {
+    "name": "kubectl scale",
+    "description": "Deploymentのレプリカ数を変更する",
+    "syntax": "kubectl scale deployment/<name> --replicas=<n>",
+    "example": "kubectl scale deployment/my-app --replicas=5\nkubectl scale deployment/my-app --replicas=0",
+    "tags": ["deployment", "scale", "replicas"],
+    "url": ""
+  },
+  {
+    "name": "kubectl set image",
+    "description": "DeploymentのコンテナイメージをリアルタイムでUpdatesする",
+    "syntax": "kubectl set image deployment/<name> <container>=<image>",
+    "example": "kubectl set image deployment/my-app nginx=nginx:1.21\nkubectl set image deployment/my-app app=myapp:2.0",
+    "tags": ["deployment", "image", "update", "rollout"],
+    "url": ""
+  },
+  {
+    "name": "kubectl autoscale",
+    "description": "Horizontal Pod Autoscaler (HPA) を設定する",
+    "syntax": "kubectl autoscale deployment/<name> --min=<n> --max=<n> --cpu-percent=<n>",
+    "example": "kubectl autoscale deployment/my-app --min=2 --max=10 --cpu-percent=80\nkubectl get hpa",
+    "tags": ["deployment", "autoscale", "hpa", "scaling"],
+    "url": ""
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "title": "コンテナライフサイクル",
+    "body": "## コンテナライフサイクル\n\nDockerコンテナは作成から削除まで明確なライフサイクルを持つ。状態を理解することでトラブルシューティングが容易になる。\n\n### 状態遷移\n\n```\ncreated → running → paused\n                 ↓\n              stopped → removed\n```\n\n| 状態 | 説明 | 主なコマンド |\n|------|------|----------|\n| **Created** | 作成済みだが未起動 | `docker create` |\n| **Running** | プロセスが実行中 | `docker start` / `docker run` |\n| **Paused** | プロセスが一時停止（cgroup freezer使用） | `docker pause` |\n| **Stopped（Exited）** | プロセスが終了またはSIGTERMで停止 | `docker stop` |\n| **Removed** | コンテナが削除され存在しない | `docker rm` |\n\n### よくあるパターン\n\n- `docker run --rm` : 停止と同時に自動削除（一時的なタスク向け）\n- `docker start` : 停止済みコンテナを再利用して起動\n- `docker ps -a` で Exited 状態のコンテナを確認できる\n\n### コンテナの一括削除\n\n```bash\ndocker container prune   # 停止中コンテナをすべて削除\n```",
+    "tags": ["container", "lifecycle", "basic"]
+  },
+  {
+    "title": "ポートマッピング",
+    "body": "## ポートマッピング\n\nコンテナ内のポートをホストのポートに紐付けることで、外部からコンテナのサービスにアクセスできるようにする。\n\n### 基本書式\n\n```bash\ndocker run -p <hostPort>:<containerPort> <image>\n```\n\n### バリエーション\n\n```bash\n# ホストの8080をコンテナの80にマッピング\ndocker run -p 8080:80 nginx\n\n# 特定のホストIPでバインド（セキュリティ上有効）\ndocker run -p 127.0.0.1:8080:80 nginx\n\n# ホストポートをランダム割り当て（-P）\ndocker run -P nginx\n\n# UDP ポートを指定\ndocker run -p 5353:53/udp mydns\n```\n\n### ランダムポートの確認\n\n```bash\ndocker port mycontainer\n# 例: 80/tcp -> 0.0.0.0:32768\n```\n\n### 注意点\n\n- 同一ホストポートを複数コンテナで共有することはできない\n- `EXPOSE` はドキュメント的な宣言であり、実際の公開は `-p` フラグで行う\n- Kubernetes環境ではポートマッピングではなくServiceリソースを使用する",
+    "tags": ["container", "port", "network", "run"]
+  },
+  {
+    "title": "環境変数の注入",
+    "body": "## 環境変数の注入\n\nコンテナ起動時に環境変数を渡すことで、設定をイメージに埋め込まずに外部から制御できる。12 Factor App の原則にも沿った設計。\n\n### 方法1: -e フラグで個別指定\n\n```bash\ndocker run -e DATABASE_URL=postgres://localhost/mydb \\\n           -e APP_ENV=production \\\n           myapp:latest\n```\n\n### 方法2: --env-file でファイルから一括読み込み\n\n```bash\n# .env ファイルの例\n# DATABASE_URL=postgres://localhost/mydb\n# APP_ENV=production\n\ndocker run --env-file .env myapp:latest\n```\n\n### 優先順位\n\n`-e` フラグ > `--env-file` > Dockerfile の `ENV` 命令\n\n### 注意点\n\n- **機密情報の取り扱い**: パスワードやAPIキーを `-e` で渡すと `docker inspect` で平文確認される危険がある\n- **本番環境**: Docker Secrets（Swarm）またはKubernetes Secretsを使用する\n- **.envファイル**: `.gitignore` に追加してリポジトリにコミットしない\n\n### 環境変数の確認\n\n```bash\ndocker exec mycontainer env\n```",
+    "tags": ["container", "env", "config", "security"]
+  },
+  {
+    "title": "コンテナリソース制限",
+    "body": "## コンテナリソース制限\n\nDockerはLinuxのcgroupsを使ってコンテナのCPU・メモリ使用量を制限できる。制限を設けないとコンテナが過剰にリソースを消費してホスト全体に影響を与える可能性がある。\n\n### メモリ制限\n\n```bash\n# 最大512MBに制限\ndocker run --memory 512m myapp\n\n# スワップも含めた制限\ndocker run --memory 512m --memory-swap 1g myapp\n```\n\n### CPU制限\n\n```bash\n# 使用できるCPUを1.5コア相当に制限\ndocker run --cpus 1.5 myapp\n\n# CPU相対的な優先度（デフォルト1024）\ndocker run --cpu-shares 512 myapp\n```\n\n### OOM Killer との関係\n\n- コンテナがメモリ制限を超えると Linux カーネルの **OOM Killer** によってプロセスが強制終了される\n- `docker inspect` の `OOMKilled` フィールドが `true` になっていればOOM Killerが原因\n- `docker stats` でリアルタイムのリソース使用量を確認できる\n\n### リソース使用状況の確認\n\n```bash\ndocker stats mycontainer\n```\n\nKubernetes環境では `resources.requests` と `resources.limits` で同等の制御を行う。",
+    "tags": ["container", "resource", "memory", "cpu", "cgroups"]
+  }
+]

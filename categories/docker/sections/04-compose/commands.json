@@ -1,0 +1,12 @@
+[
+  { "name": "docker compose up", "description": "docker-compose.ymlに定義されたサービスをビルド・作成・起動する", "syntax": "docker compose up [options] [service...]", "example": "docker compose up", "tags": ["compose", "up"], "url": "" },
+  { "name": "docker compose up -d", "description": "サービスをバックグラウンドで起動する", "syntax": "docker compose up -d [service...]", "example": "docker compose up -d", "tags": ["compose", "up", "detach"], "url": "" },
+  { "name": "docker compose up --build", "description": "強制的に再ビルドしてサービスを起動する", "syntax": "docker compose up --build [service...]", "example": "docker compose up --build", "tags": ["compose", "up", "build"], "url": "" },
+  { "name": "docker compose down", "description": "サービスを停止してコンテナ・ネットワークを削除する", "syntax": "docker compose down [options]", "example": "docker compose down", "tags": ["compose", "down"], "url": "" },
+  { "name": "docker compose down -v", "description": "サービス停止時にボリュームも含めて削除する", "syntax": "docker compose down -v", "example": "docker compose down -v", "tags": ["compose", "down", "volume"], "url": "" },
+  { "name": "docker compose ps", "description": "Composeで管理するサービス一覧と状態を表示する", "syntax": "docker compose ps [options]", "example": "docker compose ps", "tags": ["compose", "list"], "url": "" },
+  { "name": "docker compose logs", "description": "サービスのログを表示する", "syntax": "docker compose logs [options] [service...]", "example": "docker compose logs web", "tags": ["compose", "logs"], "url": "" },
+  { "name": "docker compose logs -f", "description": "サービスのログをリアルタイムでフォローする", "syntax": "docker compose logs -f [service...]", "example": "docker compose logs -f web db", "tags": ["compose", "logs", "follow"], "url": "" },
+  { "name": "docker compose exec", "description": "実行中のサービスコンテナ内でコマンドを実行する", "syntax": "docker compose exec <service> <command>", "example": "docker compose exec web bash", "tags": ["compose", "exec"], "url": "" },
+  { "name": "docker compose build", "description": "サービスのイメージビルドのみ実行する（起動しない）", "syntax": "docker compose build [options] [service...]", "example": "docker compose build --no-cache web", "tags": ["compose", "build"], "url": "" }
+]

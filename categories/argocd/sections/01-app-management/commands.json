@@ -1,0 +1,12 @@
+[
+  { "name": "argocd app create", "description": "Applicationを作成する", "syntax": "argocd app create <app-name> --repo <repo-url> --path <path> --dest-server <server> --dest-namespace <namespace>", "example": "argocd app create my-app --repo https://github.com/org/repo.git --path k8s/ --dest-server https://kubernetes.default.svc --dest-namespace default", "tags": ["app", "create"], "url": "" },
+  { "name": "argocd app list", "description": "Application一覧を表示する", "syntax": "argocd app list", "example": "argocd app list", "tags": ["app", "list"], "url": "" },
+  { "name": "argocd app get", "description": "Applicationの詳細情報を表示する", "syntax": "argocd app get <app-name>", "example": "argocd app get my-app", "tags": ["app", "get"], "url": "" },
+  { "name": "argocd app set", "description": "Applicationの設定を変更する", "syntax": "argocd app set <app-name> [flags]", "example": "argocd app set my-app --sync-policy automated", "tags": ["app", "set", "update"], "url": "" },
+  { "name": "argocd app delete", "description": "Applicationを削除する", "syntax": "argocd app delete <app-name> [--cascade]", "example": "argocd app delete my-app --cascade", "tags": ["app", "delete"], "url": "" },
+  { "name": "argocd app diff", "description": "GitリポジトリとクラスタのDiffを表示する", "syntax": "argocd app diff <app-name>", "example": "argocd app diff my-app", "tags": ["app", "diff", "debug"], "url": "" },
+  { "name": "argocd app history", "description": "Applicationのデプロイ履歴を表示する", "syntax": "argocd app history <app-name>", "example": "argocd app history my-app", "tags": ["app", "history"], "url": "" },
+  { "name": "argocd app manifests", "description": "Applicationの現在のマニフェストを表示する", "syntax": "argocd app manifests <app-name>", "example": "argocd app manifests my-app", "tags": ["app", "manifests"], "url": "" },
+  { "name": "argocd app resources", "description": "Applicationが管理するリソース一覧を表示する", "syntax": "argocd app resources <app-name>", "example": "argocd app resources my-app", "tags": ["app", "resources"], "url": "" },
+  { "name": "argocd app unset", "description": "Applicationのパラメータをリセットする", "syntax": "argocd app unset <app-name> [flags]", "example": "argocd app unset my-app --parameter image.tag", "tags": ["app", "unset", "update"], "url": "" }
+]

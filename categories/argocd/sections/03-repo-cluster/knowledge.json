@@ -1,0 +1,26 @@
+[
+  {
+    "title": "リポジトリ接続タイプ",
+    "body": "## リポジトリ接続タイプ\n\nArgoCD が Git リポジトリに接続する方法は主に 3 種類ある。セキュリティ要件と運用方針に応じて選択する。\n\n### HTTPS 認証\n最も一般的な接続方式。ユーザー名とパスワード（またはアクセストークン）を使用する。\n```bash\nargocd repo add https://github.com/org/repo.git \\\n  --username myuser --password mytoken\n```\nGitHub では Personal Access Token（PAT）、GitLab では Project Access Token の使用を推奨。\n\n### SSH 認証\nSSH 秘密鍵を使用した接続。公開鍵をリポジトリに登録し、秘密鍵を ArgoCD に登録する。\n```bash\nargocd repo add git@github.com:org/repo.git \\\n  --ssh-private-key-path ~/.ssh/id_rsa\n```\n機密性が高く、トークン管理が不要なため本番環境で多く採用される。\n\n### GitHub App 認証\nGitHub App の認証情報（App ID・Installation ID・秘密鍵）を使用する最新の認証方式。トークンの有効期限管理が自動化され、Organization レベルでの権限管理が可能。大規模な GitHub 利用環境で推奨される。",
+    "tags": ["argocd", "repo", "auth"],
+    "url": ""
+  },
+  {
+    "title": "クラスタ管理",
+    "body": "## クラスタ管理\n\nArgoCD は複数の Kubernetes クラスタを一元管理できる。デプロイ先クラスタの登録・管理方法を理解することが重要。\n\n### in-cluster（デフォルト）\nArgoCD 自身が動作しているクラスタ。特別な設定なく `https://kubernetes.default.svc` として利用できる。開発環境やシンプルな構成で多く使われる。\n\n### 外部クラスタの追加\n`kubectl` コンテキストを使ってクラスタを登録する。\n```bash\n# 対象クラスタのコンテキストを確認\nkubectl config get-contexts\n\n# ArgoCD にクラスタを追加\nargocd cluster add <context-name>\n```\nArgoCD は対象クラスタに `argocd-manager` という ServiceAccount を作成し、必要な RBAC 権限を付与する。\n\n### クラスタ管理のベストプラクティス\n- 外部クラスタへの接続は専用 ServiceAccount を使用し、最小権限を付与する\n- 本番クラスタは別の ArgoCD インスタンス（Hub and Spoke モデル）で管理することも検討する\n- クラスタ証明書の有効期限を定期的に確認する",
+    "tags": ["argocd", "cluster", "multi-cluster"],
+    "url": ""
+  },
+  {
+    "title": "ArgoCD Projects",
+    "body": "## ArgoCD Projects\n\nArgoCD Project（AppProject）は、Application をグループ化し、デプロイ先のクラスタ・Namespace・利用可能なリポジトリを制限する ACL（アクセス制御）の仕組み。\n\n### 主な機能\n\n#### ソースリポジトリの制限\n指定したリポジトリからのみ Application を作成できるように制限する。\n\n#### デプロイ先の制限\n```yaml\nspec:\n  destinations:\n  - namespace: production\n    server: https://kubernetes.default.svc\n```\n許可されたクラスタ・Namespace にのみデプロイできる。\n\n#### リソース種別の制限\nデプロイ可能なリソース種別（ClusterRole や Namespace など危険なリソース）を制限できる。\n\n### ロールとポリシー\nProject 内でロールを定義し、Application の操作権限を細かく制御できる。\n```yaml\nspec:\n  roles:\n  - name: developer\n    policies:\n    - p, proj:my-project:developer, applications, sync, my-project/*, allow\n```\n開発者には sync のみ許可し、削除権限は管理者のみに絞るといった運用が可能。",
+    "tags": ["argocd", "project", "rbac", "acl"],
+    "url": ""
+  },
+  {
+    "title": "ArgoCD RBAC",
+    "body": "## ArgoCD RBAC\n\nArgoCD は独自の RBAC システムを持ち、ユーザー・グループごとに ArgoCD リソースへのアクセス権限を制御する。\n\n### ポリシー定義\nポリシーは `argocd-rbac-cm` ConfigMap に Casbin 形式で記述する。\n\n```\n# 形式: p, <subject>, <resource>, <action>, <object>, <effect>\np, role:developer, applications, sync, */*, allow\np, role:developer, applications, get, */*, allow\ng, my-team, role:developer\n```\n\n主なリソース: `applications`, `clusters`, `repositories`, `projects`\n主なアクション: `get`, `create`, `update`, `delete`, `sync`, `override`\n\n### 組み込みロール\n- **role:readonly**: 全リソースの読み取り専用\n- **role:admin**: 全リソースへのフルアクセス\n\n### Dex 連携による SSO\nArgoCD は Dex（Identity Provider プロキシ）を内蔵しており、以下の IdP と SSO 連携できる。\n- GitHub OAuth / GitHub Organizations\n- GitLab OAuth\n- Google Workspace\n- LDAP / Active Directory\n- SAML 2.0\n\nDex を通じてログインしたユーザーのグループ情報を ArgoCD RBAC のグループにマッピングすることで、組織の権限管理と連動した細かなアクセス制御が実現できる。",
+    "tags": ["argocd", "rbac", "sso", "dex", "security"],
+    "url": ""
+  }
+]

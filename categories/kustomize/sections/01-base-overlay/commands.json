@@ -1,0 +1,10 @@
+[
+  { "name": "kubectl apply -k", "description": "kustomizationを適用する", "syntax": "kubectl apply -k <dir>", "example": "kubectl apply -k overlays/prod", "tags": ["kustomize", "apply"], "url": "" },
+  { "name": "kubectl diff -k", "description": "現在のクラスタとkustomizationのDiff確認", "syntax": "kubectl diff -k <dir>", "example": "kubectl diff -k overlays/staging", "tags": ["kustomize", "diff", "debug"], "url": "" },
+  { "name": "kubectl delete -k", "description": "kustomizationで定義されたリソースを削除する", "syntax": "kubectl delete -k <dir>", "example": "kubectl delete -k overlays/dev", "tags": ["kustomize", "delete"], "url": "" },
+  { "name": "kustomize build", "description": "kustomizationをビルドしてマニフェストをstdoutに出力する", "syntax": "kustomize build <dir>", "example": "kustomize build overlays/prod", "tags": ["kustomize", "build"], "url": "" },
+  { "name": "kustomize build | kubectl apply -f -", "description": "kustomizationをビルドしてパイプでクラスタに適用する", "syntax": "kustomize build <dir> | kubectl apply -f -", "example": "kustomize build overlays/prod | kubectl apply -f -", "tags": ["kustomize", "build", "apply"], "url": "" },
+  { "name": "kubectl get -k", "description": "kustomizationで定義されたリソース一覧を表示する", "syntax": "kubectl get -k <dir>", "example": "kubectl get -k overlays/prod", "tags": ["kustomize", "get"], "url": "" },
+  { "name": "kustomize create", "description": "kustomization.yamlの雛形を生成する", "syntax": "kustomize create [--autodetect] [--resources <file>]", "example": "kustomize create --autodetect", "tags": ["kustomize", "create", "init"], "url": "" },
+  { "name": "kustomize edit add resource", "description": "kustomization.yamlにリソースを追加する", "syntax": "kustomize edit add resource <file>", "example": "kustomize edit add resource deployment.yaml", "tags": ["kustomize", "edit", "resource"], "url": "" }
+]

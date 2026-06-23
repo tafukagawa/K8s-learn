@@ -1,23 +1,58 @@
-import { Box } from '@mui/material'
+import { useState } from 'react'
+import { Box, Tabs, Tab } from '@mui/material'
+import TerminalIcon from '@mui/icons-material/Terminal'
+import LightbulbIcon from '@mui/icons-material/Lightbulb'
 import { CommandList } from './CommandList'
 import { KnowledgeList } from './KnowledgeList'
-import type { AppSection } from '../../shared/components/Sidebar'
 
 interface ReferenceViewProps {
   categoryId: number
-  section: AppSection
+  sectionId: number
   searchQuery: string
-  onStartLearning: (section: 'commands' | 'knowledge') => void
+  onStartLearning: (contentType: 'commands' | 'knowledge') => void
 }
 
-export function ReferenceView({ categoryId, section, searchQuery, onStartLearning }: ReferenceViewProps) {
+export function ReferenceView({ categoryId, sectionId, searchQuery, onStartLearning }: ReferenceViewProps) {
+  const [tab, setTab] = useState<'commands' | 'knowledge'>('commands')
+
   return (
     <Box sx={{ p: 3, maxWidth: 1180, mx: 'auto' }}>
-      {section === 'commands' && (
-        <CommandList categoryId={categoryId} searchQuery={searchQuery} onStartLearning={() => onStartLearning('commands')} />
+      <Tabs
+        value={tab}
+        onChange={(_, v) => setTab(v)}
+        sx={{ mb: 3, borderBottom: '1px solid', borderColor: 'divider' }}
+      >
+        <Tab
+          value="commands"
+          label="コマンド"
+          icon={<TerminalIcon fontSize="small" />}
+          iconPosition="start"
+          sx={{ fontSize: 13, fontWeight: 700, minHeight: 44 }}
+        />
+        <Tab
+          value="knowledge"
+          label="ナレッジ"
+          icon={<LightbulbIcon fontSize="small" />}
+          iconPosition="start"
+          sx={{ fontSize: 13, fontWeight: 700, minHeight: 44 }}
+        />
+      </Tabs>
+
+      {tab === 'commands' && (
+        <CommandList
+          categoryId={categoryId}
+          sectionId={sectionId}
+          searchQuery={searchQuery}
+          onStartLearning={() => onStartLearning('commands')}
+        />
       )}
-      {section === 'knowledge' && (
-        <KnowledgeList categoryId={categoryId} searchQuery={searchQuery} onStartLearning={() => onStartLearning('knowledge')} />
+      {tab === 'knowledge' && (
+        <KnowledgeList
+          categoryId={categoryId}
+          sectionId={sectionId}
+          searchQuery={searchQuery}
+          onStartLearning={() => onStartLearning('knowledge')}
+        />
       )}
     </Box>
   )

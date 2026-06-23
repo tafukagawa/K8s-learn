@@ -1,0 +1,82 @@
+[
+  {
+    "name": "helm install",
+    "description": "ChartをクラスターにインストールしてReleaseを作成する",
+    "syntax": "helm install <release-name> <chart> [-n <namespace>] [-f values.yaml]",
+    "example": "helm install my-nginx bitnami/nginx -n default",
+    "tags": ["install", "release"],
+    "url": ""
+  },
+  {
+    "name": "helm install --dry-run",
+    "description": "実際にデプロイせずインストールをシミュレートする",
+    "syntax": "helm install <release-name> <chart> --dry-run [--debug]",
+    "example": "helm install my-nginx bitnami/nginx --dry-run --debug",
+    "tags": ["install", "dry-run", "debug"],
+    "url": ""
+  },
+  {
+    "name": "helm upgrade",
+    "description": "既存ReleaseをアップグレードするChartまたは設定を更新する",
+    "syntax": "helm upgrade <release-name> <chart> [-f values.yaml] [--set key=val]",
+    "example": "helm upgrade my-nginx bitnami/nginx --set image.tag=latest",
+    "tags": ["upgrade", "release"],
+    "url": ""
+  },
+  {
+    "name": "helm upgrade --install",
+    "description": "Releaseが存在しない場合はinstall、存在する場合はupgradeを行う（冪等）",
+    "syntax": "helm upgrade --install <release-name> <chart> [-f values.yaml]",
+    "example": "helm upgrade --install my-nginx bitnami/nginx -f prod-values.yaml",
+    "tags": ["upgrade", "install", "idempotent", "cicd"],
+    "url": ""
+  },
+  {
+    "name": "helm rollback",
+    "description": "Releaseを指定したリビジョンにロールバックする",
+    "syntax": "helm rollback <release-name> [revision]",
+    "example": "helm rollback my-nginx 2",
+    "tags": ["rollback", "release"],
+    "url": ""
+  },
+  {
+    "name": "helm history",
+    "description": "Releaseのリビジョン履歴を表示する",
+    "syntax": "helm history <release-name> [-n <namespace>]",
+    "example": "helm history my-nginx -n default",
+    "tags": ["history", "release", "revision"],
+    "url": ""
+  },
+  {
+    "name": "helm list",
+    "description": "デプロイ済みのRelease一覧を表示する",
+    "syntax": "helm list [-n <namespace>] [-A] [--all]",
+    "example": "helm list -A",
+    "tags": ["list", "release"],
+    "url": ""
+  },
+  {
+    "name": "helm status",
+    "description": "Releaseの現在の状態を確認する",
+    "syntax": "helm status <release-name> [-n <namespace>]",
+    "example": "helm status my-nginx -n default",
+    "tags": ["status", "release"],
+    "url": ""
+  },
+  {
+    "name": "helm uninstall",
+    "description": "ReleaseをクラスターからアンインストールしてKubernetesリソースを削除する",
+    "syntax": "helm uninstall <release-name> [-n <namespace>] [--keep-history]",
+    "example": "helm uninstall my-nginx -n default",
+    "tags": ["uninstall", "delete", "release"],
+    "url": ""
+  },
+  {
+    "name": "helm get values",
+    "description": "Releaseに現在適用されている設定値を確認する",
+    "syntax": "helm get values <release-name> [-n <namespace>] [--all]",
+    "example": "helm get values my-nginx -n default --all",
+    "tags": ["get", "values", "release"],
+    "url": ""
+  }
+]

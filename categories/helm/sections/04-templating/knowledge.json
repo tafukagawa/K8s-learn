@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Go テンプレート基礎",
+    "body": "## Go テンプレート基礎\n\nHelm のテンプレートは Go 標準ライブラリの `text/template` をベースにしています。`{{ }}` で囲まれた部分が動的に評価されます。\n\n### 基本構文\n\n```yaml\n# 値の参照\nimage: {{ .Values.image.repository }}:{{ .Values.image.tag }}\n\n# if 条件分岐\n{{- if .Values.ingress.enabled }}\napiVersion: networking.k8s.io/v1\nkind: Ingress\n{{- end }}\n\n# range ループ\n{{- range .Values.env }}\n- name: {{ .name }}\n  value: {{ .value }}\n{{- end }}\n\n# with（nilチェックを兼ねたスコープ変更）\n{{- with .Values.resources }}\nresources:\n  {{- toYaml . | nindent 2 }}\n{{- end }}\n```\n\n### パイプライン\n\n`|` を使って値を関数に渡せる。\n\n```yaml\n# quote: 文字列をダブルクォートで囲む\nname: {{ .Values.name | quote }}\n\n# upper: 大文字変換\nlabel: {{ .Values.tier | upper }}\n\n# default: 値が空の場合のデフォルト指定\nport: {{ .Values.port | default 80 }}\n```\n\n### ホワイトスペース制御\n\n`{{-` は前の空白・改行を、`-}}` は後の空白・改行をトリムする。インデントを意識したYAML生成に欠かせない。",
+    "tags": ["template", "go-template", "syntax"],
+    "url": ""
+  },
+  {
+    "title": "Sprig 関数",
+    "body": "## Sprig 関数\n\nHelm は Go テンプレートに加えて [Sprig](http://masterminds.github.io/sprig/) ライブラリの関数群を利用できます。YAML 生成に特に役立つ関数を紹介します。\n\n### YAML 操作\n\n```yaml\n# toYaml: 値を YAML 文字列に変換（nindent でインデント）\nresources:\n  {{- toYaml .Values.resources | nindent 2 }}\n\n# toJson: 値を JSON 文字列に変換\nannotations:\n  config: {{ .Values.config | toJson | quote }}\n```\n\n### 文字列操作\n\n```yaml\n# quote: ダブルクォートで囲む\nenv: {{ .Values.env | quote }}\n\n# indent / nindent: インデント付加（nindent は先頭に改行を付ける）\n{{- include \"my-app.labels\" . | nindent 4 }}\n\n# trunc / trimSuffix: 長さ制限（名前の63文字制限対応）\nname: {{ .Release.Name | trunc 63 | trimSuffix \"-\" }}\n```\n\n### 型変換・チェック\n\n```yaml\n# int / toString: 型変換\nreplicas: {{ .Values.replicaCount | int }}\n\n# empty: 空かどうかチェック\n{{- if not (empty .Values.extraEnv) }}\n\n# required: 値が必須であることを明示（空の場合はエラー）\npassword: {{ required \"password is required\" .Values.password }}\n```",
+    "tags": ["sprig", "functions", "template", "toYaml"],
+    "url": ""
+  },
+  {
+    "title": "Named テンプレート",
+    "body": "## Named テンプレート\n\nNamed テンプレートは `_helpers.tpl` に定義する再利用可能なテンプレート断片です。共通ラベルやセレクタを一箇所で管理できます。\n\n### 定義（_helpers.tpl）\n\n```yaml\n{{/*\nCommon labels\n*/}}\n{{- define \"my-app.labels\" -}}\nhelm.sh/chart: {{ include \"my-app.chart\" . }}\napp.kubernetes.io/name: {{ include \"my-app.name\" . }}\napp.kubernetes.io/instance: {{ .Release.Name }}\napp.kubernetes.io/version: {{ .Chart.AppVersion | quote }}\n{{- end }}\n\n{{- define \"my-app.name\" -}}\n{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix \"-\" }}\n{{- end }}\n```\n\n### 呼び出し方\n\n```yaml\n# include: 結果を文字列として取得しパイプラインに渡せる（推奨）\nmetadata:\n  labels:\n    {{- include \"my-app.labels\" . | nindent 4 }}\n\n# template: 結果を直接出力（パイプライン不可のため非推奨）\n{{ template \"my-app.labels\" . }}\n```\n\n### コンテキスト（.）の渡し方\n\n- `.` はルートコンテキスト（`.Values`, `.Release`, `.Chart` を含む）\n- サブテンプレートに追加データを渡すには `dict` を使う: `include \"tmpl\" (dict \"Values\" .Values \"extra\" \"data\")`",
+    "tags": ["helpers", "define", "include", "template"],
+    "url": ""
+  },
+  {
+    "title": "Chart 依存関係",
+    "body": "## Chart 依存関係\n\n`Chart.yaml` の `dependencies` フィールドで他の Chart を依存として宣言できます。データベースやキャッシュなどの共通インフラを親 Chart に組み込む際に使います。\n\n### Chart.yaml での定義\n\n```yaml\ndependencies:\n  - name: postgresql\n    version: \"12.x.x\"\n    repository: \"https://charts.bitnami.com/bitnami\"\n    condition: postgresql.enabled   # values.yaml でオン/オフ切替\n\n  - name: redis\n    version: \"17.x.x\"\n    repository: \"https://charts.bitnami.com/bitnami\"\n    tags:\n      - cache\n```\n\n### 依存関係の操作コマンド\n\n```bash\n# 依存 Chart をダウンロード（charts/ ディレクトリに保存）\nhelm dependency update ./my-app\n\n# 依存関係の一覧を確認\nhelm dependency list ./my-app\n\n# ダウンロード済み依存を再利用（ネットワーク不要）\nhelm dependency build ./my-app\n```\n\n### 依存 Chart の values 設定\n\n依存 Chart の値は `values.yaml` でChart名をキーとして設定する：\n\n```yaml\npostgresql:\n  auth:\n    database: myapp\n    username: myuser\n  primary:\n    persistence:\n      size: 10Gi\n```",
+    "tags": ["dependencies", "chart-yaml", "subcharts"],
+    "url": ""
+  }
+]

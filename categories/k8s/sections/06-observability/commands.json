@@ -1,0 +1,82 @@
+[
+  {
+    "name": "kubectl get events",
+    "description": "名前空間内のイベント一覧を表示する",
+    "syntax": "kubectl get events [-n <namespace>]",
+    "example": "kubectl get events\nkubectl get events -n production\nkubectl get events -A",
+    "tags": ["events", "observability", "debug"],
+    "url": ""
+  },
+  {
+    "name": "kubectl get events --sort-by=.lastTimestamp",
+    "description": "最終タイムスタンプ順にソートしてイベントを表示する",
+    "syntax": "kubectl get events --sort-by=.lastTimestamp [-n <namespace>]",
+    "example": "kubectl get events --sort-by=.lastTimestamp\nkubectl get events --sort-by=.lastTimestamp -n production",
+    "tags": ["events", "observability", "sort", "debug"],
+    "url": ""
+  },
+  {
+    "name": "kubectl top pods",
+    "description": "PodのCPU・メモリ使用量を表示する（metrics-server必須）",
+    "syntax": "kubectl top pods [-n <namespace>] [--sort-by=<cpu|memory>]",
+    "example": "kubectl top pods\nkubectl top pods -n production\nkubectl top pods --sort-by=memory",
+    "tags": ["observability", "metrics", "cpu", "memory", "top"],
+    "url": ""
+  },
+  {
+    "name": "kubectl top nodes",
+    "description": "ノードのCPU・メモリ使用量を表示する（metrics-server必須）",
+    "syntax": "kubectl top nodes",
+    "example": "kubectl top nodes\nkubectl top nodes --sort-by=cpu",
+    "tags": ["observability", "metrics", "node", "cpu", "memory"],
+    "url": ""
+  },
+  {
+    "name": "kubectl describe node",
+    "description": "ノードの詳細情報（リソース・Pod一覧・テイント等）を表示する",
+    "syntax": "kubectl describe node <node-name>",
+    "example": "kubectl describe node my-node\nkubectl describe node $(kubectl get nodes -o jsonpath='{.items[0].metadata.name}')",
+    "tags": ["node", "describe", "detail", "observability"],
+    "url": ""
+  },
+  {
+    "name": "kubectl cluster-info",
+    "description": "クラスターのエンドポイント情報を表示する",
+    "syntax": "kubectl cluster-info [dump]",
+    "example": "kubectl cluster-info\nkubectl cluster-info dump",
+    "tags": ["cluster", "info", "observability"],
+    "url": ""
+  },
+  {
+    "name": "kubectl get componentstatuses",
+    "description": "クラスターコンポーネント（etcd・scheduler等）の状態を確認する（csエイリアス使用可）",
+    "syntax": "kubectl get componentstatuses\nkubectl get cs",
+    "example": "kubectl get componentstatuses\nkubectl get cs",
+    "tags": ["cluster", "components", "health", "observability"],
+    "url": ""
+  },
+  {
+    "name": "kubectl get --watch",
+    "description": "リソースの変化をリアルタイムでウォッチする",
+    "syntax": "kubectl get <resource> [<name>] --watch [-n <namespace>]",
+    "example": "kubectl get pods --watch\nkubectl get pod my-pod --watch\nkubectl get deployments --watch -n production",
+    "tags": ["watch", "realtime", "observability"],
+    "url": ""
+  },
+  {
+    "name": "kubectl debug",
+    "description": "デバッグ用のephemeralコンテナをPodに追加する",
+    "syntax": "kubectl debug -it <pod-name> --image=<image> --target=<container>",
+    "example": "kubectl debug -it my-pod --image=busybox --target=app\nkubectl debug node/my-node -it --image=ubuntu",
+    "tags": ["debug", "ephemeral", "container", "observability"],
+    "url": ""
+  },
+  {
+    "name": "kubectl auth can-i",
+    "description": "特定の操作権限があるかどうかを確認する",
+    "syntax": "kubectl auth can-i <verb> <resource> [--namespace=<ns>] [--as=<user>]",
+    "example": "kubectl auth can-i create pods\nkubectl auth can-i delete deployments -n production\nkubectl auth can-i '*' '*'",
+    "tags": ["auth", "rbac", "permission", "security"],
+    "url": ""
+  }
+]

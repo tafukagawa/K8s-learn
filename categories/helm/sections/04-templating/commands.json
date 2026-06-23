@@ -1,0 +1,66 @@
+[
+  {
+    "name": "helm template",
+    "description": "ChartテンプレートをレンダリングしてYAMLを標準出力に出力する",
+    "syntax": "helm template <release-name> <chart> [-f values.yaml] [--set key=val]",
+    "example": "helm template my-app ./my-app -f values-prod.yaml",
+    "tags": ["template", "render", "yaml"],
+    "url": ""
+  },
+  {
+    "name": "helm template --debug",
+    "description": "デバッグ情報付きでテンプレートをレンダリングする",
+    "syntax": "helm template <release-name> <chart> --debug",
+    "example": "helm template my-app ./my-app --debug",
+    "tags": ["template", "debug", "render"],
+    "url": ""
+  },
+  {
+    "name": "helm get manifest",
+    "description": "デプロイ済みReleaseの実際のマニフェストを取得する",
+    "syntax": "helm get manifest <release-name> [-n <namespace>]",
+    "example": "helm get manifest my-nginx -n default",
+    "tags": ["get", "manifest", "release"],
+    "url": ""
+  },
+  {
+    "name": "helm get values",
+    "description": "Releaseのデプロイ時に使用した設定値を確認する",
+    "syntax": "helm get values <release-name> [-n <namespace>] [--all]",
+    "example": "helm get values my-nginx --all",
+    "tags": ["get", "values", "release"],
+    "url": ""
+  },
+  {
+    "name": "helm get all",
+    "description": "Releaseのマニフェスト・values・フック等の全情報を取得する",
+    "syntax": "helm get all <release-name> [-n <namespace>]",
+    "example": "helm get all my-nginx -n default",
+    "tags": ["get", "release", "info"],
+    "url": ""
+  },
+  {
+    "name": "helm diff upgrade",
+    "description": "アップグレード前後の差分を確認する（helm-diffプラグイン必要）",
+    "syntax": "helm diff upgrade <release-name> <chart> [-f values.yaml]",
+    "example": "helm diff upgrade my-nginx bitnami/nginx --set image.tag=latest",
+    "tags": ["diff", "upgrade", "plugin"],
+    "url": ""
+  },
+  {
+    "name": "helm plugin install",
+    "description": "Helmプラグインをインストールする",
+    "syntax": "helm plugin install <url>",
+    "example": "helm plugin install https://github.com/databus23/helm-diff",
+    "tags": ["plugin", "install"],
+    "url": ""
+  },
+  {
+    "name": "helm plugin list",
+    "description": "インストール済みのプラグイン一覧を表示する",
+    "syntax": "helm plugin list",
+    "example": "helm plugin list",
+    "tags": ["plugin", "list"],
+    "url": ""
+  }
+]

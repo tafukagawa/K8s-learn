@@ -1,0 +1,14 @@
+[
+  { "name": "docker run", "description": "新しいコンテナを作成して起動する", "syntax": "docker run [options] <image> [command]", "example": "docker run nginx:latest", "tags": ["container", "run"], "url": "" },
+  { "name": "docker run -d", "description": "コンテナをバックグラウンド（デタッチ）モードで起動する", "syntax": "docker run -d <image>", "example": "docker run -d -p 8080:80 nginx:latest", "tags": ["container", "run", "detach"], "url": "" },
+  { "name": "docker run -it", "description": "インタラクティブモードでコンテナを起動してシェルに接続する", "syntax": "docker run -it <image> <shell>", "example": "docker run -it ubuntu:22.04 bash", "tags": ["container", "run", "interactive"], "url": "" },
+  { "name": "docker run --rm", "description": "コンテナ停止時に自動的に削除する", "syntax": "docker run --rm <image> [command]", "example": "docker run --rm alpine echo 'hello'", "tags": ["container", "run", "cleanup"], "url": "" },
+  { "name": "docker ps", "description": "実行中のコンテナ一覧を表示する", "syntax": "docker ps [options]", "example": "docker ps", "tags": ["container", "list"], "url": "" },
+  { "name": "docker ps -a", "description": "停止中のコンテナを含む全コンテナ一覧を表示する", "syntax": "docker ps -a", "example": "docker ps -a", "tags": ["container", "list"], "url": "" },
+  { "name": "docker stop", "description": "実行中のコンテナにSIGTERMを送り正常停止する", "syntax": "docker stop <container> [container...]", "example": "docker stop mycontainer", "tags": ["container", "stop"], "url": "" },
+  { "name": "docker kill", "description": "コンテナにSIGKILLを送り強制停止する", "syntax": "docker kill <container> [container...]", "example": "docker kill mycontainer", "tags": ["container", "stop", "kill"], "url": "" },
+  { "name": "docker start", "description": "停止中のコンテナを再起動する", "syntax": "docker start <container> [container...]", "example": "docker start mycontainer", "tags": ["container", "start"], "url": "" },
+  { "name": "docker rm", "description": "停止中のコンテナを削除する", "syntax": "docker rm <container> [container...]", "example": "docker rm mycontainer", "tags": ["container", "delete"], "url": "" },
+  { "name": "docker exec", "description": "実行中のコンテナ内でコマンドを実行する", "syntax": "docker exec [options] <container> <command>", "example": "docker exec -it mycontainer bash", "tags": ["container", "exec"], "url": "" },
+  { "name": "docker logs", "description": "コンテナの標準出力・標準エラーログを表示する", "syntax": "docker logs [options] <container>", "example": "docker logs -f --tail 100 mycontainer", "tags": ["container", "logs", "debug"], "url": "" }
+]

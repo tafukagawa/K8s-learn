@@ -1,0 +1,26 @@
+[
+  {
+    "title": "kubectl events の読み方",
+    "body": "## kubectl events の読み方\n\nイベントはクラスターで起きた出来事の記録。問題調査の第一歩として確認する。\n\n### 主要フィールド\n- **REASON**: イベントの種類（`Scheduled`, `Pulling`, `BackOff`, `FailedMount` 等）\n- **MESSAGE**: 詳細メッセージ\n- **COUNT**: 同じイベントの発生回数\n- **AGE**: 最後に発生してからの経過時間\n- **TYPE**: `Normal`（正常）または `Warning`（要確認）\n\n### よく見るイベント\n| Reason | 意味 |\n|--------|------|\n| `Scheduled` | ノードにスケジュール済み |\n| `Pulling` | イメージのプル中 |\n| `BackOff` | コンテナが繰り返しクラッシュ |\n| `FailedMount` | ボリュームのマウント失敗 |\n| `OOMKilled` | メモリ不足でコンテナが強制終了 |\n\n```bash\nkubectl get events --sort-by=.lastTimestamp -n default\nkubectl get events --field-selector type=Warning\n```",
+    "tags": ["debug", "events", "observability"],
+    "url": ""
+  },
+  {
+    "title": "リソースリクエスト・制限",
+    "body": "## リソースリクエスト・制限\n\nPod のリソース消費を管理する仕組み。適切な設定でノードの安定稼働を確保する。\n\n### requests と limits\n- **requests**: スケジューリング時に保証するリソース量\n- **limits**: コンテナが使用できる最大リソース量\n\n```yaml\nresources:\n  requests:\n    cpu: \"250m\"\n    memory: \"128Mi\"\n  limits:\n    cpu: \"500m\"\n    memory: \"256Mi\"\n```\n\n### QoS クラス\n| クラス | 条件 |\n|--------|------|\n| **Guaranteed** | requests = limits |\n| **Burstable** | requests < limits |\n| **BestEffort** | 未設定 |",
+    "tags": ["resources", "requests", "limits", "qos"],
+    "url": ""
+  },
+  {
+    "title": "Liveness / Readiness / Startup Probe",
+    "body": "## Liveness / Readiness / Startup Probe\n\nKubernetes がコンテナの状態を監視するヘルスチェック機構。\n\n### 種類と役割\n| Probe | 役割 | 失敗時の動作 |\n|-------|------|-------------|\n| **Liveness** | アプリが生きているか | コンテナ再起動 |\n| **Readiness** | トラフィックを受け付けられるか | Service から切り離し |\n| **Startup** | 起動完了したか | 他 Probe を無効化 |\n\n### チェック方式\n- **httpGet**: HTTP GET でステータスコード確認\n- **tcpSocket**: TCP 接続確認\n- **exec**: コマンド実行、終了コード 0 で成功\n\n```yaml\nlivenessProbe:\n  httpGet:\n    path: /healthz\n    port: 8080\n  initialDelaySeconds: 15\n  periodSeconds: 10\n```",
+    "tags": ["probe", "health", "liveness", "readiness"],
+    "url": ""
+  },
+  {
+    "title": "メトリクスサーバーと監視",
+    "body": "## メトリクスサーバーと監視\n\n`kubectl top` コマンドや HPA には **metrics-server** が必要。\n\n### metrics-server\n- `kubectl top pods/nodes` のバックエンド\n- HPA の CPU ベーススケーリングに必須\n\n```bash\nkubectl get apiservice v1beta1.metrics.k8s.io\nkubectl top nodes\nkubectl top pods --all-namespaces\n```\n\n### 本格監視スタック\n| ツール | 用途 |\n|--------|------|\n| **Prometheus** | メトリクス収集・保存 |\n| **Grafana** | ダッシュボード可視化 |\n| **kube-state-metrics** | K8s オブジェクトのメトリクス |",
+    "tags": ["metrics", "monitoring", "prometheus"],
+    "url": ""
+  }
+]

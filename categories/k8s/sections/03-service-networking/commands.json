@@ -1,0 +1,82 @@
+[
+  {
+    "name": "kubectl get services",
+    "description": "Service一覧を表示する（svcエイリアス使用可）",
+    "syntax": "kubectl get services [-n <namespace>]\nkubectl get svc [-n <namespace>]",
+    "example": "kubectl get services\nkubectl get svc -n production\nkubectl get svc -A",
+    "tags": ["service", "list", "networking"],
+    "url": ""
+  },
+  {
+    "name": "kubectl describe service",
+    "description": "Serviceの詳細情報（エンドポイント・セレクター等）を表示する",
+    "syntax": "kubectl describe service <name> [-n <namespace>]",
+    "example": "kubectl describe service my-service\nkubectl describe svc my-service -n default",
+    "tags": ["service", "describe", "detail", "networking"],
+    "url": ""
+  },
+  {
+    "name": "kubectl expose deployment",
+    "description": "DeploymentからServiceを作成する",
+    "syntax": "kubectl expose deployment <name> --port=<port> [--type=<type>] [--target-port=<port>]",
+    "example": "kubectl expose deployment my-app --port=80 --type=ClusterIP\nkubectl expose deployment my-app --port=80 --type=NodePort\nkubectl expose deployment my-app --port=80 --type=LoadBalancer",
+    "tags": ["service", "expose", "create", "networking"],
+    "url": ""
+  },
+  {
+    "name": "kubectl get endpoints",
+    "description": "Serviceに紐付くエンドポイント一覧を表示する",
+    "syntax": "kubectl get endpoints [<service-name>] [-n <namespace>]",
+    "example": "kubectl get endpoints\nkubectl get endpoints my-service\nkubectl get ep my-service",
+    "tags": ["service", "endpoints", "networking"],
+    "url": ""
+  },
+  {
+    "name": "kubectl get ingress",
+    "description": "Ingress一覧を表示する",
+    "syntax": "kubectl get ingress [-n <namespace>]",
+    "example": "kubectl get ingress\nkubectl get ing -n production",
+    "tags": ["ingress", "list", "networking", "http"],
+    "url": ""
+  },
+  {
+    "name": "kubectl describe ingress",
+    "description": "Ingressの詳細情報（ルーティングルール等）を表示する",
+    "syntax": "kubectl describe ingress <name> [-n <namespace>]",
+    "example": "kubectl describe ingress my-ingress\nkubectl describe ing my-ingress -n production",
+    "tags": ["ingress", "describe", "networking", "routing"],
+    "url": ""
+  },
+  {
+    "name": "kubectl port-forward pod",
+    "description": "ローカルポートをPodのポートへフォワードする",
+    "syntax": "kubectl port-forward pod/<pod-name> <local-port>:<pod-port>",
+    "example": "kubectl port-forward pod/my-pod 8080:80\nkubectl port-forward pod/my-pod 5432:5432",
+    "tags": ["pod", "port-forward", "networking", "debug"],
+    "url": ""
+  },
+  {
+    "name": "kubectl port-forward service",
+    "description": "ローカルポートをServiceのポートへフォワードする",
+    "syntax": "kubectl port-forward service/<service-name> <local-port>:<service-port>",
+    "example": "kubectl port-forward service/my-service 8080:80\nkubectl port-forward svc/my-service 3000:3000",
+    "tags": ["service", "port-forward", "networking", "debug"],
+    "url": ""
+  },
+  {
+    "name": "kubectl get networkpolicies",
+    "description": "NetworkPolicy一覧を表示する",
+    "syntax": "kubectl get networkpolicies [-n <namespace>]",
+    "example": "kubectl get networkpolicies\nkubectl get netpol -n production",
+    "tags": ["networkpolicy", "security", "networking"],
+    "url": ""
+  },
+  {
+    "name": "kubectl get all",
+    "description": "名前空間内の全リソース（Pod/Service/Deployment等）を一覧表示する",
+    "syntax": "kubectl get all [-n <namespace>]",
+    "example": "kubectl get all\nkubectl get all -n production\nkubectl get all -A",
+    "tags": ["all", "list", "overview"],
+    "url": ""
+  }
+]

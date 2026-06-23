@@ -1,0 +1,66 @@
+[
+  {
+    "name": "helm create",
+    "description": "新規Chartのスケルトンを生成する",
+    "syntax": "helm create <chart-name>",
+    "example": "helm create my-app",
+    "tags": ["chart", "create"],
+    "url": ""
+  },
+  {
+    "name": "helm package",
+    "description": "ChartをtgzファイルにパッケージングするUI",
+    "syntax": "helm package <chart-dir> [--destination <dir>]",
+    "example": "helm package ./my-app --destination ./dist",
+    "tags": ["chart", "package"],
+    "url": ""
+  },
+  {
+    "name": "helm lint",
+    "description": "Chartの構文・ベストプラクティスをチェックする",
+    "syntax": "helm lint <chart-dir> [--strict]",
+    "example": "helm lint ./my-app --strict",
+    "tags": ["chart", "lint", "validate"],
+    "url": ""
+  },
+  {
+    "name": "helm template",
+    "description": "テンプレートをローカルでレンダリングする（クラスタ不要）",
+    "syntax": "helm template <release-name> <chart-dir> [-f values.yaml]",
+    "example": "helm template my-app ./my-app -f custom-values.yaml",
+    "tags": ["chart", "template", "render"],
+    "url": ""
+  },
+  {
+    "name": "helm show chart",
+    "description": "Chart.yamlの内容を表示する",
+    "syntax": "helm show chart <chart>",
+    "example": "helm show chart bitnami/nginx",
+    "tags": ["chart", "show", "info"],
+    "url": ""
+  },
+  {
+    "name": "helm show values",
+    "description": "デフォルトのvalues.yamlを表示する",
+    "syntax": "helm show values <chart>",
+    "example": "helm show values bitnami/nginx",
+    "tags": ["chart", "show", "values"],
+    "url": ""
+  },
+  {
+    "name": "helm show all",
+    "description": "Chartの全情報（Chart.yaml・values・README等）を表示する",
+    "syntax": "helm show all <chart>",
+    "example": "helm show all bitnami/nginx",
+    "tags": ["chart", "show", "info"],
+    "url": ""
+  },
+  {
+    "name": "helm pull",
+    "description": "リモートリポジトリからChartをダウンロードする",
+    "syntax": "helm pull <repo>/<chart> [--version <ver>] [--untar]",
+    "example": "helm pull bitnami/nginx --version 15.0.0",
+    "tags": ["chart", "pull", "download"],
+    "url": ""
+  }
+]

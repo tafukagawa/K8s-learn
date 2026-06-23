@@ -1,0 +1,20 @@
+[
+  {
+    "title": "Helm リポジトリとは",
+    "body": "## Helm リポジトリとは\n\nHelm リポジトリは Chart を配布・共有するための HTTP(S) サーバーです。リポジトリのルートには `index.yaml` が置かれており、利用可能な Chart の一覧とダウンロード URL が記載されています。\n\n### 仕組み\n\n1. `helm repo add <name> <url>` でリポジトリを登録すると、`index.yaml` がローカルにキャッシュされる\n2. `helm repo update` でキャッシュを最新化する（定期的に実行が必要）\n3. `helm search repo` でキャッシュ済みの index.yaml を検索する\n\n### 自前リポジトリの作成\n\n```bash\n# Chart をパッケージ化\nhelm package ./my-app\n\n# index.yaml を生成\nhelm repo index . --url https://my-repo.example.com\n\n# 生成した .tgz と index.yaml を静的 HTTP サーバーに配置する\n```\n\nGitHub Pages や S3 静的ウェブサイトホスティングを使うと低コストで運用できる。",
+    "tags": ["repo", "repository", "index"],
+    "url": ""
+  },
+  {
+    "title": "OCI レジストリ対応",
+    "body": "## OCI レジストリ対応\n\nHelm 3.8 以降、Chart を OCI（Open Container Initiative）形式でコンテナレジストリに保存・配布できます。従来の HTTP リポジトリとは異なるプロトコルを使います。\n\n### 基本コマンド\n\n```bash\n# レジストリにログイン\nhelm registry login registry.example.com -u myuser -p mypassword\n\n# Chart をパッケージ化\nhelm package ./my-app\n\n# OCI レジストリに push\nhelm push my-app-1.0.0.tgz oci://registry.example.com/charts\n\n# OCI レジストリから pull\nhelm pull oci://registry.example.com/charts/my-app --version 1.0.0\n\n# OCI レジストリから直接インストール\nhelm install my-release oci://registry.example.com/charts/my-app\n```\n\n### 従来リポジトリとの違い\n\n- `helm repo add` は不要（URL を直接指定）\n- GitHub Container Registry (GHCR) や AWS ECR など既存のコンテナレジストリを流用できる\n- イメージと Chart を同一レジストリで一元管理できる",
+    "tags": ["oci", "registry", "push", "pull"],
+    "url": ""
+  },
+  {
+    "title": "ArtifactHub",
+    "body": "## ArtifactHub\n\nArtifactHub（https://artifacthub.io）は Helm Chart を含む Kubernetes 関連パッケージを検索できる公式パブリックサイトです。\n\n### 使い方\n\n```bash\n# CLI から ArtifactHub を検索\nhelm search hub nginx\n\n# ウェブサイトから検索した後、表示されたコマンドでリポジトリを追加\nhelm repo add bitnami https://charts.bitnami.com/bitnami\nhelm install my-nginx bitnami/nginx\n```\n\n### 信頼性の確認方法\n\nArtifactHub では Chart の信頼性を判断するための指標が表示される。\n\n- **Verified Publisher**: リポジトリ所有者が検証済み\n- **Official**: 公式プロジェクトが提供するChart（例: prometheus-community）\n- **CNCF**: Cloud Native Computing Foundation プロジェクトの公式Chart\n- **Security Report**: Snyk による既知の脆弱性スキャン結果\n\n本番環境で使う Chart は必ず Verified Publisher または Official バッジを確認し、最終更新日や GitHub のスター数・Issue 数も参考にする。",
+    "tags": ["artifacthub", "search", "security"],
+    "url": ""
+  }
+]

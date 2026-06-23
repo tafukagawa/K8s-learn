@@ -1,0 +1,22 @@
+[
+  {
+    "title": "configMapGenerator",
+    "body": "## configMapGenerator\n\nファイルやリテラル値から ConfigMap を自動生成する機能。kustomization.yaml に定義するだけで、ビルド時に ConfigMap リソースが生成される。\n\n### kustomization.yaml の記述例\n```yaml\nconfigMapGenerator:\n  - name: app-config\n    literals:\n      - APP_ENV=production\n      - LOG_LEVEL=info\n  - name: nginx-config\n    files:\n      - nginx.conf\n  - name: env-config\n    envs:\n      - app.env\n```\n\n### ハッシュサフィックス\nデフォルトでは生成された ConfigMap 名にコンテンツのハッシュが付与される。\n```\napp-config-7d8k2m9f4t  # ハッシュサフィックス付き\n```\nこれにより ConfigMap の内容が変わると名前も変わり、参照している Pod が自動的に再起動される。\n\n### ハッシュを無効にする場合\n```yaml\nconfigMapGenerator:\n  - name: app-config\n    options:\n      disableNameSuffixHash: true\n    literals:\n      - APP_ENV=production\n```",
+    "tags": ["kustomize", "configmap", "generator"]
+  },
+  {
+    "title": "secretGenerator",
+    "body": "## secretGenerator\n\nファイルやリテラル値から Secret を自動生成する機能。base64 エンコードは Kustomize が自動で行う。\n\n### kustomization.yaml の記述例\n```yaml\nsecretGenerator:\n  - name: db-secret\n    literals:\n      - DB_PASSWORD=s3cr3t\n      - DB_USER=admin\n  - name: tls-secret\n    files:\n      - tls.crt\n      - tls.key\n  - name: env-secret\n    envs:\n      - secret.env\n```\n\n### envファイルの形式\n`secret.env` ファイルに key=value 形式で記述する。\n```\nDB_PASSWORD=s3cr3t\nAPI_KEY=abc123\n```\n\n### 注意点\n- リテラル値はビルド時に base64 エンコードされる\n- 生成された Secret もハッシュサフィックスが付与される\n- Git に機密情報をコミットする場合は Sealed Secrets や External Secrets との組み合わせを検討すること\n- `type` フィールドで Secret の種類（`kubernetes.io/tls` 等）を指定できる",
+    "tags": ["kustomize", "secret", "generator"]
+  },
+  {
+    "title": "ハッシュサフィックスの仕組み",
+    "body": "## ハッシュサフィックスの仕組み\n\nconfigMapGenerator / secretGenerator で生成されるリソースには、コンテンツのハッシュ値がサフィックスとして付与される。\n\n### 動作の仕組み\n1. Kustomize がリソース内容のハッシュを計算\n2. リソース名に `<name>-<hash>` 形式でサフィックスを付与\n3. Deployment 等の参照先も自動的に新しい名前に書き換えられる\n\n```\n# 変更前\nconfigmap/app-config-7d8k2m9f4t\n\n# 設定変更後（新しいハッシュ）\nconfigmap/app-config-9b3n5p7q2s\n```\n\n### なぜ重要か\nKubernetes は ConfigMap/Secret 自体が更新されても Pod を自動再起動しない。ハッシュサフィックスにより名前が変わると、Deployment の `.spec.template` が更新されたと判断され、**ローリングアップデートが自動でトリガーされる**。\n\n### まとめ\n- 設定変更 → ハッシュ変わる → リソース名変わる → Deployment 更新 → Pod 再起動\n- 設定変更を確実に反映させる仕組みとして非常に有効",
+    "tags": ["kustomize", "hash", "generator", "rollout"]
+  },
+  {
+    "title": "HelmChartInflationGenerator",
+    "body": "## HelmChartInflationGenerator\n\nKustomize で Helm チャートを管理するための機能。Helm チャートを Kustomize のリソースとして扱い、さらに Kustomize のパッチを重ねることができる。\n\n### kustomization.yaml の記述例\n```yaml\napiVersion: kustomize.config.k8s.io/v1beta1\nkind: Kustomization\n\nhelmCharts:\n  - name: nginx\n    repo: https://charts.bitnami.com/bitnami\n    version: 15.0.0\n    releaseName: my-nginx\n    namespace: web\n    valuesFile: values.yaml\n```\n\n### values.yaml の例\n```yaml\nreplicaCount: 3\nservice:\n  type: ClusterIP\n```\n\n### ビルド方法\n```bash\n# helmプラグインが必要\nkustomize build --enable-helm ./\n```\n\n### 利用ケース\n- 既存 Helm チャートに Kustomize のパッチを適用したい場合\n- GitOps ツール（ArgoCD）で Helm チャートを Kustomize として管理する場合\n- Helm の values だけでは対応できない細かいカスタマイズが必要な場合\n\n### 注意\n`--enable-helm` フラグが必要。`kubectl apply -k` では利用できず、`kustomize build` が必要。",
+    "tags": ["kustomize", "helm", "generator", "helmchart"]
+  }
+]

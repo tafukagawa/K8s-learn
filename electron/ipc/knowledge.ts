@@ -5,6 +5,11 @@ function parseTags(raw: string): string[] {
   try { return JSON.parse(raw) } catch { return [] }
 }
 
+function parseCloze(raw: string | null) {
+  if (!raw) return null
+  try { return JSON.parse(raw) } catch { return null }
+}
+
 function rowToKnowledge(row: any): Knowledge {
   return {
     id: row.id,
@@ -14,19 +19,28 @@ function rowToKnowledge(row: any): Knowledge {
     tags: parseTags(row.tags),
     isCustom: row.is_custom === 1,
     url: row.url ?? '',
+    cloze: parseCloze(row.cloze ?? null),
   }
 }
 
 export function createKnowledgeHandlers(db: Database.Database) {
   return {
-    list(categoryId: number): KnowledgeWithProgress[] {
-      const rows = db.prepare(`
-        SELECT k.*, p.status, p.correct_count, p.attempt_count, p.last_reviewed
-        FROM knowledge k
-        LEFT JOIN progress p ON p.item_type = 'knowledge' AND p.item_id = k.id
-        WHERE k.category_id = ?
-        ORDER BY k.id
-      `).all(categoryId)
+    list(categoryId: number, sectionId?: number): KnowledgeWithProgress[] {
+      const rows = sectionId != null
+        ? db.prepare(`
+            SELECT k.*, p.status, p.correct_count, p.attempt_count, p.last_reviewed
+            FROM knowledge k
+            LEFT JOIN progress p ON p.item_type = 'knowledge' AND p.item_id = k.id
+            WHERE k.category_id = ? AND k.section_id = ?
+            ORDER BY k.id
+          `).all(categoryId, sectionId)
+        : db.prepare(`
+            SELECT k.*, p.status, p.correct_count, p.attempt_count, p.last_reviewed
+            FROM knowledge k
+            LEFT JOIN progress p ON p.item_type = 'knowledge' AND p.item_id = k.id
+            WHERE k.category_id = ?
+            ORDER BY k.id
+          `).all(categoryId)
       return rows.map((row: any) => ({
         ...rowToKnowledge(row),
         progress: row.status ? {

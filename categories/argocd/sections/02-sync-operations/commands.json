@@ -1,0 +1,10 @@
+[
+  { "name": "argocd app sync", "description": "Applicationを手動で同期する", "syntax": "argocd app sync <app-name>", "example": "argocd app sync my-app", "tags": ["sync", "app"], "url": "" },
+  { "name": "argocd app sync --dry-run", "description": "同期をシミュレートする（実際には変更しない）", "syntax": "argocd app sync <app-name> --dry-run", "example": "argocd app sync my-app --dry-run", "tags": ["sync", "dry-run"], "url": "" },
+  { "name": "argocd app sync --prune", "description": "Gitに存在しない余分なリソースも削除して同期する", "syntax": "argocd app sync <app-name> --prune", "example": "argocd app sync my-app --prune", "tags": ["sync", "prune"], "url": "" },
+  { "name": "argocd app sync --force", "description": "リソースを強制的に再作成して同期する", "syntax": "argocd app sync <app-name> --force", "example": "argocd app sync my-app --force", "tags": ["sync", "force"], "url": "" },
+  { "name": "argocd app wait", "description": "Applicationの同期・ヘルスチェック完了まで待機する", "syntax": "argocd app wait <app-name> [--health] [--sync]", "example": "argocd app wait my-app --health", "tags": ["sync", "wait"], "url": "" },
+  { "name": "argocd app rollback", "description": "Applicationを特定のリビジョンにロールバックする", "syntax": "argocd app rollback <app-name> <revision-id>", "example": "argocd app rollback my-app 3", "tags": ["rollback", "app"], "url": "" },
+  { "name": "argocd app terminate-op", "description": "Applicationで実行中の操作を強制停止する", "syntax": "argocd app terminate-op <app-name>", "example": "argocd app terminate-op my-app", "tags": ["sync", "terminate"], "url": "" },
+  { "name": "argocd app patch", "description": "Applicationリソースをパッチで更新する", "syntax": "argocd app patch <app-name> --patch <json-patch>", "example": "argocd app patch my-app --patch '[{\"op\":\"replace\",\"path\":\"/spec/source/targetRevision\",\"value\":\"HEAD\"}]'", "tags": ["app", "patch", "update"], "url": "" }
+]

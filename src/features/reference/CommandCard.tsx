@@ -47,7 +47,7 @@ export function CommandCard({ command, onClick, onProgressChange }: CommandCardP
 
           <Box sx={{ minWidth: 0, flex: 1 }}>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 1, mb: 0.75 }}>
-              <Typography sx={{ fontFamily: 'monospace', fontSize: 15, color: 'text.primary', fontWeight: 850, overflowWrap: 'anywhere' }}>
+              <Typography sx={{ fontFamily: 'monospace', fontSize: 18, color: 'text.primary', fontWeight: 850, overflowWrap: 'anywhere' }}>
                 {command.name}
               </Typography>
               <Box

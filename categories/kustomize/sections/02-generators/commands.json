@@ -1,0 +1,8 @@
+[
+  { "name": "kustomize build", "description": "configMapGeneratorやsecretGeneratorを含むkustomization.yamlをビルドする", "syntax": "kustomize build <dir>", "example": "kustomize build base/", "tags": ["kustomize", "build", "generator"], "url": "" },
+  { "name": "kustomize build --enable-alpha-plugins", "description": "アルファ版プラグインを有効にしてビルドする", "syntax": "kustomize build --enable-alpha-plugins <dir>", "example": "kustomize build --enable-alpha-plugins base/", "tags": ["kustomize", "build", "plugin"], "url": "" },
+  { "name": "kubectl apply -k", "description": "generatorを含むkustomizationをクラスタに適用する", "syntax": "kubectl apply -k <dir>", "example": "kubectl apply -k base/", "tags": ["kustomize", "apply", "generator"], "url": "" },
+  { "name": "kustomize edit add configmap", "description": "kustomization.yamlにconfigMapGeneratorエントリを追加する", "syntax": "kustomize edit add configmap <name> --from-literal=<key>=<value>", "example": "kustomize edit add configmap app-config --from-literal=APP_ENV=production", "tags": ["kustomize", "configmap", "generator"], "url": "" },
+  { "name": "kustomize edit add secret", "description": "kustomization.yamlにsecretGeneratorエントリを追加する", "syntax": "kustomize edit add secret <name> --from-literal=<key>=<value>", "example": "kustomize edit add secret db-secret --from-literal=DB_PASSWORD=s3cr3t", "tags": ["kustomize", "secret", "generator"], "url": "" },
+  { "name": "kustomize edit set image", "description": "kustomization.yamlのimagesフィールドでイメージタグを更新する", "syntax": "kustomize edit set image <image>=<newimage>:<tag>", "example": "kustomize edit set image nginx=nginx:1.25.0", "tags": ["kustomize", "image", "update"], "url": "" }
+]

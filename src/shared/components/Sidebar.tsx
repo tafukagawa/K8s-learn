@@ -154,7 +154,7 @@ export function Sidebar({ mode, section, onModeChange, onSectionChange, doneCoun
               <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>{Math.round(progress)}% 到達</Typography>
             </Box>
           </Box>
-          <LinearProgress variant="determinate" value={progress} sx={{ height: 7, borderRadius: 1, bgcolor: 'rgba(148,163,184,0.16)', '& .MuiLinearProgress-bar': { borderRadius: 1 } }} />
+          <LinearProgress variant="determinate" value={progress} sx={{ height: 4, borderRadius: 1, bgcolor: 'rgba(148,163,184,0.14)', '& .MuiLinearProgress-bar': { borderRadius: 1 } }} />
         </Box>
 
         <Box

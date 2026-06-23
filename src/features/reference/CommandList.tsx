@@ -126,7 +126,7 @@ export function CommandList({ categoryId, searchQuery, onStartLearning }: Comman
                 <LinearProgress
                   variant="determinate"
                   value={completion}
-                  sx={{ flex: 1, height: 7, borderRadius: 999, bgcolor: 'rgba(148,163,184,0.16)', '& .MuiLinearProgress-bar': { borderRadius: 999 } }}
+                  sx={{ flex: 1, height: 4, borderRadius: 999, bgcolor: 'rgba(148,163,184,0.14)', '& .MuiLinearProgress-bar': { borderRadius: 999 } }}
                 />
                 <Typography sx={{ fontWeight: 800, fontSize: 13 }}>{completion}%</Typography>
               </Box>
@@ -177,7 +177,7 @@ export function CommandList({ categoryId, searchQuery, onStartLearning }: Comman
               <BoltIcon sx={{ color: 'primary.light' }} />
               <Typography sx={{ color: 'text.secondary', fontSize: 13, fontWeight: 700 }}>完了率</Typography>
               <Typography sx={{ fontSize: 28, fontWeight: 900 }}>{completion}%</Typography>
-              <LinearProgress variant="determinate" value={completion} sx={{ height: 7, borderRadius: 999, bgcolor: 'rgba(148,163,184,0.16)', '& .MuiLinearProgress-bar': { borderRadius: 999 } }} />
+              <LinearProgress variant="determinate" value={completion} sx={{ height: 4, borderRadius: 999, bgcolor: 'rgba(148,163,184,0.14)', '& .MuiLinearProgress-bar': { borderRadius: 999 } }} />
             </Box>
             <Box sx={statCardSx}>
               <CheckCircleIcon sx={{ color: 'secondary.main' }} />

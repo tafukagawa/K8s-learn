@@ -2,13 +2,15 @@ import { alpha, createTheme, type PaletteMode } from '@mui/material/styles'
 
 export function createAppTheme(mode: PaletteMode) {
   const isDark = mode === 'dark'
-  const primary = '#3B82F6'
+  const primary = isDark ? '#5590C8' : '#3B82F6'
+  const primaryLight = isDark ? '#7AAED8' : '#60A5FA'
+  const primaryDark = isDark ? '#2962A0' : '#1D4ED8'
   const secondary = '#38BDF8'
 
   return createTheme({
     palette: {
       mode,
-      primary: { main: primary, light: '#60A5FA', dark: '#1D4ED8' },
+      primary: { main: primary, light: primaryLight, dark: primaryDark },
       secondary: { main: secondary, light: '#7DD3FC', dark: '#0284C7' },
       background: {
         default: isDark ? '#0B1628' : '#EEF4FF',

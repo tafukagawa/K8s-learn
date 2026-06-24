@@ -1,0 +1,14 @@
+[
+  {
+    "name": "docker buildx build",
+    "description": "Docker イメージをビルドするコマンド",
+    "syntax": "docker buildx build [OPTIONS] PATH | URL | -",
+    "example": "docker buildx build .\ndocker buildx build --tag myimage:latest .",
+    "tags": [
+      "docker",
+      "buildx",
+      "image"
+    ],
+    "url": "https://docs.docker.com/reference/cli/docker/buildx/build/"
+  }
+]

@@ -3,6 +3,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
+import { api } from '../../shared/ipc'
 import type { CommandWithProgress } from '../../types'
 
 interface CommandDetailProps {
@@ -57,7 +58,7 @@ export function CommandDetail({ command, onClose, onEdit, onDelete }: CommandDet
                 variant="text"
                 size="small"
                 startIcon={<OpenInNewIcon fontSize="small" />}
-                onClick={() => window.api.shell.openExternal(command.url)}
+                onClick={() => api.shell.openExternal(command.url)}
                 sx={{ mb: 2 }}
               >
                 公式ドキュメント

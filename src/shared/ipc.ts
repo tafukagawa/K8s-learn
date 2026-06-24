@@ -32,4 +32,7 @@ export const api = {
     checkOllama: () => window.api.ai.checkOllama(),
     generateCloze: (knowledgeId: number) => window.api.ai.generateCloze(knowledgeId),
   },
+  shell: {
+    openExternal: (url: string) => window.api.shell.openExternal(url),
+  },
 }

@@ -12,9 +12,12 @@ export default defineConfig({
   plugins: [react()],
   base: '/K8s-learn/',
   resolve: {
-    alias: {
-      [resolve(__dirname, 'src/shared/ipc.ts')]: resolve(__dirname, 'src/shared/ipc.web.ts'),
-    },
+    alias: [
+      {
+        find: /.*\/shared\/ipc$/,
+        replacement: resolve(__dirname, 'src/shared/ipc.web.ts'),
+      },
+    ],
   },
   build: {
     outDir: 'dist/web',

@@ -5,6 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { api } from '../../shared/ipc'
 import type { KnowledgeWithProgress } from '../../types'
 
 interface KnowledgeDetailProps {
@@ -54,7 +55,7 @@ export function KnowledgeDetail({ item, onClose, onEdit, onDelete }: KnowledgeDe
                 variant="text"
                 size="small"
                 startIcon={<OpenInNewIcon fontSize="small" />}
-                onClick={() => window.api.shell.openExternal(item.url)}
+                onClick={() => api.shell.openExternal(item.url)}
                 sx={{ mb: 2 }}
               >
                 公式ドキュメント

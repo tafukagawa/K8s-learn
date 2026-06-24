@@ -9,6 +9,7 @@ import { TagFilter } from './TagFilter'
 import { KnowledgeDetail } from './KnowledgeDetail'
 import { KnowledgeForm } from './KnowledgeForm'
 import { api } from '../../shared/ipc'
+import { stripMarkdown } from '../../shared/stripMarkdown'
 import type { KnowledgeWithProgress, ProgressStatus, ClozeItem } from '../../types'
 
 interface KnowledgeListProps {
@@ -185,6 +186,7 @@ export function KnowledgeList({ categoryId, sectionId, searchQuery, onStartLearn
         )}
         {filtered.map((item, index) => {
           const status = item.progress?.status ?? 'unseen'
+          const bodyPreview = stripMarkdown(item.body)
           return (
             <Box
               key={item.id}
@@ -214,7 +216,7 @@ export function KnowledgeList({ categoryId, sectionId, searchQuery, onStartLearn
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, flexWrap: 'wrap', mt: 0.25 }}>
                   <Typography sx={{ fontSize: 12, color: 'text.secondary' }} noWrap>
-                    {item.body.slice(0, 80)}{item.body.length > 80 ? '...' : ''}
+                    {bodyPreview.slice(0, 80)}{bodyPreview.length > 80 ? '...' : ''}
                   </Typography>
                   {item.tags.map(tag => (
                     <Chip

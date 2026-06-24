@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Box, Typography, Chip } from '@mui/material'
 import { api } from '../../shared/ipc'
+import { stripMarkdown } from '../../shared/stripMarkdown'
 
 type CarouselItem =
   | { type: 'knowledge'; id: number; title: string; body: string }
@@ -57,7 +58,7 @@ export function AutoplayCarousel({ categoryId, sectionId }: AutoplayCarouselProp
   const item = items[index]
   const label = item.type === 'knowledge' ? 'ナレッジ' : 'コマンド'
   const title = item.type === 'knowledge' ? item.title : item.name
-  const subtitle = item.type === 'knowledge' ? item.body : item.description
+  const subtitle = item.type === 'knowledge' ? stripMarkdown(item.body) : item.description
 
   return (
     <Box

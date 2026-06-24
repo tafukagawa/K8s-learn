@@ -13,7 +13,7 @@ interface ReferenceViewProps {
 }
 
 export function ReferenceView({ categoryId, sectionId, searchQuery, onStartLearning }: ReferenceViewProps) {
-  const [tab, setTab] = useState<'commands' | 'knowledge'>('commands')
+  const [tab, setTab] = useState<'commands' | 'knowledge'>('knowledge')
 
   return (
     <Box sx={{ p: 3, maxWidth: 1180, mx: 'auto' }}>
@@ -23,16 +23,16 @@ export function ReferenceView({ categoryId, sectionId, searchQuery, onStartLearn
         sx={{ mb: 3, borderBottom: '1px solid', borderColor: 'divider' }}
       >
         <Tab
-          value="commands"
-          label="コマンド"
-          icon={<TerminalIcon fontSize="small" />}
+          value="knowledge"
+          label="ナレッジ"
+          icon={<LightbulbIcon fontSize="small" />}
           iconPosition="start"
           sx={{ fontSize: 13, fontWeight: 700, minHeight: 44 }}
         />
         <Tab
-          value="knowledge"
-          label="ナレッジ"
-          icon={<LightbulbIcon fontSize="small" />}
+          value="commands"
+          label="コマンド"
+          icon={<TerminalIcon fontSize="small" />}
           iconPosition="start"
           sx={{ fontSize: 13, fontWeight: 700, minHeight: 44 }}
         />

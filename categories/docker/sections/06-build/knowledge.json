@@ -1,0 +1,12 @@
+[
+  {
+    "title": "Docker Buildx",
+    "body": "Docker Buildxは、Dockerのビルド機能を拡張するためのプラグインです。これにより、複数のプラットフォーム向けにイメージをビルドしたり、ビルドキャッシュを管理したりすることができます。Buildxを使用すると、より効率的にコンテナイメージを作成できます。",
+    "tags": [
+      "Docker",
+      "Buildx",
+      "コンテナ"
+    ],
+    "url": "https://docs.docker.com/reference/cli/docker/buildx/build/"
+  }
+]

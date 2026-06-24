@@ -3,11 +3,10 @@ import {
   Box, List, ListItemButton, ListItemIcon, ListItemText,
   Typography, LinearProgress, Collapse,
 } from '@mui/material'
-import StyleIcon from '@mui/icons-material/Style'
-import RouteIcon from '@mui/icons-material/Route'
-import HelpOutlineIcon from '@mui/icons-material/HelpOutlined'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import ChevronRightIcon from '@mui/icons-material/ChevronRight'
+import {
+  StackIcon, ProjectRoadmapIcon, QuestionIcon,
+  ChevronDownIcon, ChevronRightIcon,
+} from '@primer/octicons-react'
 import { alpha } from '@mui/material/styles'
 import { api } from '../../shared/ipc'
 import type { Category, Section } from '../../types'
@@ -61,9 +60,9 @@ export function Sidebar({ categories, view, onViewChange, doneCount, totalCount 
   const progress = totalCount > 0 ? (doneCount / totalCount) * 100 : 0
 
   return (
-    <Box sx={theme => ({
+    <Box sx={{
       width: 252,
-      bgcolor: theme.palette.mode === 'dark' ? '#111111' : '#ffffff',
+      bgcolor: 'background.paper',
       borderRight: '1px solid',
       borderColor: 'divider',
       p: 1.5,
@@ -72,7 +71,7 @@ export function Sidebar({ categories, view, onViewChange, doneCount, totalCount 
       display: 'flex',
       flexDirection: 'column',
       gap: 1.5,
-    })}>
+    }}>
 
       {/* 学習ツール */}
       <Box>
@@ -83,16 +82,21 @@ export function Sidebar({ categories, view, onViewChange, doneCount, totalCount 
             selected={view.mode === 'flashcard'}
             onClick={() => onViewChange({ mode: 'flashcard' })}
             sx={theme => ({
-              borderRadius: 1, mb: 0.5, px: 1, minHeight: 40,
-              border: '1px solid',
-              bgcolor: view.mode === 'flashcard' ? (theme.palette.mode === 'dark' ? '#2A4A78' : alpha(theme.palette.primary.main, 0.12)) : undefined,
-              borderColor: view.mode === 'flashcard' ? alpha(theme.palette.primary.main, 0.5) : 'transparent',
+              borderRadius: 1, mb: 0.5, px: 1, minHeight: 36,
+              bgcolor: view.mode === 'flashcard'
+                ? alpha(theme.palette.primary.main, 0.10)
+                : undefined,
             })}
           >
-            <ListItemIcon sx={{ minWidth: 30, color: view.mode === 'flashcard' ? 'primary.light' : 'text.secondary' }}>
-              <StyleIcon fontSize="small" />
+            <ListItemIcon sx={{ minWidth: 28 }}>
+              <Box sx={{ color: view.mode === 'flashcard' ? 'primary.light' : 'text.secondary', display: 'flex' }}>
+                <StackIcon size={14} />
+              </Box>
             </ListItemIcon>
-            <ListItemText primary="フラッシュカード" slotProps={{ primary: { sx: { fontSize: 13, fontWeight: view.mode === 'flashcard' ? 800 : 600 } } }} />
+            <ListItemText
+              primary="フラッシュカード"
+              slotProps={{ primary: { sx: { fontSize: 13, fontWeight: view.mode === 'flashcard' ? 600 : 400, color: view.mode === 'flashcard' ? 'primary.light' : 'text.primary' } } }}
+            />
           </ListItemButton>
 
           {/* ロードマップ */}
@@ -100,45 +104,57 @@ export function Sidebar({ categories, view, onViewChange, doneCount, totalCount 
             selected={view.mode === 'roadmap'}
             onClick={() => onViewChange({ mode: 'roadmap' })}
             sx={theme => ({
-              borderRadius: 1, mb: 0.25, px: 1, minHeight: 40,
-              border: '1px solid',
-              bgcolor: view.mode === 'roadmap' ? (theme.palette.mode === 'dark' ? '#2A4A78' : alpha(theme.palette.primary.main, 0.12)) : undefined,
-              borderColor: view.mode === 'roadmap' ? alpha(theme.palette.primary.main, 0.5) : 'transparent',
+              borderRadius: 1, mb: 0.25, px: 1, minHeight: 36,
+              bgcolor: view.mode === 'roadmap'
+                ? alpha(theme.palette.primary.main, 0.10)
+                : undefined,
             })}
           >
-            <ListItemIcon sx={{ minWidth: 30, color: view.mode === 'roadmap' ? 'primary.light' : 'text.secondary' }}>
-              <RouteIcon fontSize="small" />
+            <ListItemIcon sx={{ minWidth: 28 }}>
+              <Box sx={{ color: view.mode === 'roadmap' ? 'primary.light' : 'text.secondary', display: 'flex' }}>
+                <ProjectRoadmapIcon size={14} />
+              </Box>
             </ListItemIcon>
-            <ListItemText primary="ロードマップ" slotProps={{ primary: { sx: { fontSize: 13, fontWeight: view.mode === 'roadmap' ? 800 : 600 } } }} />
+            <ListItemText
+              primary="ロードマップ"
+              slotProps={{ primary: { sx: { fontSize: 13, fontWeight: view.mode === 'roadmap' ? 600 : 400, color: view.mode === 'roadmap' ? 'primary.light' : 'text.primary' } } }}
+            />
           </ListItemButton>
 
-          {/* 学習進捗（ロードマップ配下・常時表示） */}
-          <Box sx={theme => ({
+          {/* 学習進捗ウィジェット */}
+          <Box sx={{
             mx: 1, mb: 0.5, p: 1.25,
-            bgcolor: theme.palette.mode === 'dark' ? '#1A1A1A' : '#f4f8ff',
+            bgcolor: 'background.default',
             borderRadius: 1.5,
             border: '1px solid',
             borderColor: 'divider',
-          })}>
-            <Typography sx={{ fontSize: 11, fontWeight: 800, color: 'text.secondary', mb: 0.75 }}>学習進捗</Typography>
+          }}>
+            <Typography sx={{ fontSize: 11, fontWeight: 600, color: 'text.secondary', mb: 0.75 }}>学習進捗</Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25, mb: 0.75 }}>
               <Box sx={theme => ({
                 width: 48, height: 48, display: 'grid', placeItems: 'center', borderRadius: '50%',
                 background: `conic-gradient(${theme.palette.primary.main} ${progress}%, rgba(148,163,184,0.14) 0)`,
                 position: 'relative', flexShrink: 0,
-                '&::after': { content: '""', position: 'absolute', inset: 6, borderRadius: '50%', bgcolor: theme.palette.mode === 'dark' ? '#1A1A1A' : '#f4f8ff' },
+                '&::after': {
+                  content: '""', position: 'absolute', inset: 6,
+                  borderRadius: '50%', bgcolor: 'background.default',
+                },
               })}>
                 <Box sx={{ position: 'relative', textAlign: 'center' }}>
-                  <Typography sx={{ fontSize: 11, fontWeight: 900, lineHeight: 1 }}>{doneCount}</Typography>
+                  <Typography sx={{ fontSize: 11, fontWeight: 700, lineHeight: 1 }}>{doneCount}</Typography>
                   <Typography sx={{ fontSize: 9, color: 'text.secondary' }}>/{totalCount}</Typography>
                 </Box>
               </Box>
               <Box>
-                <Typography sx={{ fontSize: 12, fontWeight: 800 }}>{Math.round(progress)}% 完了</Typography>
+                <Typography sx={{ fontSize: 12, fontWeight: 600 }}>{Math.round(progress)}% 完了</Typography>
                 <Typography sx={{ fontSize: 11, color: 'text.secondary' }}>あと {Math.max(0, totalCount - doneCount)} 件</Typography>
               </Box>
             </Box>
-            <LinearProgress variant="determinate" value={progress} sx={{ height: 3, borderRadius: 1, bgcolor: 'rgba(148,163,184,0.14)', '& .MuiLinearProgress-bar': { borderRadius: 1 } }} />
+            <LinearProgress
+              variant="determinate"
+              value={progress}
+              sx={{ height: 3, borderRadius: 1, bgcolor: 'rgba(148,163,184,0.14)', '& .MuiLinearProgress-bar': { borderRadius: 1 } }}
+            />
           </Box>
         </List>
       </Box>
@@ -150,18 +166,21 @@ export function Sidebar({ categories, view, onViewChange, doneCount, totalCount 
           {categories.map(cat => {
             const isCatOpen = expandedCats.has(cat.id)
             const catSections = sections[cat.id] ?? []
-
             return (
               <Box key={cat.id}>
                 <ListItemButton onClick={() => toggleCat(cat)} sx={{ borderRadius: 1, py: 0.6, px: 1, mb: 0.25 }}>
-                  <ListItemIcon sx={{ minWidth: 22 }}>
-                    {isCatOpen
-                      ? <ExpandMoreIcon sx={{ fontSize: 15, color: 'text.secondary' }} />
-                      : <ChevronRightIcon sx={{ fontSize: 15, color: 'text.secondary' }} />}
+                  <ListItemIcon sx={{ minWidth: 20 }}>
+                    <Box sx={{ color: 'text.secondary', display: 'flex' }}>
+                      {isCatOpen
+                        ? <ChevronDownIcon size={13} />
+                        : <ChevronRightIcon size={13} />}
+                    </Box>
                   </ListItemIcon>
-                  <ListItemText primary={cat.name} slotProps={{ primary: { sx: { fontSize: 13, fontWeight: 700 } } }} />
+                  <ListItemText
+                    primary={cat.name}
+                    slotProps={{ primary: { sx: { fontSize: 13, fontWeight: 600 } } }}
+                  />
                 </ListItemButton>
-
                 <Collapse in={isCatOpen} unmountOnExit>
                   {catSections.map(sec => {
                     const sel = isRefView && view.categoryId === cat.id && view.sectionId === sec.id
@@ -173,10 +192,13 @@ export function Sidebar({ categories, view, onViewChange, doneCount, totalCount 
                         sx={theme => ({
                           borderRadius: 1, py: 0.4, pl: 3.5, pr: 1, mb: 0.1,
                           borderLeft: `2px solid ${sel ? theme.palette.primary.main : 'transparent'}`,
-                          bgcolor: sel ? (theme.palette.mode === 'dark' ? alpha(theme.palette.primary.main, 0.18) : alpha(theme.palette.primary.main, 0.08)) : undefined,
+                          bgcolor: sel ? alpha(theme.palette.primary.main, 0.10) : undefined,
                         })}
                       >
-                        <ListItemText primary={sec.title} slotProps={{ primary: { sx: { fontSize: 12, fontWeight: sel ? 800 : 500 } } }} />
+                        <ListItemText
+                          primary={sec.title}
+                          slotProps={{ primary: { sx: { fontSize: 12, fontWeight: sel ? 600 : 400, color: sel ? 'primary.light' : 'text.secondary' } } }}
+                        />
                       </ListItemButton>
                     )
                   })}
@@ -194,15 +216,18 @@ export function Sidebar({ categories, view, onViewChange, doneCount, totalCount 
           onClick={() => onViewChange({ mode: 'help' })}
           sx={theme => ({
             borderRadius: 1, px: 1, minHeight: 36,
-            border: '1px solid',
-            bgcolor: view.mode === 'help' ? (theme.palette.mode === 'dark' ? '#2A4A78' : alpha(theme.palette.primary.main, 0.12)) : undefined,
-            borderColor: view.mode === 'help' ? alpha(theme.palette.primary.main, 0.5) : 'transparent',
+            bgcolor: view.mode === 'help' ? alpha(theme.palette.primary.main, 0.10) : undefined,
           })}
         >
-          <ListItemIcon sx={{ minWidth: 30, color: view.mode === 'help' ? 'primary.light' : 'text.secondary' }}>
-            <HelpOutlineIcon fontSize="small" />
+          <ListItemIcon sx={{ minWidth: 28 }}>
+            <Box sx={{ color: view.mode === 'help' ? 'primary.light' : 'text.secondary', display: 'flex' }}>
+              <QuestionIcon size={14} />
+            </Box>
           </ListItemIcon>
-          <ListItemText primary="ヘルプ" slotProps={{ primary: { sx: { fontSize: 13, fontWeight: view.mode === 'help' ? 800 : 600 } } }} />
+          <ListItemText
+            primary="ヘルプ"
+            slotProps={{ primary: { sx: { fontSize: 13, fontWeight: view.mode === 'help' ? 600 : 400, color: view.mode === 'help' ? 'primary.light' : 'text.primary' } } }}
+          />
         </ListItemButton>
       </Box>
     </Box>
@@ -212,9 +237,9 @@ export function Sidebar({ categories, view, onViewChange, doneCount, totalCount 
 const labelSx = {
   color: 'text.secondary',
   textTransform: 'uppercase' as const,
-  letterSpacing: 1,
+  letterSpacing: 0.5,
   mb: 0.75,
   display: 'block',
-  fontWeight: 800,
+  fontWeight: 600,
   fontSize: '0.65rem',
 }

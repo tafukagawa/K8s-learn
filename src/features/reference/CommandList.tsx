@@ -15,10 +15,11 @@ interface CommandListProps {
   categoryId: number
   sectionId: number
   searchQuery: string
+  categoryName: string
   onStartLearning: () => void
 }
 
-export function CommandList({ categoryId, sectionId, searchQuery, onStartLearning }: CommandListProps) {
+export function CommandList({ categoryId, sectionId, searchQuery, categoryName, onStartLearning }: CommandListProps) {
   const [commands, setCommands] = useState<CommandWithProgress[]>([])
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
   const [detailCommand, setDetailCommand] = useState<CommandWithProgress | null>(null)
@@ -77,7 +78,7 @@ export function CommandList({ categoryId, sectionId, searchQuery, onStartLearnin
       {/* ヘッダー */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2.5 }}>
         <Box>
-          <Typography variant="h5" sx={{ fontWeight: 600 }}>Kubernetes Commands</Typography>
+          <Typography variant="h5" sx={{ fontWeight: 600 }}>{categoryName} Commands</Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
             {commands.length} コマンド中 {doneCount} 完了
           </Typography>

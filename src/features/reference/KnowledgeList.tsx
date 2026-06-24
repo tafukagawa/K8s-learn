@@ -18,10 +18,11 @@ interface KnowledgeListProps {
   categoryId: number
   sectionId: number
   searchQuery: string
+  categoryName: string
   onStartLearning: () => void
 }
 
-export function KnowledgeList({ categoryId, sectionId, searchQuery, onStartLearning }: KnowledgeListProps) {
+export function KnowledgeList({ categoryId, sectionId, searchQuery, categoryName, onStartLearning }: KnowledgeListProps) {
   const [items, setItems] = useState<KnowledgeWithProgress[]>([])
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
   const [detailItem, setDetailItem] = useState<KnowledgeWithProgress | null>(null)
@@ -96,7 +97,7 @@ export function KnowledgeList({ categoryId, sectionId, searchQuery, onStartLearn
       {/* ヘッダー */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2.5 }}>
         <Box>
-          <Typography variant="h5" sx={{ fontWeight: 600 }}>Kubernetes Knowledge</Typography>
+          <Typography variant="h5" sx={{ fontWeight: 600 }}>{categoryName} Knowledge</Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
             {items.length} 件中 {doneCount} 完了
           </Typography>

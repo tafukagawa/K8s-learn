@@ -19,6 +19,7 @@ interface ReferenceViewProps {
 export function ReferenceView({ categoryId, sectionId, searchQuery, onStartLearning }: ReferenceViewProps) {
   const [tab, setTab] = useState<'commands' | 'knowledge'>('knowledge')
   const [docUrl, setDocUrl] = useState<string | null>(null)
+  const [categoryName, setCategoryName] = useState('')
 
   useEffect(() => {
     Promise.all([
@@ -28,6 +29,7 @@ export function ReferenceView({ categoryId, sectionId, searchQuery, onStartLearn
       const cat = cats.find(c => c.id === categoryId)
       const sec = sections.find(s => s.id === sectionId)
       if (cat && sec) {
+        setCategoryName(cat.name)
         setDocUrl(SECTION_URLS[cat.slug]?.[sec.slug] ?? null)
       }
     })
@@ -62,6 +64,7 @@ export function ReferenceView({ categoryId, sectionId, searchQuery, onStartLearn
           categoryId={categoryId}
           sectionId={sectionId}
           searchQuery={searchQuery}
+          categoryName={categoryName}
           onStartLearning={() => onStartLearning('commands')}
         />
       )}
@@ -70,6 +73,7 @@ export function ReferenceView({ categoryId, sectionId, searchQuery, onStartLearn
           categoryId={categoryId}
           sectionId={sectionId}
           searchQuery={searchQuery}
+          categoryName={categoryName}
           onStartLearning={() => onStartLearning('knowledge')}
         />
       )}

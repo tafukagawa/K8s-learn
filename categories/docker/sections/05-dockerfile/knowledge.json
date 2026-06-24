@@ -1,0 +1,71 @@
+[
+  {
+    "title": "Dockerfile",
+    "body": "Dockerfileは、Dockerイメージを作成するための設定ファイルです。このファイルには、イメージのビルド手順や環境設定が記述されます。Dockerfileを使用することで、再現性のある環境を簡単に構築できます。",
+    "tags": [
+      "Docker",
+      "Dockerfile",
+      "イメージ作成"
+    ],
+    "url": "https://docs.docker.com/reference/dockerfile/"
+  },
+  {
+    "title": ".dockerignoreファイル",
+    "body": ".dockerignoreファイルは、Dockerイメージをビルドする際に無視するファイルやディレクトリを指定するためのファイルです。このファイルを使用することで、不要なファイルがイメージに含まれるのを防ぎ、ビルド時間を短縮できます。",
+    "tags": [
+      "Docker",
+      ".dockerignore",
+      "ビルド最適化"
+    ],
+    "url": "https://docs.docker.com/reference/dockerfile/#dockerignore-file"
+  },
+  {
+    "title": "命令",
+    "body": "Dockerfileには、FROM、RUN、COPY、CMDなどのさまざまな命令があります。これらの命令は、ベースイメージの指定、アプリケーションの依存関係のインストール、ファイルのコピー、コンテナ起動時のコマンドの指定などに使用されます。",
+    "tags": [
+      "Dockerfile",
+      "命令",
+      "コンテナ"
+    ],
+    "url": "https://docs.docker.com/reference/dockerfile/"
+  },
+  {
+    "title": "ビルドコンテキスト",
+    "body": "ビルドコンテキストは、Dockerイメージを構築する際にDockerが参照するファイルやディレクトリの集合です。Dockerfileが存在するディレクトリが通常のビルドコンテキストとなり、COPYやADD命令で指定されたファイルはこのコンテキスト内に存在する必要があります。",
+    "tags": [
+      "Docker",
+      "ビルドコンテキスト",
+      "ファイル"
+    ],
+    "url": "https://docs.docker.com/reference/dockerfile/"
+  },
+  {
+    "title": "レイヤー",
+    "body": "Dockerイメージは、各命令によって生成されるレイヤーの集合として構成されます。各レイヤーは変更不可であり、イメージのサイズを小さく保つために、共通のレイヤーを再利用することができます。これにより、効率的なストレージと高速なデプロイが実現します。",
+    "tags": [
+      "Docker",
+      "レイヤー",
+      "イメージ"
+    ],
+    "url": "https://docs.docker.com/reference/dockerfile/"
+  },
+  {
+    "title": "ビルドプロセス",
+    "body": "Dockerfileを使用してイメージをビルドする際、Dockerは各命令を順に実行し、最終的なイメージを生成します。このプロセスは、効率的なキャッシュ機構を利用して高速化されます。",
+    "tags": [
+      "ビルド",
+      "プロセス",
+      "Docker"
+    ],
+    "url": "https://docs.docker.com/reference/dockerfile/"
+  },
+  {
+    "title": "最適化",
+    "body": "Dockerfileを最適化することで、ビルド時間やイメージサイズを削減できます。例えば、不要なファイルを除外したり、命令をまとめたりすることが推奨されます。",
+    "tags": [
+      "最適化",
+      "Dockerfile"
+    ],
+    "url": "https://docs.docker.com/reference/dockerfile/"
+  }
+]

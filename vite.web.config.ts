@@ -10,7 +10,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 export default defineConfig({
   root: __dirname,
   plugins: [react()],
-  base: '/k8s-learning-app/',
+  base: '/K8s-learn/',
   resolve: {
     alias: {
       [resolve(__dirname, 'src/shared/ipc.ts')]: resolve(__dirname, 'src/shared/ipc.web.ts'),

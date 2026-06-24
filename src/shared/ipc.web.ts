@@ -118,7 +118,22 @@ let _nextCustomId = 100000
 
 export const api = {
   categories: {
-    list: (): Promise<Category[]> => Promise.resolve([...DB.categories]),
+    list: (): Promise<Category[]> => {
+      const raw = localStorage.getItem('category-order')
+      if (!raw) return Promise.resolve([...DB.categories])
+      const slugs: string[] = JSON.parse(raw)
+      const slugIndex = (slug: string) => {
+        const i = slugs.indexOf(slug)
+        return i === -1 ? Infinity : i
+      }
+      return Promise.resolve(
+        [...DB.categories].sort((a, b) => slugIndex(a.slug) - slugIndex(b.slug))
+      )
+    },
+    reorder: (slugs: string[]): Promise<void> => {
+      localStorage.setItem('category-order', JSON.stringify(slugs))
+      return Promise.resolve()
+    },
   },
 
   sections: {

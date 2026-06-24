@@ -1,6 +1,7 @@
 export const api = {
   categories: {
     list: () => window.api.categories.list(),
+    reorder: (_slugs: string[]): Promise<void> => Promise.resolve(),
   },
   sections: {
     list: (categoryId: number) => window.api.sections.list(categoryId),

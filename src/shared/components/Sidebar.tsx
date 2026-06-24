@@ -3,11 +3,20 @@ import {
   Box, List, ListItemButton, ListItemIcon, ListItemText,
   Typography, LinearProgress, Collapse,
 } from '@mui/material'
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator'
 import {
   StackIcon, ProjectRoadmapIcon, QuestionIcon,
   ChevronDownIcon, ChevronRightIcon,
 } from '@primer/octicons-react'
 import { alpha } from '@mui/material/styles'
+import {
+  DndContext, closestCenter, type DragEndEvent,
+} from '@dnd-kit/core'
+import {
+  SortableContext, verticalListSortingStrategy,
+  arrayMove, useSortable,
+} from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import { api } from '../../shared/ipc'
 import type { Category, Section } from '../../types'
 
@@ -25,9 +34,85 @@ interface SidebarProps {
   totalCount: number
 }
 
+interface SortableCategoryRowProps {
+  cat: Category
+  sections: Section[]
+  isOpen: boolean
+  view: AppView
+  onToggle: () => void
+  onViewChange: (view: AppView) => void
+}
+
+function SortableCategoryRow({ cat, sections, isOpen, view, onToggle, onViewChange }: SortableCategoryRowProps) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: cat.id })
+  const isRefView = view.mode === 'reference'
+
+  return (
+    <Box
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.5 : 1,
+      }}
+    >
+      <ListItemButton
+        onClick={onToggle}
+        sx={{ borderRadius: 1, py: 0.6, px: 1, mb: 0.25, pr: 0.5, '&:hover .drag-handle': { opacity: 1 } }}
+      >
+        <Box
+          className="drag-handle"
+          onClick={e => e.stopPropagation()}
+          sx={{ opacity: 0, cursor: 'grab', color: 'text.disabled', display: 'flex', mr: 0.25, flexShrink: 0, '&:active': { cursor: 'grabbing' } }}
+          {...attributes}
+          {...listeners}
+        >
+          <DragIndicatorIcon sx={{ fontSize: 14 }} />
+        </Box>
+        <ListItemIcon sx={{ minWidth: 20 }}>
+          <Box sx={{ color: 'text.secondary', display: 'flex' }}>
+            {isOpen ? <ChevronDownIcon size={13} /> : <ChevronRightIcon size={13} />}
+          </Box>
+        </ListItemIcon>
+        <ListItemText
+          primary={cat.name}
+          slotProps={{ primary: { sx: { fontSize: 13, fontWeight: 600 } } }}
+        />
+      </ListItemButton>
+      <Collapse in={isOpen} unmountOnExit>
+        {sections.map(sec => {
+          const sel = isRefView && view.categoryId === cat.id && view.sectionId === sec.id
+          return (
+            <ListItemButton
+              key={sec.id}
+              selected={sel}
+              onClick={() => onViewChange({ mode: 'reference', categoryId: cat.id, sectionId: sec.id })}
+              sx={theme => ({
+                borderRadius: 1, py: 0.4, pl: 3.5, pr: 1, mb: 0.1,
+                borderLeft: `2px solid ${sel ? theme.palette.primary.main : 'transparent'}`,
+                bgcolor: sel ? alpha(theme.palette.primary.main, 0.10) : undefined,
+              })}
+            >
+              <ListItemText
+                primary={sec.title}
+                slotProps={{ primary: { sx: { fontSize: 12, fontWeight: sel ? 600 : 400, color: sel ? 'primary.light' : 'text.secondary' } } }}
+              />
+            </ListItemButton>
+          )
+        })}
+      </Collapse>
+    </Box>
+  )
+}
+
 export function Sidebar({ categories, view, onViewChange, doneCount, totalCount }: SidebarProps) {
   const [sections, setSections] = useState<Record<number, Section[]>>({})
   const [expandedCats, setExpandedCats] = useState<Set<number>>(new Set())
+  const [localCategories, setLocalCategories] = useState<Category[]>(categories)
+
+  useEffect(() => {
+    setLocalCategories(categories)
+  }, [categories])
 
   useEffect(() => {
     if (categories.length === 0 || expandedCats.size > 0) return
@@ -56,7 +141,16 @@ export function Sidebar({ categories, view, onViewChange, doneCount, totalCount 
     setExpandedCats(next)
   }
 
-  const isRefView = view.mode === 'reference'
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event
+    if (!over || active.id === over.id) return
+    const oldIndex = localCategories.findIndex(c => c.id === active.id)
+    const newIndex = localCategories.findIndex(c => c.id === over.id)
+    const reordered = arrayMove(localCategories, oldIndex, newIndex)
+    setLocalCategories(reordered)
+    api.categories.reorder(reordered.map(c => c.slug))
+  }
+
   const progress = totalCount > 0 ? (doneCount / totalCount) * 100 : 0
 
   return (
@@ -77,7 +171,6 @@ export function Sidebar({ categories, view, onViewChange, doneCount, totalCount 
       <Box>
         <Typography variant="caption" sx={labelSx}>学習ツール</Typography>
         <List dense disablePadding>
-          {/* フラッシュカード */}
           <ListItemButton
             selected={view.mode === 'flashcard'}
             onClick={() => onViewChange({ mode: 'flashcard' })}
@@ -99,7 +192,6 @@ export function Sidebar({ categories, view, onViewChange, doneCount, totalCount 
             />
           </ListItemButton>
 
-          {/* ロードマップ */}
           <ListItemButton
             selected={view.mode === 'roadmap'}
             onClick={() => onViewChange({ mode: 'roadmap' })}
@@ -163,49 +255,21 @@ export function Sidebar({ categories, view, onViewChange, doneCount, totalCount 
       <Box sx={{ flex: 1, minHeight: 0 }}>
         <Typography variant="caption" sx={labelSx}>カテゴリ</Typography>
         <List dense disablePadding>
-          {categories.map(cat => {
-            const isCatOpen = expandedCats.has(cat.id)
-            const catSections = sections[cat.id] ?? []
-            return (
-              <Box key={cat.id}>
-                <ListItemButton onClick={() => toggleCat(cat)} sx={{ borderRadius: 1, py: 0.6, px: 1, mb: 0.25 }}>
-                  <ListItemIcon sx={{ minWidth: 20 }}>
-                    <Box sx={{ color: 'text.secondary', display: 'flex' }}>
-                      {isCatOpen
-                        ? <ChevronDownIcon size={13} />
-                        : <ChevronRightIcon size={13} />}
-                    </Box>
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={cat.name}
-                    slotProps={{ primary: { sx: { fontSize: 13, fontWeight: 600 } } }}
-                  />
-                </ListItemButton>
-                <Collapse in={isCatOpen} unmountOnExit>
-                  {catSections.map(sec => {
-                    const sel = isRefView && view.categoryId === cat.id && view.sectionId === sec.id
-                    return (
-                      <ListItemButton
-                        key={sec.id}
-                        selected={sel}
-                        onClick={() => onViewChange({ mode: 'reference', categoryId: cat.id, sectionId: sec.id })}
-                        sx={theme => ({
-                          borderRadius: 1, py: 0.4, pl: 3.5, pr: 1, mb: 0.1,
-                          borderLeft: `2px solid ${sel ? theme.palette.primary.main : 'transparent'}`,
-                          bgcolor: sel ? alpha(theme.palette.primary.main, 0.10) : undefined,
-                        })}
-                      >
-                        <ListItemText
-                          primary={sec.title}
-                          slotProps={{ primary: { sx: { fontSize: 12, fontWeight: sel ? 600 : 400, color: sel ? 'primary.light' : 'text.secondary' } } }}
-                        />
-                      </ListItemButton>
-                    )
-                  })}
-                </Collapse>
-              </Box>
-            )
-          })}
+          <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+            <SortableContext items={localCategories.map(c => c.id)} strategy={verticalListSortingStrategy}>
+              {localCategories.map(cat => (
+                <SortableCategoryRow
+                  key={cat.id}
+                  cat={cat}
+                  sections={sections[cat.id] ?? []}
+                  isOpen={expandedCats.has(cat.id)}
+                  view={view}
+                  onToggle={() => toggleCat(cat)}
+                  onViewChange={onViewChange}
+                />
+              ))}
+            </SortableContext>
+          </DndContext>
         </List>
       </Box>
 

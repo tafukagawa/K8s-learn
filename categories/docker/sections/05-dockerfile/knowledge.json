@@ -18,5 +18,35 @@
       "ビルド最適化"
     ],
     "url": "https://docs.docker.com/reference/dockerfile/#dockerignore-file"
+  },
+  {
+    "title": "命令",
+    "body": "Dockerfileには、FROM、RUN、COPY、CMDなどのさまざまな命令があります。これらの命令は、ベースイメージの指定、アプリケーションの依存関係のインストール、ファイルのコピー、コンテナ起動時のコマンドの指定などに使用されます。",
+    "tags": [
+      "Dockerfile",
+      "命令",
+      "コンテナ"
+    ],
+    "url": "https://docs.docker.com/reference/dockerfile/"
+  },
+  {
+    "title": "ビルドコンテキスト",
+    "body": "ビルドコンテキストは、Dockerイメージを構築する際にDockerが参照するファイルやディレクトリの集合です。Dockerfileが存在するディレクトリが通常のビルドコンテキストとなり、COPYやADD命令で指定されたファイルはこのコンテキスト内に存在する必要があります。",
+    "tags": [
+      "Docker",
+      "ビルドコンテキスト",
+      "ファイル"
+    ],
+    "url": "https://docs.docker.com/reference/dockerfile/"
+  },
+  {
+    "title": "レイヤー",
+    "body": "Dockerイメージは、各命令によって生成されるレイヤーの集合として構成されます。各レイヤーは変更不可であり、イメージのサイズを小さく保つために、共通のレイヤーを再利用することができます。これにより、効率的なストレージと高速なデプロイが実現します。",
+    "tags": [
+      "Docker",
+      "レイヤー",
+      "イメージ"
+    ],
+    "url": "https://docs.docker.com/reference/dockerfile/"
   }
 ]

@@ -4,6 +4,7 @@ import TerminalIcon from '@mui/icons-material/Terminal'
 import LightbulbIcon from '@mui/icons-material/Lightbulb'
 import { CommandList } from './CommandList'
 import { KnowledgeList } from './KnowledgeList'
+import { AutoplayCarousel } from './AutoplayCarousel'
 
 interface ReferenceViewProps {
   categoryId: number
@@ -17,6 +18,7 @@ export function ReferenceView({ categoryId, sectionId, searchQuery, onStartLearn
 
   return (
     <Box sx={{ p: 3, maxWidth: 1180, mx: 'auto' }}>
+      <AutoplayCarousel categoryId={categoryId} sectionId={sectionId} />
       <Tabs
         value={tab}
         onChange={(_, v) => setTab(v)}

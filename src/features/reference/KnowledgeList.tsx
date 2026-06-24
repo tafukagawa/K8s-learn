@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Box, Typography, Button, Chip, LinearProgress, IconButton, Dialog, DialogContent, DialogTitle, DialogActions } from '@mui/material'
+import { Box, Typography, Button, Chip, LinearProgress, IconButton, Dialog, DialogContent, DialogTitle, DialogActions, Snackbar, Alert } from '@mui/material'
+import { useWorkflowPolling } from '../../shared/hooks/useWorkflowPolling'
 import { alpha } from '@mui/material/styles'
 import {
   PlusIcon, PlayIcon, ArrowRightIcon,
@@ -29,6 +30,7 @@ export function KnowledgeList({ categoryId, sectionId, searchQuery, onStartLearn
   const [generatingId, setGeneratingId] = useState<number | null>(null)
   const [ollamaGuideOpen, setOllamaGuideOpen] = useState(false)
   const [generateOpen, setGenerateOpen] = useState(false)
+  const polling = useWorkflowPolling()
 
   useEffect(() => {
     api.knowledge.list(categoryId, sectionId).then(setItems)
@@ -292,7 +294,31 @@ export function KnowledgeList({ categoryId, sectionId, searchQuery, onStartLearn
         defaultCategoryId={categoryId}
         defaultSectionId={sectionId}
         onClose={() => setGenerateOpen(false)}
+        onDispatched={polling.startPolling}
       />
+
+      <Snackbar
+        open={polling.status === 'polling'}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert severity="info" sx={{ width: '100%' }}>
+          コンテンツを生成中... (最大10分)
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={polling.status === 'done' || polling.status === 'error'}
+        autoHideDuration={6000}
+        onClose={polling.dismiss}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert
+          severity={polling.status === 'done' ? 'success' : 'error'}
+          onClose={polling.dismiss}
+          sx={{ width: '100%' }}
+        >
+          {polling.message}
+        </Alert>
+      </Snackbar>
 
       <Dialog open={ollamaGuideOpen} onClose={() => setOllamaGuideOpen(false)} maxWidth="sm" fullWidth>
         <DialogTitle>Ollama が起動していません</DialogTitle>

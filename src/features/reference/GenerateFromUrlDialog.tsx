@@ -17,11 +17,12 @@ interface Props {
   defaultCategoryId?: number
   defaultSectionId?: number
   onClose: () => void
+  onDispatched: (token: string, dispatchedAt: string) => void
 }
 
-type Status = 'idle' | 'dispatching' | 'polling' | 'done' | 'error'
+type Status = 'idle' | 'dispatching' | 'error'
 
-export function GenerateFromUrlDialog({ open, defaultCategoryId, defaultSectionId, onClose }: Props) {
+export function GenerateFromUrlDialog({ open, defaultCategoryId, defaultSectionId, onClose, onDispatched }: Props) {
   const [url, setUrl] = useState('')
   const [categories, setCategories] = useState<Category[]>([])
   const [sections, setSections] = useState<Section[]>([])
@@ -49,33 +50,6 @@ export function GenerateFromUrlDialog({ open, defaultCategoryId, defaultSectionI
 
   const selectedCategory = categories.find(c => c.id === categoryId)
   const selectedSection = sections.find(s => s.id === sectionId)
-
-  async function pollForCompletion(token: string, dispatchedAt: string) {
-    const maxAttempts = 30
-    for (let i = 0; i < maxAttempts; i++) {
-      await new Promise(r => setTimeout(r, 10000))
-      const res = await fetch(
-        `https://api.github.com/repos/${OWNER}/${REPO}/actions/runs?workflow_id=${WORKFLOW}&per_page=1`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: 'application/vnd.github+json',
-            'X-GitHub-Api-Version': '2022-11-28',
-          },
-        }
-      )
-      if (!res.ok) continue
-      const data = await res.json()
-      const run = data.workflow_runs?.[0]
-      if (!run) continue
-      if (new Date(run.created_at) < new Date(dispatchedAt)) continue
-      if (run.status === 'completed') {
-        if (run.conclusion !== 'success') throw new Error(`ワークフローが失敗しました: ${run.conclusion}`)
-        return
-      }
-    }
-    throw new Error('タイムアウト: ワークフローの完了を確認できませんでした')
-  }
 
   async function handleGenerate() {
     const token = getGithubToken()
@@ -119,46 +93,26 @@ export function GenerateFromUrlDialog({ open, defaultCategoryId, defaultSectionI
         throw new Error(body.message ?? `HTTP ${res.status}`)
       }
 
-      setStatus('polling')
-      await pollForCompletion(token, dispatchedAt)
-      setStatus('done')
+      onDispatched(token, dispatchedAt)
+      onClose()
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err))
       setStatus('error')
     }
   }
 
-  const isLoading = status === 'dispatching' || status === 'polling'
+  const isDispatching = status === 'dispatching'
 
   return (
-    <Dialog
-      open={open}
-      onClose={isLoading ? undefined : onClose}
-      maxWidth="sm"
-      fullWidth
-    >
+    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>URLからナレッジを生成</DialogTitle>
       <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 2 }}>
-        {status === 'done' ? (
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, py: 2 }}>
-            <Alert severity="success" sx={{ width: '100%' }}>
-              生成完了！GitHub Pages のデプロイ後（約1〜2分）にリロードすると反映されます。
-            </Alert>
-            <Button variant="contained" onClick={() => window.location.reload()}>
-              今すぐリロード
-            </Button>
-          </Box>
-        ) : isLoading ? (
+        {isDispatching ? (
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, py: 3 }}>
             <CircularProgress size={40} />
             <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
-              {status === 'dispatching' ? 'GitHub Actions を起動中...' : 'コンテンツを生成中... (最大5分)'}
+              GitHub Actions を起動中...
             </Typography>
-            {status === 'polling' && (
-              <Typography sx={{ fontSize: 11, color: 'text.disabled' }}>
-                GitHub Actions でドキュメントを解析しています
-              </Typography>
-            )}
           </Box>
         ) : (
           <>
@@ -206,9 +160,9 @@ export function GenerateFromUrlDialog({ open, defaultCategoryId, defaultSectionI
           </>
         )}
       </DialogContent>
-      {!isLoading && status !== 'done' && (
-        <DialogActions>
-          <Button onClick={onClose}>キャンセル</Button>
+      <DialogActions>
+        <Button onClick={onClose} disabled={isDispatching}>閉じる</Button>
+        {!isDispatching && (
           <Button
             variant="contained"
             onClick={handleGenerate}
@@ -216,13 +170,8 @@ export function GenerateFromUrlDialog({ open, defaultCategoryId, defaultSectionI
           >
             生成
           </Button>
-        </DialogActions>
-      )}
-      {status === 'done' && (
-        <DialogActions>
-          <Button onClick={onClose}>閉じる</Button>
-        </DialogActions>
-      )}
+        )}
+      </DialogActions>
     </Dialog>
   )
 }

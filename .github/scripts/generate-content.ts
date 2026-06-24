@@ -52,6 +52,28 @@ const SOURCES: Source[] = [
   { category: 'kustomize', section: '01-base-overlay',   url: 'https://kubectl.docs.kubernetes.io/references/kustomize/glossary/',                          type: 'both' },
   { category: 'kustomize', section: '02-generators',     url: 'https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/generators/',           type: 'both' },
   { category: 'kustomize', section: '03-transformers',   url: 'https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/transformers/',         type: 'both' },
+  // k8s 追加セクション
+  { category: 'k8s', section: '07-rbac',                  url: 'https://kubernetes.io/docs/reference/access-authn-authz/rbac/',                                          type: 'both' },
+  { category: 'k8s', section: '08-statefulset-daemonset',  url: 'https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/',                                  type: 'both' },
+  { category: 'k8s', section: '09-jobs-cronjobs',          url: 'https://kubernetes.io/docs/concepts/workloads/controllers/job/',                                          type: 'both' },
+  { category: 'k8s', section: '10-ingress-networkpolicy',  url: 'https://kubernetes.io/docs/concepts/services-networking/ingress/',                                        type: 'both' },
+  { category: 'k8s', section: '11-resource-management',    url: 'https://kubernetes.io/docs/concepts/policy/resource-quotas/',                                             type: 'both' },
+  { category: 'k8s', section: '12-namespace-context',      url: 'https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/',                           type: 'both' },
+  // docker 追加セクション
+  { category: 'docker', section: '05-dockerfile',          url: 'https://docs.docker.com/reference/dockerfile/',                                                           type: 'knowledge' },
+  { category: 'docker', section: '06-build',               url: 'https://docs.docker.com/reference/cli/docker/buildx/build/',                                             type: 'commands' },
+  { category: 'docker', section: '07-registry',            url: 'https://docs.docker.com/reference/cli/docker/image/push/',                                               type: 'commands' },
+  // helm 追加セクション
+  { category: 'helm', section: '05-dependencies',          url: 'https://helm.sh/docs/helm/helm_dependency/',                                                             type: 'both' },
+  { category: 'helm', section: '06-hooks',                 url: 'https://helm.sh/docs/topics/charts_hooks/',                                                              type: 'knowledge' },
+  { category: 'helm', section: '07-test',                  url: 'https://helm.sh/docs/helm/helm_test/',                                                                   type: 'commands' },
+  // argocd 追加セクション
+  { category: 'argocd', section: '04-cli-reference',       url: 'https://argo-cd.readthedocs.io/en/stable/user-guide/commands/argocd/',                                   type: 'commands' },
+  { category: 'argocd', section: '05-applicationset',      url: 'https://argo-cd.readthedocs.io/en/stable/user-guide/application-set/',                                   type: 'both' },
+  { category: 'argocd', section: '06-notifications',       url: 'https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/',                                type: 'knowledge' },
+  // kustomize 追加セクション
+  { category: 'kustomize', section: '04-patches',          url: 'https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/patches/',                          type: 'both' },
+  { category: 'kustomize', section: '05-components',       url: 'https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/components/',                       type: 'both' },
 ]
 
 const COMMAND_PROMPT = (docText: string, url: string) => `

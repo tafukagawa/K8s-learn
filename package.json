@@ -9,7 +9,9 @@
     "build:main": "tsc -p tsconfig.electron.json",
     "build": "npm run build:renderer && npm run build:main",
     "dist": "npm run build && electron-builder",
-    "test": "vitest run"
+    "test": "vitest run",
+    "build:web": "vite build --config vite.web.config.ts",
+    "dev:web": "vite --config vite.web.config.ts"
   },
   "keywords": [],
   "author": "",

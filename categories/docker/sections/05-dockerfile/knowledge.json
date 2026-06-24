@@ -1,0 +1,22 @@
+[
+  {
+    "title": "Dockerfile",
+    "body": "Dockerfileは、Dockerイメージを作成するための設定ファイルです。このファイルには、イメージのビルド手順や環境設定が記述されます。Dockerfileを使用することで、再現性のある環境を簡単に構築できます。",
+    "tags": [
+      "Docker",
+      "Dockerfile",
+      "イメージ作成"
+    ],
+    "url": "https://docs.docker.com/reference/dockerfile/"
+  },
+  {
+    "title": ".dockerignoreファイル",
+    "body": ".dockerignoreファイルは、Dockerイメージをビルドする際に無視するファイルやディレクトリを指定するためのファイルです。このファイルを使用することで、不要なファイルがイメージに含まれるのを防ぎ、ビルド時間を短縮できます。",
+    "tags": [
+      "Docker",
+      ".dockerignore",
+      "ビルド最適化"
+    ],
+    "url": "https://docs.docker.com/reference/dockerfile/#dockerignore-file"
+  }
+]

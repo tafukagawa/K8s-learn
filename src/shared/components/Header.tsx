@@ -1,6 +1,7 @@
 import { AppBar, Toolbar, Typography, InputBase, Box, IconButton, Tooltip } from '@mui/material'
 import { alpha } from '@mui/material/styles'
-import { MarkGithubIcon, SearchIcon, BellIcon, MoonIcon, SunIcon } from '@primer/octicons-react'
+import { SearchIcon, BellIcon, MoonIcon, SunIcon } from '@primer/octicons-react'
+import HubIcon from '@mui/icons-material/Hub'
 
 interface HeaderProps {
   searchQuery: string
@@ -23,8 +24,15 @@ export function Header({ searchQuery, onSearchChange, darkMode, onToggleDark }: 
     >
       <Toolbar sx={{ gap: 1.5, minHeight: 56 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 200 }}>
-          <Box sx={{ color: 'text.primary', display: 'flex', alignItems: 'center' }}>
-            <MarkGithubIcon size={24} />
+          <Box sx={{
+            width: 24, height: 24,
+            borderRadius: '6px',
+            background: 'linear-gradient(135deg, #2563EB, #1D4ED8)',
+            display: 'grid',
+            placeItems: 'center',
+            flexShrink: 0,
+          }}>
+            <HubIcon sx={{ fontSize: 14, color: '#fff' }} />
           </Box>
           <Typography sx={{ color: 'text.primary', fontWeight: 600, whiteSpace: 'nowrap', fontSize: 14 }}>
             k8s Learn

@@ -3,8 +3,9 @@ import { Box, Typography, Button, Chip, LinearProgress, IconButton, Dialog, Dial
 import { alpha } from '@mui/material/styles'
 import {
   PlusIcon, PlayIcon, ArrowRightIcon,
-  PencilIcon, TrashIcon, CheckIcon, ZapIcon,
+  PencilIcon, TrashIcon, CheckIcon, ZapIcon, LinkExternalIcon,
 } from '@primer/octicons-react'
+import { GenerateFromUrlDialog } from './GenerateFromUrlDialog'
 import { TagFilter } from './TagFilter'
 import { KnowledgeDetail } from './KnowledgeDetail'
 import { KnowledgeForm } from './KnowledgeForm'
@@ -27,6 +28,7 @@ export function KnowledgeList({ categoryId, sectionId, searchQuery, onStartLearn
   const [editingItem, setEditingItem] = useState<KnowledgeWithProgress | null>(null)
   const [generatingId, setGeneratingId] = useState<number | null>(null)
   const [ollamaGuideOpen, setOllamaGuideOpen] = useState(false)
+  const [generateOpen, setGenerateOpen] = useState(false)
 
   useEffect(() => {
     api.knowledge.list(categoryId, sectionId).then(setItems)
@@ -100,10 +102,10 @@ export function KnowledgeList({ categoryId, sectionId, searchQuery, onStartLearn
         <Button
           variant="contained"
           size="small"
-          startIcon={<Box sx={{ display: 'flex' }}><PlusIcon size={14} /></Box>}
-          onClick={() => { setEditingItem(null); setFormOpen(true) }}
+          startIcon={<Box sx={{ display: 'flex' }}><LinkExternalIcon size={14} /></Box>}
+          onClick={() => setGenerateOpen(true)}
         >
-          追加
+          URLから生成
         </Button>
       </Box>
 
@@ -283,6 +285,13 @@ export function KnowledgeList({ categoryId, sectionId, searchQuery, onStartLearn
         existingTags={allTags}
         onClose={() => { setFormOpen(false); setEditingItem(null) }}
         onSuccess={handleFormSuccess}
+      />
+
+      <GenerateFromUrlDialog
+        open={generateOpen}
+        defaultCategoryId={categoryId}
+        defaultSectionId={sectionId}
+        onClose={() => setGenerateOpen(false)}
       />
 
       <Dialog open={ollamaGuideOpen} onClose={() => setOllamaGuideOpen(false)} maxWidth="sm" fullWidth>

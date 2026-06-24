@@ -2,15 +2,17 @@ import { AppBar, Toolbar, Typography, InputBase, Box, IconButton, Tooltip } from
 import { alpha } from '@mui/material/styles'
 import { SearchIcon, BellIcon, MoonIcon, SunIcon } from '@primer/octicons-react'
 import HubIcon from '@mui/icons-material/Hub'
+import SettingsIcon from '@mui/icons-material/Settings'
 
 interface HeaderProps {
   searchQuery: string
   onSearchChange: (q: string) => void
   darkMode: boolean
   onToggleDark: () => void
+  onOpenSettings: () => void
 }
 
-export function Header({ searchQuery, onSearchChange, darkMode, onToggleDark }: HeaderProps) {
+export function Header({ searchQuery, onSearchChange, darkMode, onToggleDark, onOpenSettings }: HeaderProps) {
   return (
     <AppBar
       position="sticky"
@@ -67,6 +69,12 @@ export function Header({ searchQuery, onSearchChange, darkMode, onToggleDark }: 
             /
           </Box>
         </Box>
+
+        <Tooltip title="設定">
+          <IconButton onClick={onOpenSettings} size="small" sx={{ border: '1px solid', borderColor: 'divider', bgcolor: 'background.paper' }}>
+            <SettingsIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
+          </IconButton>
+        </Tooltip>
 
         <Tooltip title="通知">
           <IconButton size="small" disabled sx={{ border: '1px solid', borderColor: 'divider', bgcolor: 'background.paper' }}>

@@ -9,6 +9,7 @@ import { ReferenceView } from './features/reference/ReferenceView'
 import { FlashcardView } from './features/flashcard/FlashcardView'
 import { RoadmapView } from './features/roadmap/RoadmapView'
 import { HelpView } from './features/help/HelpView'
+import { SettingsDialog } from './features/settings/SettingsDialog'
 import { api } from './shared/ipc'
 import type { Category } from './types'
 
@@ -26,6 +27,7 @@ export default function App() {
   const [flashcardConfig, setFlashcardConfig] = useState<FlashcardConfig>({ section: 'all', filter: 'all' })
   const [splashVisible, setSplashVisible] = useState(true)
   const [splashExiting, setSplashExiting] = useState(false)
+  const [settingsOpen, setSettingsOpen] = useState(false)
   const lastRefView = useRef<Extract<AppView, { mode: 'reference' }> | null>(null)
 
   function handleStartLearning(contentType: 'commands' | 'knowledge') {
@@ -83,6 +85,7 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       {splashVisible && <SplashScreen exiting={splashExiting} />}
+      <SettingsDialog open={settingsOpen} onClose={() => setSettingsOpen(false)} />
       <Layout
         header={
           <Header
@@ -90,6 +93,7 @@ export default function App() {
             onSearchChange={setSearchQuery}
             darkMode={darkMode}
             onToggleDark={() => setDarkMode(d => !d)}
+            onOpenSettings={() => setSettingsOpen(true)}
           />
         }
         sidebar={

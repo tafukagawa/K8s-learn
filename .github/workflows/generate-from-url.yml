@@ -1,0 +1,53 @@
+name: Generate Content from URL
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'Documentation URL'
+        required: true
+        type: string
+      category:
+        description: 'Category slug (k8s/docker/helm/argocd/kustomize)'
+        required: true
+        type: string
+      section:
+        description: 'Section slug (e.g. 01-pod-management)'
+        required: true
+        type: string
+      type:
+        description: 'Content type'
+        required: false
+        default: 'both'
+        type: choice
+        options:
+          - both
+          - knowledge
+          - commands
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install openai tsx --no-save
+      - name: Generate content
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INPUT_URL: ${{ inputs.url }}
+          INPUT_CATEGORY: ${{ inputs.category }}
+          INPUT_SECTION: ${{ inputs.section }}
+          INPUT_TYPE: ${{ inputs.type }}
+        run: npx tsx .github/scripts/generate-from-url.ts
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add categories/
+          git diff --staged --quiet || git commit -m "feat: generate content from URL (${{ inputs.category }}/${{ inputs.section }})"
+          git push

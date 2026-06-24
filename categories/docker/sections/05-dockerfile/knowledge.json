@@ -48,5 +48,24 @@
       "イメージ"
     ],
     "url": "https://docs.docker.com/reference/dockerfile/"
+  },
+  {
+    "title": "ビルドプロセス",
+    "body": "Dockerfileを使用してイメージをビルドする際、Dockerは各命令を順に実行し、最終的なイメージを生成します。このプロセスは、効率的なキャッシュ機構を利用して高速化されます。",
+    "tags": [
+      "ビルド",
+      "プロセス",
+      "Docker"
+    ],
+    "url": "https://docs.docker.com/reference/dockerfile/"
+  },
+  {
+    "title": "最適化",
+    "body": "Dockerfileを最適化することで、ビルド時間やイメージサイズを削減できます。例えば、不要なファイルを除外したり、命令をまとめたりすることが推奨されます。",
+    "tags": [
+      "最適化",
+      "Dockerfile"
+    ],
+    "url": "https://docs.docker.com/reference/dockerfile/"
   }
 ]

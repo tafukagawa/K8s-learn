@@ -31,7 +31,7 @@ export function KnowledgeForm({ open, categoryId, item, existingTags, onClose, o
       const updated = await api.knowledge.update(item.id, { title, body, tags, url })
       onSuccess({ ...updated, progress: item.progress })
     } else {
-      const created = await api.knowledge.create({ categoryId, title, body, tags, url })
+      const created = await api.knowledge.create({ categoryId, title, body, tags, url, cloze: null })
       onSuccess({ ...created, progress: null })
     }
   }

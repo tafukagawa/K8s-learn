@@ -81,10 +81,10 @@ export function RoadmapView({ categories, onSelectCategory }: { categories: Cate
           const pct = p && p.total > 0 ? Math.round((p.done / p.total) * 100) : 0
           return (
             <Grid key={cat.id} size={{ xs: 12, sm: 6 }}>
-              <Box sx={theme => ({
+              <Box sx={{
                 p: 2, borderRadius: 2, border: '1px solid', borderColor: 'divider',
                 bgcolor: 'background.paper',
-              })}>
+              }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                   <Typography sx={{ fontSize: 14, fontWeight: 800 }}>{cat.name}</Typography>
                   <Typography sx={{ fontSize: 13, fontWeight: 900, color: pct === 100 ? 'success.main' : 'text.secondary' }}>

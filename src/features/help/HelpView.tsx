@@ -174,7 +174,7 @@ export function HelpView() {
           onChange={(_, open) => setExpanded(open ? sec.id : false)}
           disableGutters
           elevation={0}
-          sx={theme => ({
+          sx={{
             mb: 1,
             border: '1px solid',
             borderColor: expanded === sec.id ? 'primary.main' : 'divider',
@@ -182,7 +182,7 @@ export function HelpView() {
             bgcolor: 'background.paper',
             '&:before': { display: 'none' },
             transition: 'border-color 0.15s',
-          })}
+          }}
         >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}

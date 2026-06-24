@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import type {
   Category, Section, Command, Knowledge,
   CommandWithProgress, KnowledgeWithProgress,

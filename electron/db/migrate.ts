@@ -23,4 +23,10 @@ export function runMigrations(db: Database.Database): void {
   if (!knowledgeCols.includes('cloze')) {
     db.exec("ALTER TABLE knowledge ADD COLUMN cloze TEXT")
   }
+  if (!commandCols.includes('refs')) {
+    db.exec("ALTER TABLE commands ADD COLUMN refs TEXT NOT NULL DEFAULT '[]'")
+  }
+  if (!knowledgeCols.includes('refs')) {
+    db.exec("ALTER TABLE knowledge ADD COLUMN refs TEXT NOT NULL DEFAULT '[]'")
+  }
 }

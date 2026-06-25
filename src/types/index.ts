@@ -24,6 +24,12 @@ export interface Command {
   tags: string[]
   isCustom: boolean
   url: string
+  refs: RefLink[]
+}
+
+export interface RefLink {
+  label: string
+  url: string
 }
 
 export interface ClozeItem {
@@ -39,6 +45,7 @@ export interface Knowledge {
   tags: string[]
   isCustom: boolean
   url: string
+  refs: RefLink[]
   cloze: ClozeItem[] | null
 }
 

@@ -10,6 +10,11 @@ function parseCloze(raw: string | null) {
   try { return JSON.parse(raw) } catch { return null }
 }
 
+function parseRefs(raw: string | null | undefined): import('../../src/types').RefLink[] {
+  if (!raw) return []
+  try { return JSON.parse(raw) } catch { return [] }
+}
+
 function rowToKnowledge(row: any): Knowledge {
   return {
     id: row.id,
@@ -20,6 +25,7 @@ function rowToKnowledge(row: any): Knowledge {
     isCustom: row.is_custom === 1,
     url: row.url ?? '',
     cloze: parseCloze(row.cloze ?? null),
+    refs: parseRefs(row.refs),
   }
 }
 
@@ -57,10 +63,10 @@ export function createKnowledgeHandlers(db: Database.Database) {
 
     create(data: Omit<Knowledge, 'id' | 'isCustom'>): Knowledge {
       const row = db.prepare(`
-        INSERT INTO knowledge (category_id, title, body, tags, url, is_custom)
-        VALUES (?, ?, ?, ?, ?, 1)
+        INSERT INTO knowledge (category_id, title, body, tags, url, refs, is_custom)
+        VALUES (?, ?, ?, ?, ?, ?, 1)
         RETURNING *
-      `).get(data.categoryId, data.title, data.body, JSON.stringify(data.tags), data.url ?? '') as any
+      `).get(data.categoryId, data.title, data.body, JSON.stringify(data.tags), data.url ?? '', JSON.stringify(data.refs ?? [])) as any
       return rowToKnowledge(row)
     },
 
@@ -71,6 +77,7 @@ export function createKnowledgeHandlers(db: Database.Database) {
       if (data.body !== undefined) { fields.push('body = ?'); values.push(data.body) }
       if (data.tags !== undefined) { fields.push('tags = ?'); values.push(JSON.stringify(data.tags)) }
       if (data.url !== undefined) { fields.push('url = ?'); values.push(data.url) }
+      if (data.refs !== undefined) { fields.push('refs = ?'); values.push(JSON.stringify(data.refs)) }
       values.push(id)
       const row = db.prepare(`UPDATE knowledge SET ${fields.join(', ')} WHERE id = ? RETURNING *`).get(...values) as any
       return rowToKnowledge(row)

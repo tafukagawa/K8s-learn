@@ -5,6 +5,11 @@ function parseTags(raw: string): string[] {
   try { return JSON.parse(raw) } catch { return [] }
 }
 
+function parseRefs(raw: string | null | undefined): import('../../src/types').RefLink[] {
+  if (!raw) return []
+  try { return JSON.parse(raw) } catch { return [] }
+}
+
 function rowToCommand(row: any): Command {
   return {
     id: row.id,
@@ -16,6 +21,7 @@ function rowToCommand(row: any): Command {
     tags: parseTags(row.tags),
     isCustom: row.is_custom === 1,
     url: row.url ?? '',
+    refs: parseRefs(row.refs),
   }
 }
 
@@ -53,10 +59,10 @@ export function createCommandHandlers(db: Database.Database) {
 
     create(data: Omit<Command, 'id' | 'isCustom'>): Command {
       const row = db.prepare(`
-        INSERT INTO commands (category_id, name, description, syntax, example, tags, url, is_custom)
-        VALUES (?, ?, ?, ?, ?, ?, ?, 1)
+        INSERT INTO commands (category_id, name, description, syntax, example, tags, url, refs, is_custom)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)
         RETURNING *
-      `).get(data.categoryId, data.name, data.description, data.syntax, data.example, JSON.stringify(data.tags), data.url ?? '') as any
+      `).get(data.categoryId, data.name, data.description, data.syntax, data.example, JSON.stringify(data.tags), data.url ?? '', JSON.stringify(data.refs ?? [])) as any
       return rowToCommand(row)
     },
 
@@ -69,6 +75,7 @@ export function createCommandHandlers(db: Database.Database) {
       if (data.example !== undefined) { fields.push('example = ?'); values.push(data.example) }
       if (data.tags !== undefined) { fields.push('tags = ?'); values.push(JSON.stringify(data.tags)) }
       if (data.url !== undefined) { fields.push('url = ?'); values.push(data.url) }
+      if (data.refs !== undefined) { fields.push('refs = ?'); values.push(JSON.stringify(data.refs)) }
       values.push(id)
       const row = db.prepare(`UPDATE commands SET ${fields.join(', ')} WHERE id = ? RETURNING *`).get(...values) as any
       return rowToCommand(row)

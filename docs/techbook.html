@@ -1,0 +1,1013 @@
+<title>k8s Learning App — 技術リファレンス</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0D1117;
+    --surface: #161B22;
+    --surface2: #21262D;
+    --border: #30363D;
+    --accent: #3B82F6;
+    --accent-subtle: rgba(59,130,246,0.12);
+    --accent-dim: #1D4ED8;
+    --text: #E6EDF3;
+    --text-muted: #7D8590;
+    --text-dim: #484F58;
+    --green: #3FB950;
+    --yellow: #D29922;
+    --red: #F85149;
+    --purple: #A371F7;
+    --teal: #39D353;
+    --mono: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.7;
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ── Sidebar TOC ── */
+  .toc {
+    width: 220px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 28px 16px;
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .toc-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .toc-logo-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #2563EB, #1D4ED8);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+
+  .toc-logo-icon svg { width: 14px; height: 14px; fill: #fff; }
+
+  .toc-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+  }
+
+  .toc-subtitle {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .toc nav { display: flex; flex-direction: column; gap: 2px; }
+
+  .toc-section-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 12px 8px 4px;
+  }
+
+  .toc a {
+    display: block;
+    padding: 5px 8px;
+    border-radius: 5px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 12.5px;
+    transition: background 0.12s, color 0.12s;
+  }
+
+  .toc a:hover { background: var(--surface2); color: var(--text); }
+  .toc a.active { background: var(--accent-subtle); color: var(--accent); }
+
+  /* ── Main content ── */
+  main {
+    flex: 1;
+    min-width: 0;
+    padding: 40px 48px 80px;
+    max-width: 860px;
+  }
+
+  /* ── Page header ── */
+  .page-header {
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .page-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .page-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 10px;
+    text-wrap: balance;
+  }
+
+  .page-header p {
+    color: var(--text-muted);
+    font-size: 15px;
+    max-width: 540px;
+  }
+
+  .badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 16px;
+  }
+
+  .badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    background: var(--surface2);
+  }
+
+  .badge.blue { border-color: rgba(59,130,246,0.4); color: #93C5FD; background: rgba(59,130,246,0.08); }
+  .badge.green { border-color: rgba(63,185,80,0.4); color: #86EFAC; background: rgba(63,185,80,0.08); }
+  .badge.purple { border-color: rgba(163,113,247,0.4); color: #C4B5FD; background: rgba(163,113,247,0.08); }
+  .badge.yellow { border-color: rgba(210,153,34,0.4); color: #FDE68A; background: rgba(210,153,34,0.08); }
+
+  /* ── Section ── */
+  section { margin-bottom: 52px; }
+
+  section h2 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  section h2 .section-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    background: var(--accent-subtle);
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  section h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin: 20px 0 8px;
+    letter-spacing: 0.01em;
+  }
+
+  section p { color: var(--text-muted); margin-bottom: 8px; }
+
+  /* ── Tech card grid ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+  }
+
+  .tech-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    transition: border-color 0.15s;
+  }
+
+  .tech-card:hover { border-color: #444C56; }
+
+  .tech-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+
+  .tech-name {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .tech-version {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    background: var(--surface2);
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+
+  .tech-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .tech-role {
+    font-size: 10px;
+    font-family: var(--mono);
+    color: var(--accent);
+    margin-top: 6px;
+    letter-spacing: 0.04em;
+  }
+
+  /* ── Code block ── */
+  .code-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 12px 0;
+  }
+
+  .code-block-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .code-lang {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .code-block pre {
+    padding: 14px 16px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.65;
+    color: var(--text);
+    white-space: pre;
+  }
+
+  .c-blue { color: #79C0FF; }
+  .c-green { color: #A5F3A5; }
+  .c-yellow { color: #F0C03C; }
+  .c-muted { color: var(--text-muted); }
+  .c-purple { color: #D2A8FF; }
+  .c-red { color: #FF7B72; }
+
+  /* ── Architecture diagram ── */
+  .arch-diagram {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 12px 0;
+  }
+
+  .arch-row {
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .arch-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    flex: 1;
+    text-align: center;
+  }
+
+  .arch-box.accent { border-color: rgba(59,130,246,0.5); color: #93C5FD; background: rgba(59,130,246,0.08); }
+  .arch-box.green { border-color: rgba(63,185,80,0.5); color: #86EFAC; background: rgba(63,185,80,0.08); }
+  .arch-box.purple { border-color: rgba(163,113,247,0.5); color: #C4B5FD; background: rgba(163,113,247,0.08); }
+  .arch-box.yellow { border-color: rgba(210,153,34,0.5); color: #FDE68A; background: rgba(210,153,34,0.08); }
+
+  .arch-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .arch-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dim);
+    font-size: 16px;
+    padding: 0 4px;
+  }
+
+  /* ── Component tree ── */
+  .tree {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    line-height: 1.8;
+    overflow-x: auto;
+  }
+
+  .tree .node { color: var(--text); }
+  .tree .node-path { color: var(--text-muted); }
+  .tree .node-tag { color: #79C0FF; }
+  .tree .node-note { color: var(--text-dim); font-size: 11px; }
+
+  /* ── Table ── */
+  .ref-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    overflow-x: auto;
+  }
+
+  .ref-table th {
+    text-align: left;
+    padding: 8px 12px;
+    background: var(--surface2);
+    color: var(--text-muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ref-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+    vertical-align: top;
+  }
+
+  .ref-table td:first-child {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text);
+  }
+
+  .ref-table tr:last-child td { border-bottom: none; }
+  .ref-table-wrap { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin: 12px 0; }
+  .ref-table-wrap .ref-table { overflow-x: auto; }
+
+  /* ── Hook card ── */
+  .hook-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 8px 0;
+  }
+
+  .hook-name {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--purple);
+    margin-bottom: 4px;
+  }
+
+  .hook-desc { font-size: 12.5px; color: var(--text-muted); }
+
+  /* ── Callout ── */
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-subtle);
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    margin: 12px 0;
+    font-size: 12.5px;
+    color: #93C5FD;
+  }
+
+  /* ── File path ── */
+  .file {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--green);
+    background: rgba(63,185,80,0.08);
+    border: 1px solid rgba(63,185,80,0.2);
+    padding: 1px 6px;
+    border-radius: 4px;
+  }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  @media (max-width: 720px) {
+    .toc { display: none; }
+    main { padding: 24px 20px 60px; }
+    .card-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<!-- Sidebar TOC -->
+<aside class="toc">
+  <div class="toc-logo">
+    <div class="toc-logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+    </div>
+    <div>
+      <div class="toc-title">k8s Learn</div>
+      <div class="toc-subtitle">Tech Reference</div>
+    </div>
+  </div>
+  <nav>
+    <div class="toc-section-label">概要</div>
+    <a href="#overview">プロジェクト概要</a>
+    <a href="#stack">技術スタック</a>
+
+    <div class="toc-section-label">アーキテクチャ</div>
+    <a href="#platform">プラットフォーム分離</a>
+    <a href="#data">データ層</a>
+    <a href="#build">ビルドシステム</a>
+
+    <div class="toc-section-label">UI</div>
+    <a href="#components">コンポーネント構成</a>
+    <a href="#design">UIデザイン</a>
+    <a href="#hooks">カスタムフック</a>
+
+    <div class="toc-section-label">インフラ</div>
+    <a href="#cicd">GitHub Actions</a>
+    <a href="#persistence">データ永続化</a>
+
+    <div class="toc-section-label">その他</div>
+    <a href="#specs">設計書一覧</a>
+  </nav>
+</aside>
+
+<!-- Main -->
+<main>
+  <div class="page-header">
+    <div class="page-eyebrow">Technical Reference</div>
+    <h1>k8s Learning App</h1>
+    <p>このアプリで使用しているすべての技術・仕組み・コンポーネント・UIデザインを網羅したリファレンス。</p>
+    <div class="badge-row">
+      <span class="badge blue">React 19</span>
+      <span class="badge blue">TypeScript</span>
+      <span class="badge blue">Vite</span>
+      <span class="badge">Electron 42</span>
+      <span class="badge green">GitHub Pages</span>
+      <span class="badge green">GitHub Actions</span>
+      <span class="badge purple">MUI v9</span>
+      <span class="badge yellow">dnd-kit</span>
+    </div>
+  </div>
+
+  <!-- 1. プロジェクト概要 -->
+  <section id="overview">
+    <h2><span class="section-num">01</span> プロジェクト概要</h2>
+    <p>Kubernetes・Docker・Helm などのコンテナ技術を学習するための知識管理アプリ。コマンドリファレンス・ナレッジベース・フラッシュカードを1つにまとめている。</p>
+
+    <div class="arch-diagram" style="margin-top:16px">
+      <div class="arch-label">デプロイ形態</div>
+      <div class="arch-row">
+        <div class="arch-box accent">Electron アプリ<br><span style="font-size:10px;color:#7D8590">デスクトップ / SQLite</span></div>
+        <div class="arch-arrow">|</div>
+        <div class="arch-box green">GitHub Pages<br><span style="font-size:10px;color:#7D8590">Web / localStorage + JSON</span></div>
+      </div>
+      <div style="font-size:11px;color:var(--text-dim);margin-top:8px;font-family:var(--mono)">同一の React コードベース。データ層のみ分岐。</div>
+    </div>
+  </section>
+
+  <!-- 2. 技術スタック -->
+  <section id="stack">
+    <h2><span class="section-num">02</span> 技術スタック</h2>
+
+    <h3>フロントエンド</h3>
+    <div class="card-grid">
+      <div class="tech-card">
+        <div class="tech-card-header">
+          <span class="tech-name">React</span>
+          <span class="tech-version">v19</span>
+        </div>
+        <div class="tech-desc">UIライブラリ。コンポーネントベースの画面構成。</div>
+        <div class="tech-role">UI Framework</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-card-header">
+          <span class="tech-name">TypeScript</span>
+          <span class="tech-version">v6</span>
+        </div>
+        <div class="tech-desc">型安全なJavaScript。全ソースファイルに適用。</div>
+        <div class="tech-role">Language</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-card-header">
+          <span class="tech-name">Vite</span>
+          <span class="tech-version">v8</span>
+        </div>
+        <div class="tech-desc">ビルドツール。Electron版・Web版で別設定ファイルを使用。</div>
+        <div class="tech-role">Build Tool</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-card-header">
+          <span class="tech-name">MUI</span>
+          <span class="tech-version">v9</span>
+        </div>
+        <div class="tech-desc">Material UIコンポーネントライブラリ。アイコンも同パッケージ。</div>
+        <div class="tech-role">UI Library</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-card-header">
+          <span class="tech-name">@primer/octicons-react</span>
+          <span class="tech-version">v19</span>
+        </div>
+        <div class="tech-desc">GitHub製SVGアイコン。サイドバー・ナビゲーション用。</div>
+        <div class="tech-role">Icons</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-card-header">
+          <span class="tech-name">react-markdown</span>
+          <span class="tech-version">v10</span>
+        </div>
+        <div class="tech-desc">Markdownテキストをレンダリング。remark-gfm でGFM拡張対応。</div>
+        <div class="tech-role">Markdown</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-card-header">
+          <span class="tech-name">dnd-kit</span>
+          <span class="tech-version">—</span>
+        </div>
+        <div class="tech-desc">ドラッグ＆ドロップライブラリ。サイドバーのカテゴリ並び替えに使用。</div>
+        <div class="tech-role">DnD / Sortable</div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:24px">デスクトップ（Electron）</h3>
+    <div class="card-grid">
+      <div class="tech-card">
+        <div class="tech-card-header">
+          <span class="tech-name">Electron</span>
+          <span class="tech-version">v42</span>
+        </div>
+        <div class="tech-desc">デスクトップアプリ化。Main プロセスと Renderer プロセスに分離。</div>
+        <div class="tech-role">Desktop Runtime</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-card-header">
+          <span class="tech-name">better-sqlite3</span>
+          <span class="tech-version">v12</span>
+        </div>
+        <div class="tech-desc">同期型SQLiteバインディング。Electronのメインプロセスで動作。</div>
+        <div class="tech-role">Database</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-card-header">
+          <span class="tech-name">electron-builder</span>
+          <span class="tech-version">v26</span>
+        </div>
+        <div class="tech-desc">Electronアプリのパッケージング・配布用。</div>
+        <div class="tech-role">Packaging</div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:24px">CI/CD・インフラ</h3>
+    <div class="card-grid">
+      <div class="tech-card">
+        <div class="tech-card-header">
+          <span class="tech-name">GitHub Pages</span>
+          <span class="tech-version">—</span>
+        </div>
+        <div class="tech-desc">静的サイトホスティング。Web版のデプロイ先。</div>
+        <div class="tech-role">Hosting</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-card-header">
+          <span class="tech-name">GitHub Actions</span>
+          <span class="tech-version">—</span>
+        </div>
+        <div class="tech-desc">CI/CD・AI生成ワークフローの実行基盤。</div>
+        <div class="tech-role">CI/CD</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-card-header">
+          <span class="tech-name">GitHub Models</span>
+          <span class="tech-version">—</span>
+        </div>
+        <div class="tech-desc">Actions内でドキュメントURLからナレッジを自動生成するためのAI API。</div>
+        <div class="tech-role">AI API</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. プラットフォーム分離 -->
+  <section id="platform">
+    <h2><span class="section-num">03</span> プラットフォーム分離</h2>
+    <p>ElectronとWebで同じReactコードを使いながら、データ取得層だけを切り替えている。Viteの <code style="font-family:var(--mono);font-size:12px;color:#79C0FF">resolve.alias</code> を利用してビルド時にファイルをスワップする。</p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <span class="code-lang">vite.web.config.ts</span>
+      </div>
+      <pre><span class="c-muted">// ipc への import を ipc.web.ts に差し替え</span>
+resolve: {
+  alias: [
+    {
+      find: <span class="c-green">/.*\/shared\/ipc$/</span>,
+      replacement: <span class="c-green">'src/shared/ipc.web.ts'</span>,
+    },
+  ],
+},</pre>
+    </div>
+
+    <div class="ref-table-wrap">
+      <table class="ref-table">
+        <thead>
+          <tr><th>ファイル</th><th>用途</th><th>データソース</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>src/shared/ipc.ts</td>
+            <td>Electron版 API クライアント</td>
+            <td>window.api（IPC経由でSQLite）</td>
+          </tr>
+          <tr>
+            <td>src/shared/ipc.web.ts</td>
+            <td>Web版 API クライアント</td>
+            <td>JSONファイル + localStorage</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      コンポーネント側は <code style="font-family:var(--mono)">import { api } from '../../shared/ipc'</code> とするだけ。ElectronかWebかを意識しない。
+    </div>
+  </section>
+
+  <!-- 4. データ層 -->
+  <section id="data">
+    <h2><span class="section-num">04</span> データ層</h2>
+
+    <h3>コンテンツファイル構造（Web版）</h3>
+    <div class="tree">
+<span class="node-path">categories/</span>
+├── <span class="node-tag">k8s/</span>
+│   ├── <span class="c-yellow">meta.json</span>          <span class="node-note">{ "name": "Kubernetes" }</span>
+│   └── sections/
+│       └── <span class="node-tag">01-pod-management/</span>
+│           ├── <span class="c-yellow">meta.json</span>      <span class="node-note">{ "title": "Pod管理" }</span>
+│           ├── <span class="c-blue">commands.json</span>  <span class="node-note">コマンド一覧</span>
+│           └── <span class="c-blue">knowledge.json</span> <span class="node-note">ナレッジ一覧</span>
+├── <span class="node-tag">docker/</span>
+├── <span class="node-tag">helm/</span>
+├── <span class="node-tag">argocd/</span>
+└── <span class="node-tag">kustomize/</span></div>
+
+    <p style="margin-top:12px">ビルド時に <code style="font-family:var(--mono);font-size:12px;color:#79C0FF">import.meta.glob</code> で全JSONをバンドル。実行時のファイル読み込みは不要。</p>
+
+    <h3>型定義（抜粋）</h3>
+    <div class="code-block">
+      <div class="code-block-header"><span class="code-lang">types/index.ts</span></div>
+      <pre><span class="c-purple">interface</span> <span class="c-blue">Category</span>  { id, slug, name, icon, order }
+<span class="c-purple">interface</span> <span class="c-blue">Section</span>   { id, categoryId, slug, title, order }
+<span class="c-purple">interface</span> <span class="c-blue">Command</span>   { id, categoryId, name, syntax, example, tags, url }
+<span class="c-purple">interface</span> <span class="c-blue">Knowledge</span> { id, categoryId, title, body, tags, url, cloze }
+<span class="c-purple">interface</span> <span class="c-blue">Progress</span>  { itemType, itemId, status, correctCount, lastReviewed }</pre>
+    </div>
+  </section>
+
+  <!-- 5. ビルドシステム -->
+  <section id="build">
+    <h2><span class="section-num">05</span> ビルドシステム</h2>
+    <div class="ref-table-wrap">
+      <table class="ref-table">
+        <thead>
+          <tr><th>コマンド</th><th>内容</th><th>出力先</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>npm run dev</td>
+            <td>Electron開発サーバー起動（Vite + Electron 並列）</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>npm run dev:web</td>
+            <td>Web版開発サーバー（vite.web.config.ts）</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>npm run build:web</td>
+            <td>Web版プロダクションビルド</td>
+            <td>dist/web/</td>
+          </tr>
+          <tr>
+            <td>npm run build</td>
+            <td>Electron版ビルド（renderer + main）</td>
+            <td>dist/renderer/ + dist/main/</td>
+          </tr>
+          <tr>
+            <td>npm run dist</td>
+            <td>Electronアプリをパッケージング</td>
+            <td>installers/</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 6. コンポーネント構成 -->
+  <section id="components">
+    <h2><span class="section-num">06</span> コンポーネント構成</h2>
+
+    <div class="tree">
+<span class="c-yellow">App.tsx</span>
+├── <span class="c-blue">Layout</span>                <span class="node-note">shared/components/Layout.tsx</span>
+│   ├── <span class="c-blue">Header</span>            <span class="node-note">検索・ダークモード・設定</span>
+│   ├── <span class="c-blue">Sidebar</span>           <span class="node-note">カテゴリツリー（dnd-kit 並び替え）</span>
+│   └── <span class="c-blue">main</span>
+│       ├── <span class="c-blue">ReferenceView</span>  <span class="node-note">カテゴリ/セクション別リファレンス</span>
+│       │   ├── <span class="c-blue">AutoplayCarousel</span>
+│       │   ├── <span class="c-blue">CommandList</span>
+│       │   └── <span class="c-blue">KnowledgeList</span>
+│       │       └── <span class="c-blue">GenerateFromUrlDialog</span>
+│       ├── <span class="c-blue">FlashcardView</span>  <span class="node-note">穴埋め・暗記カード</span>
+│       ├── <span class="c-blue">RoadmapView</span>   <span class="node-note">学習ロードマップ</span>
+│       └── <span class="c-blue">HelpView</span>      <span class="node-note">使い方ガイド</span>
+├── <span class="c-blue">SplashScreen</span>          <span class="node-note">起動時ローディング画面</span>
+└── <span class="c-blue">SettingsDialog</span>        <span class="node-note">GitHub トークン設定</span></div>
+
+    <h3>主要コンポーネント詳細</h3>
+    <div class="ref-table-wrap">
+      <table class="ref-table">
+        <thead>
+          <tr><th>コンポーネント</th><th>役割</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Sidebar</td>
+            <td>カテゴリツリー（dnd-kit SortableContext）、学習進捗ウィジェット、フラッシュカード/ロードマップへの導線</td>
+          </tr>
+          <tr>
+            <td>KnowledgeList</td>
+            <td>ナレッジ一覧・検索・タグフィルタ。AI穴埋め生成、URL生成ダイアログ、Snackbarポーリング通知を内包</td>
+          </tr>
+          <tr>
+            <td>GenerateFromUrlDialog</td>
+            <td>URLを入力してGitHub Actions経由でナレッジを自動生成。dispatch後すぐ閉じられる</td>
+          </tr>
+          <tr>
+            <td>AutoplayCarousel</td>
+            <td>セクション内のナレッジを自動スライド表示</td>
+          </tr>
+          <tr>
+            <td>FlashcardView</td>
+            <td>コマンド/ナレッジをフラッシュカード形式で学習。進捗（unseen/learning/done）を記録</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 7. UIデザイン -->
+  <section id="design">
+    <h2><span class="section-num">07</span> UIデザイン</h2>
+
+    <h3>テーマシステム</h3>
+    <p><span class="file">src/shared/theme.ts</span> で MUI の <code style="font-family:var(--mono);font-size:12px;color:#79C0FF">createTheme()</code> を使って dark/light テーマを定義。App.tsx の state でトグル。</p>
+
+    <div class="ref-table-wrap">
+      <table class="ref-table">
+        <thead><tr><th>要素</th><th>手法</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>スタイリング</td>
+            <td>MUI の sx prop。CSS-in-JSで型安全なスタイル記述</td>
+          </tr>
+          <tr>
+            <td>透過色</td>
+            <td>MUI の alpha() ヘルパー関数でテーマカラーに透過度を付与</td>
+          </tr>
+          <tr>
+            <td>アイコン（ナビ）</td>
+            <td>@mui/icons-material（MUI Icons）を使用</td>
+          </tr>
+          <tr>
+            <td>アイコン（UI）</td>
+            <td>@primer/octicons-react（GitHub製）を使用</td>
+          </tr>
+          <tr>
+            <td>ダークモード</td>
+            <td>デフォルトdark。ヘッダーのトグルボタンで切り替え。localStorageには未永続化</td>
+          </tr>
+          <tr>
+            <td>ドラッグハンドル</td>
+            <td>DragIndicatorIcon（MUI）をホバー時のみ表示（opacity: 0→1）</td>
+          </tr>
+          <tr>
+            <td>通知</td>
+            <td>MUI Snackbar + Alert。ポーリング完了・エラー通知に使用</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>ドラッグ＆ドロップ（dnd-kit）</h3>
+    <p>カテゴリの並び替えに使用。<code style="font-family:var(--mono);font-size:12px;color:#79C0FF">DndContext</code> + <code style="font-family:var(--mono);font-size:12px;color:#79C0FF">SortableContext</code> でラップし、<code style="font-family:var(--mono);font-size:12px;color:#79C0FF">useSortable</code> フックを持つ <code style="font-family:var(--mono);font-size:12px;color:#79C0FF">SortableCategoryRow</code> コンポーネントに分離。</p>
+
+    <div class="code-block">
+      <div class="code-block-header"><span class="code-lang">Sidebar.tsx — 構造</span></div>
+      <pre><span class="c-blue">DndContext</span> collisionDetection={closestCenter} onDragEnd={handleDragEnd}
+  <span class="c-blue">SortableContext</span> items={catIds} strategy={verticalListSortingStrategy}
+    <span class="c-blue">SortableCategoryRow</span> <span class="c-muted">← useSortable({ id: cat.id })</span>
+      DragIndicatorIcon  <span class="c-muted">← onClick: stopPropagation</span>
+      ListItemButton     <span class="c-muted">← onClick: toggleCat</span></pre>
+    </div>
+  </section>
+
+  <!-- 8. カスタムフック -->
+  <section id="hooks">
+    <h2><span class="section-num">08</span> カスタムフック</h2>
+
+    <div class="hook-card">
+      <div class="hook-name">useWorkflowPolling()</div>
+      <div class="hook-desc">GitHub Actions ワークフローの完了をポーリング監視するフック。<br>
+      <span class="file">src/shared/hooks/useWorkflowPolling.ts</span><br><br>
+      <strong style="color:var(--text)">status</strong>: idle → polling → done | error<br>
+      <strong style="color:var(--text)">startPolling(token, dispatchedAt)</strong>: ポーリング開始<br>
+      <strong style="color:var(--text)">dismiss()</strong>: 通知を閉じる<br><br>
+      KnowledgeList レベルで保持することで、GenerateFromUrlDialog を閉じてもポーリングが継続する。最大10分（10秒×60回）。
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. GitHub Actions -->
+  <section id="cicd">
+    <h2><span class="section-num">09</span> GitHub Actions ワークフロー</h2>
+    <div class="ref-table-wrap">
+      <table class="ref-table">
+        <thead><tr><th>ファイル</th><th>トリガー</th><th>内容</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>deploy.yml</td>
+            <td>main へのpush</td>
+            <td>build:web → GitHub Pages へデプロイ</td>
+          </tr>
+          <tr>
+            <td>generate-from-url.yml</td>
+            <td>workflow_dispatch（アプリUIから）</td>
+            <td>URL指定→GitHub Models APIでナレッジ生成→categories/ にコミット</td>
+          </tr>
+          <tr>
+            <td>generate-content.yml</td>
+            <td>手動 / スケジュール</td>
+            <td>sectionUrls.ts に定義されたURL群からまとめてコンテンツ生成</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      generate-from-url は <code style="font-family:var(--mono)">permissions: models: read</code> が必要（GitHub Models API アクセスのため）。
+    </div>
+  </section>
+
+  <!-- 10. データ永続化 -->
+  <section id="persistence">
+    <h2><span class="section-num">10</span> データ永続化</h2>
+    <div class="ref-table-wrap">
+      <table class="ref-table">
+        <thead><tr><th>キー / テーブル</th><th>内容</th><th>対象</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>progress:command:{id}</td>
+            <td>コマンドの学習進捗（unseen/learning/done）</td>
+            <td>Web: localStorage</td>
+          </tr>
+          <tr>
+            <td>progress:knowledge:{id}</td>
+            <td>ナレッジの学習進捗</td>
+            <td>Web: localStorage</td>
+          </tr>
+          <tr>
+            <td>custom:commands</td>
+            <td>ユーザー追加のカスタムコマンド一覧</td>
+            <td>Web: localStorage</td>
+          </tr>
+          <tr>
+            <td>custom:knowledge</td>
+            <td>ユーザー追加のカスタムナレッジ一覧</td>
+            <td>Web: localStorage</td>
+          </tr>
+          <tr>
+            <td>category-order</td>
+            <td>サイドバーのカテゴリ並び順（slug配列）</td>
+            <td>Web: localStorage</td>
+          </tr>
+          <tr>
+            <td>github-token</td>
+            <td>GitHub Personal Access Token</td>
+            <td>Web: localStorage</td>
+          </tr>
+          <tr>
+            <td>SQLite DB</td>
+            <td>上記すべてをDBで管理（Electron版）</td>
+            <td>Electron: better-sqlite3</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 11. 設計書一覧 -->
+  <section id="specs">
+    <h2><span class="section-num">11</span> 設計書一覧</h2>
+    <div class="ref-table-wrap">
+      <table class="ref-table">
+        <thead><tr><th>ファイル</th><th>内容</th><th>状態</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>2026-06-23-flashcard-and-reference-url-design.md</td>
+            <td>フラッシュカード＆リファレンスURL機能</td>
+            <td><span class="badge green">実装済み</span></td>
+          </tr>
+          <tr>
+            <td>2026-06-24-sidebar-category-reorder-design.md</td>
+            <td>サイドバーカテゴリ並び替え（dnd-kit）</td>
+            <td><span class="badge green">実装済み</span></td>
+          </tr>
+          <tr>
+            <td>2026-06-24-mobile-responsive-design.md</td>
+            <td>モバイルレスポンシブ対応</td>
+            <td><span class="badge yellow">設計書のみ</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:12px">設計書は <span class="file">docs/superpowers/specs/</span> に格納。</p>
+  </section>
+</main>
+
+<script>
+  // Highlight active TOC link on scroll
+  const links = document.querySelectorAll('.toc a');
+  const sections = document.querySelectorAll('section[id]');
+
+  function updateActive() {
+    let current = '';
+    sections.forEach(sec => {
+      if (window.scrollY >= sec.offsetTop - 80) current = sec.id;
+    });
+    links.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  }
+
+  window.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
+</script>

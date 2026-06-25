@@ -46,4 +46,17 @@ export const SECTION_URLS: Record<string, Record<string, string>> = {
     '04-patches':       'https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/patches/',
     '05-components':    'https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/components/',
   },
+  aws: {
+    '01-iam':            'https://docs.aws.amazon.com/IAM/latest/UserGuide/',
+    '02-ec2':            'https://docs.aws.amazon.com/ec2/index.html',
+    '03-s3':             'https://docs.aws.amazon.com/s3/index.html',
+    '04-vpc':            'https://docs.aws.amazon.com/vpc/index.html',
+    '05-rds':            'https://docs.aws.amazon.com/rds/index.html',
+    '06-lambda':         'https://docs.aws.amazon.com/lambda/index.html',
+    '07-eks':            'https://docs.aws.amazon.com/eks/index.html',
+    '08-ecr':            'https://docs.aws.amazon.com/ecr/index.html',
+    '09-elb':            'https://docs.aws.amazon.com/elasticloadbalancing/index.html',
+    '10-cloudwatch':     'https://docs.aws.amazon.com/cloudwatch/index.html',
+    '11-cloudformation': 'https://docs.aws.amazon.com/cloudformation/index.html',
+  },
 }

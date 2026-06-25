@@ -65,6 +65,22 @@ export function CommandDetail({ command, onClose, onEdit, onDelete }: CommandDet
               </Button>
             )}
 
+            {command.refs && command.refs.length > 0 && (
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 2 }}>
+                {command.refs.map((ref, i) => (
+                  <Button
+                    key={i}
+                    variant="text"
+                    size="small"
+                    startIcon={<OpenInNewIcon fontSize="small" />}
+                    onClick={() => api.shell.openExternal(ref.url)}
+                  >
+                    {ref.label || ref.url}
+                  </Button>
+                ))}
+              </Box>
+            )}
+
             <Divider sx={{ mb: 2 }} />
 
             <Box sx={{ display: 'flex', gap: 1 }}>

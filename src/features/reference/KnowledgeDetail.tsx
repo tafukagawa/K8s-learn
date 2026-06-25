@@ -62,6 +62,22 @@ export function KnowledgeDetail({ item, onClose, onEdit, onDelete }: KnowledgeDe
               </Button>
             )}
 
+            {item.refs && item.refs.length > 0 && (
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 2 }}>
+                {item.refs.map((ref, i) => (
+                  <Button
+                    key={i}
+                    variant="text"
+                    size="small"
+                    startIcon={<OpenInNewIcon fontSize="small" />}
+                    onClick={() => api.shell.openExternal(ref.url)}
+                  >
+                    {ref.label || ref.url}
+                  </Button>
+                ))}
+              </Box>
+            )}
+
             <Divider sx={{ mb: 2 }} />
             <Box sx={{ display: 'flex', gap: 1 }}>
               <Button variant="outlined" startIcon={<EditIcon />} onClick={() => onEdit(item)} size="small">編集</Button>

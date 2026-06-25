@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Box, Autocomplete, Chip } from '@mui/material'
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Box, Autocomplete, Chip, IconButton, Typography } from '@mui/material'
+import AddIcon from '@mui/icons-material/Add'
+import DeleteIcon from '@mui/icons-material/Delete'
 import { api } from '../../shared/ipc'
-import type { CommandWithProgress } from '../../types'
+import type { CommandWithProgress, RefLink } from '../../types'
 
 interface CommandFormProps {
   open: boolean
@@ -19,6 +21,7 @@ export function CommandForm({ open, categoryId, command, existingTags, onClose, 
   const [example, setExample] = useState('')
   const [tags, setTags] = useState<string[]>([])
   const [url, setUrl] = useState('')
+  const [refs, setRefs] = useState<RefLink[]>([])
 
   useEffect(() => {
     if (command) {
@@ -28,17 +31,18 @@ export function CommandForm({ open, categoryId, command, existingTags, onClose, 
       setExample(command.example)
       setTags(command.tags)
       setUrl(command.url)
+      setRefs(command.refs ?? [])
     } else {
-      setName(''); setDescription(''); setSyntax(''); setExample(''); setTags([]); setUrl('')
+      setName(''); setDescription(''); setSyntax(''); setExample(''); setTags([]); setUrl(''); setRefs([])
     }
   }, [command, open])
 
   async function handleSubmit() {
     if (command) {
-      const updated = await api.commands.update(command.id, { name, description, syntax, example, tags, url })
+      const updated = await api.commands.update(command.id, { name, description, syntax, example, tags, url, refs })
       onSuccess({ ...updated, progress: command.progress })
     } else {
-      const created = await api.commands.create({ categoryId, name, description, syntax, example, tags, url })
+      const created = await api.commands.create({ categoryId, name, description, syntax, example, tags, url, refs })
       onSuccess({ ...created, progress: null })
     }
   }
@@ -76,6 +80,41 @@ export function CommandForm({ open, categoryId, command, existingTags, onClose, 
             size="small"
             placeholder="https://kubernetes.io/docs/..."
           />
+          <Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+              <Typography variant="caption" color="text.secondary">参考リンク</Typography>
+              <Button
+                size="small"
+                startIcon={<AddIcon />}
+                onClick={() => setRefs(r => [...r, { label: '', url: '' }])}
+              >
+                追加
+              </Button>
+            </Box>
+            {refs.map((ref, i) => (
+              <Box key={i} sx={{ display: 'flex', gap: 1, mb: 1, alignItems: 'center' }}>
+                <TextField
+                  label="ラベル"
+                  value={ref.label}
+                  onChange={e => setRefs(r => r.map((x, j) => j === i ? { ...x, label: e.target.value } : x))}
+                  size="small"
+                  sx={{ width: 140 }}
+                  placeholder="Qiita記事"
+                />
+                <TextField
+                  label="URL"
+                  value={ref.url}
+                  onChange={e => setRefs(r => r.map((x, j) => j === i ? { ...x, url: e.target.value } : x))}
+                  size="small"
+                  sx={{ flex: 1 }}
+                  placeholder="https://..."
+                />
+                <IconButton size="small" onClick={() => setRefs(r => r.filter((_, j) => j !== i))}>
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
+              </Box>
+            ))}
+          </Box>
         </Box>
       </DialogContent>
       <DialogActions>

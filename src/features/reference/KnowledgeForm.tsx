@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Box, Autocomplete, Chip } from '@mui/material'
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Box, Autocomplete, Chip, IconButton, Typography } from '@mui/material'
+import AddIcon from '@mui/icons-material/Add'
+import DeleteIcon from '@mui/icons-material/Delete'
 import { api } from '../../shared/ipc'
-import type { KnowledgeWithProgress } from '../../types'
+import type { KnowledgeWithProgress, RefLink } from '../../types'
 
 interface KnowledgeFormProps {
   open: boolean
@@ -17,21 +19,22 @@ export function KnowledgeForm({ open, categoryId, item, existingTags, onClose, o
   const [body, setBody] = useState('')
   const [tags, setTags] = useState<string[]>([])
   const [url, setUrl] = useState('')
+  const [refs, setRefs] = useState<RefLink[]>([])
 
   useEffect(() => {
     if (item) {
-      setTitle(item.title); setBody(item.body); setTags(item.tags); setUrl(item.url)
+      setTitle(item.title); setBody(item.body); setTags(item.tags); setUrl(item.url); setRefs(item.refs ?? [])
     } else {
-      setTitle(''); setBody(''); setTags([]); setUrl('')
+      setTitle(''); setBody(''); setTags([]); setUrl(''); setRefs([])
     }
   }, [item, open])
 
   async function handleSubmit() {
     if (item) {
-      const updated = await api.knowledge.update(item.id, { title, body, tags, url })
+      const updated = await api.knowledge.update(item.id, { title, body, tags, url, refs })
       onSuccess({ ...updated, progress: item.progress })
     } else {
-      const created = await api.knowledge.create({ categoryId, title, body, tags, url, cloze: null })
+      const created = await api.knowledge.create({ categoryId, title, body, tags, url, cloze: null, refs })
       onSuccess({ ...created, progress: null })
     }
   }
@@ -67,6 +70,41 @@ export function KnowledgeForm({ open, categoryId, item, existingTags, onClose, o
             size="small"
             placeholder="https://kubernetes.io/docs/..."
           />
+          <Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+              <Typography variant="caption" color="text.secondary">参考リンク</Typography>
+              <Button
+                size="small"
+                startIcon={<AddIcon />}
+                onClick={() => setRefs(r => [...r, { label: '', url: '' }])}
+              >
+                追加
+              </Button>
+            </Box>
+            {refs.map((ref, i) => (
+              <Box key={i} sx={{ display: 'flex', gap: 1, mb: 1, alignItems: 'center' }}>
+                <TextField
+                  label="ラベル"
+                  value={ref.label}
+                  onChange={e => setRefs(r => r.map((x, j) => j === i ? { ...x, label: e.target.value } : x))}
+                  size="small"
+                  sx={{ width: 140 }}
+                  placeholder="Qiita記事"
+                />
+                <TextField
+                  label="URL"
+                  value={ref.url}
+                  onChange={e => setRefs(r => r.map((x, j) => j === i ? { ...x, url: e.target.value } : x))}
+                  size="small"
+                  sx={{ flex: 1 }}
+                  placeholder="https://..."
+                />
+                <IconButton size="small" onClick={() => setRefs(r => r.filter((_, j) => j !== i))}>
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
+              </Box>
+            ))}
+          </Box>
         </Box>
       </DialogContent>
       <DialogActions>

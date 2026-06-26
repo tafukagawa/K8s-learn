@@ -1,0 +1,58 @@
+[
+  {
+    "name": "aws s3 ls",
+    "description": "バケット一覧またはバケット内のオブジェクト一覧を表示する",
+    "syntax": "aws s3 ls [s3://<bucket>/<prefix>]",
+    "example": "aws s3 ls s3://my-bucket/logs/",
+    "tags": ["s3", "list", "bucket"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/s3/ls.html"
+  },
+  {
+    "name": "aws s3 mb",
+    "description": "新しいS3バケットを作成する",
+    "syntax": "aws s3 mb s3://<bucket-name> [--region <region>]",
+    "example": "aws s3 mb s3://my-unique-bucket-name --region ap-northeast-1",
+    "tags": ["s3", "bucket", "create"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/s3/mb.html"
+  },
+  {
+    "name": "aws s3 cp",
+    "description": "ファイルをローカルとS3間、またはS3バケット間でコピーする",
+    "syntax": "aws s3 cp <source> <destination> [--recursive]",
+    "example": "aws s3 cp ./local-file.txt s3://my-bucket/uploads/",
+    "tags": ["s3", "copy", "upload"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/s3/cp.html"
+  },
+  {
+    "name": "aws s3 sync",
+    "description": "ローカルディレクトリとS3バケットを同期する（差分のみ転送）",
+    "syntax": "aws s3 sync <source> <destination> [--delete]",
+    "example": "aws s3 sync ./dist/ s3://my-website-bucket/ --delete",
+    "tags": ["s3", "sync", "upload"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/s3/sync.html"
+  },
+  {
+    "name": "aws s3 rm",
+    "description": "S3からオブジェクトを削除する",
+    "syntax": "aws s3 rm s3://<bucket>/<key> [--recursive]",
+    "example": "aws s3 rm s3://my-bucket/old-files/ --recursive",
+    "tags": ["s3", "delete", "remove"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/s3/rm.html"
+  },
+  {
+    "name": "aws s3api get-bucket-policy",
+    "description": "バケットポリシーを取得する",
+    "syntax": "aws s3api get-bucket-policy --bucket <bucket-name>",
+    "example": "aws s3api get-bucket-policy --bucket my-bucket",
+    "tags": ["s3", "policy", "bucket"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/s3api/get-bucket-policy.html"
+  },
+  {
+    "name": "aws s3 presign",
+    "description": "S3オブジェクトへの署名付き一時URLを生成する",
+    "syntax": "aws s3 presign s3://<bucket>/<key> [--expires-in <seconds>]",
+    "example": "aws s3 presign s3://my-bucket/secret-file.pdf --expires-in 3600",
+    "tags": ["s3", "presign", "url"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/s3/presign.html"
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "title": "VPC（Virtual Private Cloud）とは",
+    "body": "AWS クラウド内に構築する**論理的に分離されたプライベートネットワーク**。\n\n**特徴：**\n- CIDR ブロックで IP アドレス範囲を定義（例: `10.0.0.0/16`）\n- リージョン全体にまたがる\n- サブネット・ルートテーブル・ゲートウェイで構成\n- **デフォルト VPC** が各リージョンに 1 つ存在する",
+    "tags": ["vpc", "overview", "networking"],
+    "url": "https://docs.aws.amazon.com/vpc/index.html"
+  },
+  {
+    "title": "パブリックサブネットとプライベートサブネット",
+    "body": "**パブリックサブネット** — インターネットゲートウェイへのルートがあり、インターネットからアクセス可能。Web サーバーや ALB を配置する。\n\n**プライベートサブネット** — インターネットへの直接ルートがない。DB サーバーやアプリサーバーを配置する。外部へのアウトバウンド通信は **NAT ゲートウェイ** 経由。\n\n**推奨構成：**\n```\nパブリックサブネット: ALB, NAT Gateway, Bastion\nプライベートサブネット: EC2 App, RDS, EKS Nodes\n```",
+    "tags": ["vpc", "subnet", "networking"],
+    "url": "https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Scenario2.html"
+  },
+  {
+    "title": "NAT ゲートウェイとは",
+    "body": "プライベートサブネット内のリソースがインターネットへアウトバウンド通信するための**ネットワークアドレス変換**サービス。\n\n**特徴：**\n- パブリックサブネットに配置する\n- マネージドサービスで高可用性\n- **インバウンド通信は不可**（外部からプライベートサブネットへの直接通信は不可）\n- Elastic IP アドレスが割り当てられる\n- AZ ごとに作成を推奨（AZ 障害対策）",
+    "tags": ["vpc", "nat-gateway", "networking"],
+    "url": "https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html"
+  }
+]

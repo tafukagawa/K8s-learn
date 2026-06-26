@@ -1,0 +1,58 @@
+[
+  {
+    "name": "aws ec2 describe-vpcs",
+    "description": "VPCの一覧と設定情報を取得する",
+    "syntax": "aws ec2 describe-vpcs [--vpc-ids <ids>]",
+    "example": "aws ec2 describe-vpcs --filters 'Name=isDefault,Values=false'",
+    "tags": ["vpc", "list"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-vpcs.html"
+  },
+  {
+    "name": "aws ec2 create-vpc",
+    "description": "新しいVPCを作成する",
+    "syntax": "aws ec2 create-vpc --cidr-block <cidr>",
+    "example": "aws ec2 create-vpc --cidr-block 10.0.0.0/16",
+    "tags": ["vpc", "create"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/ec2/create-vpc.html"
+  },
+  {
+    "name": "aws ec2 describe-subnets",
+    "description": "サブネットの一覧と設定情報を取得する",
+    "syntax": "aws ec2 describe-subnets [--filters <filters>]",
+    "example": "aws ec2 describe-subnets --filters 'Name=vpc-id,Values=vpc-12345678'",
+    "tags": ["vpc", "subnet", "list"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-subnets.html"
+  },
+  {
+    "name": "aws ec2 create-subnet",
+    "description": "VPC内にサブネットを作成する",
+    "syntax": "aws ec2 create-subnet --vpc-id <vpc-id> --cidr-block <cidr> --availability-zone <az>",
+    "example": "aws ec2 create-subnet --vpc-id vpc-12345678 --cidr-block 10.0.1.0/24 --availability-zone ap-northeast-1a",
+    "tags": ["vpc", "subnet", "create"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/ec2/create-subnet.html"
+  },
+  {
+    "name": "aws ec2 create-internet-gateway",
+    "description": "インターネットゲートウェイを作成する",
+    "syntax": "aws ec2 create-internet-gateway",
+    "example": "aws ec2 create-internet-gateway",
+    "tags": ["vpc", "internet-gateway", "create"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/ec2/create-internet-gateway.html"
+  },
+  {
+    "name": "aws ec2 attach-internet-gateway",
+    "description": "インターネットゲートウェイをVPCにアタッチする",
+    "syntax": "aws ec2 attach-internet-gateway --internet-gateway-id <igw-id> --vpc-id <vpc-id>",
+    "example": "aws ec2 attach-internet-gateway --internet-gateway-id igw-12345678 --vpc-id vpc-12345678",
+    "tags": ["vpc", "internet-gateway"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/ec2/attach-internet-gateway.html"
+  },
+  {
+    "name": "aws ec2 describe-route-tables",
+    "description": "ルートテーブルの一覧と設定を取得する",
+    "syntax": "aws ec2 describe-route-tables [--filters <filters>]",
+    "example": "aws ec2 describe-route-tables --filters 'Name=vpc-id,Values=vpc-12345678'",
+    "tags": ["vpc", "route-table", "list"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-route-tables.html"
+  }
+]

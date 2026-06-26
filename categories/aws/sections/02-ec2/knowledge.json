@@ -1,0 +1,26 @@
+[
+  {
+    "title": "EC2（Elastic Compute Cloud）とは",
+    "body": "AWS が提供する仮想サーバーサービス。スペックや OS を選んで数分でサーバーを立ち上げられる。\n\n**特徴：**\n- 数百種類の **インスタンスタイプ** から用途に合ったスペックを選択\n- **従量課金** — 使用した時間分のみ課金\n- **AMI（Amazon Machine Image）** から OS・ソフトウェア構成を選択\n- 複数の **AZ（アベイラビリティゾーン）** に配置して可用性を高められる",
+    "tags": ["ec2", "overview"],
+    "url": "https://docs.aws.amazon.com/ec2/index.html"
+  },
+  {
+    "title": "インスタンスタイプとは",
+    "body": "CPU・メモリ・ネットワーク性能の組み合わせで定義されるサーバースペック。\n\n**命名規則：** `<ファミリー><世代>.<サイズ>`（例: `t3.micro`）\n\n| ファミリー | 用途 | 例 |\n|-----------|------|----|\n| t | バースト型（開発・低負荷） | t3.micro, t3.small |\n| m | 汎用 | m5.large, m6i.xlarge |\n| c | コンピューティング最適化 | c5.xlarge |\n| r | メモリ最適化 | r5.large |\n| p / g | GPU（機械学習） | p3.xlarge |",
+    "tags": ["ec2", "instance-type"],
+    "url": "https://docs.aws.amazon.com/ec2/latest/instancetypes/instance-types.html"
+  },
+  {
+    "title": "AMI（Amazon Machine Image）とは",
+    "body": "EC2 インスタンスを起動するためのテンプレート。OS・アプリケーション・設定が含まれる。\n\n**種類：**\n- **AWS 提供 AMI** — Amazon Linux, Ubuntu, Windows Server など\n- **AWS Marketplace AMI** — サードパーティが提供するソフトウェア入り\n- **カスタム AMI** — 自分で作成した AMI（既存インスタンスから作成可能）\n\nリージョンごとに AMI ID が異なる点に注意。",
+    "tags": ["ec2", "ami"],
+    "url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html"
+  },
+  {
+    "title": "セキュリティグループとは",
+    "body": "EC2 インスタンスへの通信を制御する**仮想ファイアウォール**。インバウンド（受信）とアウトバウンド（送信）のルールを設定する。\n\n**特徴：**\n- **ステートフル** — インバウンドを許可すると、そのレスポンスは自動で許可される\n- デフォルトは**全アウトバウンド許可・全インバウンド拒否**\n- 複数のインスタンスに同じセキュリティグループを適用可能\n- ポート・プロトコル・CIDR または別のセキュリティグループを指定できる",
+    "tags": ["ec2", "security-group", "networking"],
+    "url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-security-groups.html"
+  }
+]

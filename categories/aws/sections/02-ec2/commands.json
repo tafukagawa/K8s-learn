@@ -1,0 +1,66 @@
+[
+  {
+    "name": "aws ec2 describe-instances",
+    "description": "EC2インスタンスの一覧と詳細情報を取得する",
+    "syntax": "aws ec2 describe-instances [--filters <filters>] [--instance-ids <ids>]",
+    "example": "aws ec2 describe-instances --filters 'Name=instance-state-name,Values=running'",
+    "tags": ["ec2", "instance", "list"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-instances.html"
+  },
+  {
+    "name": "aws ec2 run-instances",
+    "description": "新しいEC2インスタンスを起動する",
+    "syntax": "aws ec2 run-instances --image-id <ami-id> --instance-type <type> --key-name <key> --count <n>",
+    "example": "aws ec2 run-instances --image-id ami-0abcdef1234567890 --instance-type t3.micro --key-name my-key --count 1",
+    "tags": ["ec2", "instance", "create"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/ec2/run-instances.html"
+  },
+  {
+    "name": "aws ec2 stop-instances",
+    "description": "実行中のEC2インスタンスを停止する（課金は一部継続）",
+    "syntax": "aws ec2 stop-instances --instance-ids <id>",
+    "example": "aws ec2 stop-instances --instance-ids i-1234567890abcdef0",
+    "tags": ["ec2", "instance", "stop"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/ec2/stop-instances.html"
+  },
+  {
+    "name": "aws ec2 start-instances",
+    "description": "停止中のEC2インスタンスを起動する",
+    "syntax": "aws ec2 start-instances --instance-ids <id>",
+    "example": "aws ec2 start-instances --instance-ids i-1234567890abcdef0",
+    "tags": ["ec2", "instance", "start"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/ec2/start-instances.html"
+  },
+  {
+    "name": "aws ec2 terminate-instances",
+    "description": "EC2インスタンスを終了（削除）する。この操作は取り消せない",
+    "syntax": "aws ec2 terminate-instances --instance-ids <id>",
+    "example": "aws ec2 terminate-instances --instance-ids i-1234567890abcdef0",
+    "tags": ["ec2", "instance", "delete"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/ec2/terminate-instances.html"
+  },
+  {
+    "name": "aws ec2 create-key-pair",
+    "description": "EC2インスタンスへのSSH接続に使用するキーペアを作成する",
+    "syntax": "aws ec2 create-key-pair --key-name <name> --query 'KeyMaterial' --output text > <file>.pem",
+    "example": "aws ec2 create-key-pair --key-name my-key --query 'KeyMaterial' --output text > my-key.pem",
+    "tags": ["ec2", "key-pair", "ssh"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/ec2/create-key-pair.html"
+  },
+  {
+    "name": "aws ec2 describe-security-groups",
+    "description": "セキュリティグループの一覧と設定を取得する",
+    "syntax": "aws ec2 describe-security-groups [--group-ids <ids>]",
+    "example": "aws ec2 describe-security-groups --group-ids sg-0123456789abcdef0",
+    "tags": ["ec2", "security-group", "list"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-security-groups.html"
+  },
+  {
+    "name": "aws ec2 authorize-security-group-ingress",
+    "description": "セキュリティグループにインバウンドルールを追加する",
+    "syntax": "aws ec2 authorize-security-group-ingress --group-id <sg-id> --protocol <tcp|udp|icmp> --port <port> --cidr <cidr>",
+    "example": "aws ec2 authorize-security-group-ingress --group-id sg-0123456789abcdef0 --protocol tcp --port 22 --cidr 0.0.0.0/0",
+    "tags": ["ec2", "security-group", "inbound"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/ec2/authorize-security-group-ingress.html"
+  }
+]

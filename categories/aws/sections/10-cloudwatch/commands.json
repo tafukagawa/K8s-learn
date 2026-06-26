@@ -1,0 +1,50 @@
+[
+  {
+    "name": "aws cloudwatch list-metrics",
+    "description": "CloudWatchメトリクスの一覧を取得する",
+    "syntax": "aws cloudwatch list-metrics [--namespace <namespace>]",
+    "example": "aws cloudwatch list-metrics --namespace AWS/EC2",
+    "tags": ["cloudwatch", "metrics", "list"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/cloudwatch/list-metrics.html"
+  },
+  {
+    "name": "aws cloudwatch get-metric-statistics",
+    "description": "指定期間のCloudWatchメトリクス統計を取得する",
+    "syntax": "aws cloudwatch get-metric-statistics --namespace <ns> --metric-name <name> --start-time <time> --end-time <time> --period <sec> --statistics <stat>",
+    "example": "aws cloudwatch get-metric-statistics --namespace AWS/EC2 --metric-name CPUUtilization --start-time 2024-01-01T00:00:00 --end-time 2024-01-01T01:00:00 --period 3600 --statistics Average",
+    "tags": ["cloudwatch", "metrics", "statistics"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/cloudwatch/get-metric-statistics.html"
+  },
+  {
+    "name": "aws cloudwatch put-metric-alarm",
+    "description": "CloudWatchアラームを作成・更新する",
+    "syntax": "aws cloudwatch put-metric-alarm --alarm-name <name> --namespace <ns> --metric-name <name> --threshold <value> --comparison-operator <op> --evaluation-periods <n> --period <sec> --statistic <stat> --alarm-actions <arn>",
+    "example": "aws cloudwatch put-metric-alarm --alarm-name HighCPU --namespace AWS/EC2 --metric-name CPUUtilization --threshold 80 --comparison-operator GreaterThanThreshold --evaluation-periods 2 --period 300 --statistic Average",
+    "tags": ["cloudwatch", "alarm", "create"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/cloudwatch/put-metric-alarm.html"
+  },
+  {
+    "name": "aws logs describe-log-groups",
+    "description": "CloudWatch Logsのロググループ一覧を取得する",
+    "syntax": "aws logs describe-log-groups [--log-group-name-prefix <prefix>]",
+    "example": "aws logs describe-log-groups --log-group-name-prefix /aws/lambda/",
+    "tags": ["cloudwatch", "logs", "log-group"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/logs/describe-log-groups.html"
+  },
+  {
+    "name": "aws logs get-log-events",
+    "description": "ログストリームからログイベントを取得する",
+    "syntax": "aws logs get-log-events --log-group-name <group> --log-stream-name <stream>",
+    "example": "aws logs get-log-events --log-group-name /aws/lambda/my-function --log-stream-name '2024/01/01/[$LATEST]abc123'",
+    "tags": ["cloudwatch", "logs", "get"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/logs/get-log-events.html"
+  },
+  {
+    "name": "aws logs filter-log-events",
+    "description": "ロググループのログをフィルタリングして検索する",
+    "syntax": "aws logs filter-log-events --log-group-name <group> --filter-pattern <pattern>",
+    "example": "aws logs filter-log-events --log-group-name /aws/lambda/my-function --filter-pattern 'ERROR'",
+    "tags": ["cloudwatch", "logs", "filter", "search"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/logs/filter-log-events.html"
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "title": "CloudWatch とは",
+    "body": "AWS リソースとアプリケーションの**監視・観測**サービス。メトリクス・ログ・アラームを一元管理する。\n\n**主な機能：**\n- **メトリクス** — CPU 使用率・リクエスト数などの時系列データ\n- **Logs** — アプリケーション・サービスのログ収集と検索\n- **アラーム** — 閾値を超えたら SNS 通知や Auto Scaling をトリガー\n- **ダッシュボード** — メトリクスを可視化するカスタム画面\n- **Logs Insights** — ログをクエリ言語で分析",
+    "tags": ["cloudwatch", "overview", "monitoring"],
+    "url": "https://docs.aws.amazon.com/cloudwatch/index.html"
+  },
+  {
+    "title": "CloudWatch メトリクスとアラームの仕組み",
+    "body": "**メトリクス** — AWS サービスが自動で収集する時系列データ。ネームスペース・ディメンションで分類される。\n\n例: `AWS/EC2` ネームスペースの `CPUUtilization` メトリクス\n\n**アラームの状態：**\n- `OK` — 閾値以内\n- `ALARM` — 閾値を超えた状態が評価期間を満たした\n- `INSUFFICIENT_DATA` — データが不足\n\n**アクション** — ALARM 時に SNS トピック通知・EC2 アクション・Lambda 実行などを設定できる",
+    "tags": ["cloudwatch", "metrics", "alarm"],
+    "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/AlarmThatSendsEmail.html"
+  },
+  {
+    "title": "CloudWatch Logs Insights とは",
+    "body": "ロググループのデータをインタラクティブに**クエリ・分析**できる機能。\n\n**クエリ例：**\n```\n# エラーログを最新10件取得\nfields @timestamp, @message\n| filter @message like /ERROR/\n| sort @timestamp desc\n| limit 10\n```\n\n**主なコマンド：**\n- `fields` — 表示するフィールドを選択\n- `filter` — 条件でフィルタリング\n- `stats` — 集計（`count()`, `avg()`, `sum()`）\n- `sort` — ソート\n- `limit` — 件数制限",
+    "tags": ["cloudwatch", "logs", "insights", "query"],
+    "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CWL_QuerySyntax.html"
+  }
+]

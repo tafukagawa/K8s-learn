@@ -69,6 +69,21 @@ export interface KnowledgeWithProgress extends Knowledge {
   progress: Progress | null
 }
 
+export interface GradeRequest {
+  type: 'command' | 'knowledge'
+  id: number
+  question: string
+  userAnswer: string
+  correctAnswer: string
+}
+
+export interface GradeResult {
+  id: number
+  verdict: 'correct' | 'partial' | 'incorrect'
+  comment: string
+  correctAnswer: string
+}
+
 // IPC API の型（window.api）
 export interface IpcApi {
   categories: {
@@ -98,6 +113,7 @@ export interface IpcApi {
   ai: {
     checkOllama: () => Promise<{ ok: boolean; models: string[] }>
     generateCloze: (knowledgeId: number) => Promise<ClozeItem[]>
+    gradeAnswers: (requests: GradeRequest[]) => Promise<GradeResult[]>
   }
 }
 

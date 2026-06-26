@@ -6,7 +6,7 @@ import { Header } from './shared/components/Header'
 import { Sidebar, type AppView } from './shared/components/Sidebar'
 import { SplashScreen } from './shared/components/SplashScreen'
 import { ReferenceView } from './features/reference/ReferenceView'
-import { FlashcardView } from './features/flashcard/FlashcardView'
+import { TestView } from './features/flashcard/TestView'
 import { RoadmapView } from './features/roadmap/RoadmapView'
 import { HelpView } from './features/help/HelpView'
 import { SettingsDialog } from './features/settings/SettingsDialog'
@@ -119,7 +119,7 @@ export default function App() {
         )}
         {view.mode === 'help' && <HelpView />}
         {view.mode === 'flashcard' && flashcardCategoryId != null && (
-          <FlashcardView
+          <TestView
             categoryId={flashcardCategoryId}
             initialSection={flashcardConfig.section}
             initialFilter={flashcardConfig.filter}

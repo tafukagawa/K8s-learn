@@ -1,0 +1,50 @@
+[
+  {
+    "name": "aws elbv2 describe-load-balancers",
+    "description": "ロードバランサーの一覧と詳細情報を取得する",
+    "syntax": "aws elbv2 describe-load-balancers",
+    "example": "aws elbv2 describe-load-balancers --query 'LoadBalancers[].DNSName'",
+    "tags": ["elb", "alb", "list"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/elbv2/describe-load-balancers.html"
+  },
+  {
+    "name": "aws elbv2 create-load-balancer",
+    "description": "ALB（Application Load Balancer）またはNLBを作成する",
+    "syntax": "aws elbv2 create-load-balancer --name <name> --subnets <subnet-ids> --type <application|network>",
+    "example": "aws elbv2 create-load-balancer --name my-alb --subnets subnet-abc subnet-def --type application",
+    "tags": ["elb", "alb", "create"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/elbv2/create-load-balancer.html"
+  },
+  {
+    "name": "aws elbv2 create-target-group",
+    "description": "ターゲットグループを作成する（ルーティング先のグループ）",
+    "syntax": "aws elbv2 create-target-group --name <name> --protocol <HTTP|HTTPS> --port <port> --vpc-id <vpc-id>",
+    "example": "aws elbv2 create-target-group --name my-targets --protocol HTTP --port 80 --vpc-id vpc-12345678",
+    "tags": ["elb", "target-group", "create"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/elbv2/create-target-group.html"
+  },
+  {
+    "name": "aws elbv2 register-targets",
+    "description": "ターゲットグループにEC2インスタンスを登録する",
+    "syntax": "aws elbv2 register-targets --target-group-arn <arn> --targets Id=<instance-id>",
+    "example": "aws elbv2 register-targets --target-group-arn arn:aws:... --targets Id=i-1234567890abcdef0",
+    "tags": ["elb", "target-group", "register"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/elbv2/register-targets.html"
+  },
+  {
+    "name": "aws elbv2 create-listener",
+    "description": "ロードバランサーにリスナー（受信ルール）を作成する",
+    "syntax": "aws elbv2 create-listener --load-balancer-arn <arn> --protocol <HTTP|HTTPS> --port <port> --default-actions Type=forward,TargetGroupArn=<tg-arn>",
+    "example": "aws elbv2 create-listener --load-balancer-arn arn:aws:... --protocol HTTP --port 80 --default-actions Type=forward,TargetGroupArn=arn:aws:...",
+    "tags": ["elb", "listener", "create"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/elbv2/create-listener.html"
+  },
+  {
+    "name": "aws elbv2 describe-target-health",
+    "description": "ターゲットグループ内のターゲットのヘルス状態を確認する",
+    "syntax": "aws elbv2 describe-target-health --target-group-arn <arn>",
+    "example": "aws elbv2 describe-target-health --target-group-arn arn:aws:elasticloadbalancing:...",
+    "tags": ["elb", "target-group", "health"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/elbv2/describe-target-health.html"
+  }
+]

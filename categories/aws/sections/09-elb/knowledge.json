@@ -1,0 +1,20 @@
+[
+  {
+    "title": "ELB（Elastic Load Balancing）の種類",
+    "body": "AWS には 3 種類のロードバランサーがある。\n\n| 種類 | レイヤー | 用途 |\n|------|---------|------|\n| **ALB**（Application） | L7 | HTTP/HTTPS のパスベース・ホストベースルーティング |\n| **NLB**（Network） | L4 | TCP/UDP の超低レイテンシ・固定 IP |\n| **CLB**（Classic） | L4/L7 | 旧世代、新規利用非推奨 |\n\n**現在の推奨：**\n- Web アプリ・API → ALB\n- 低レイテンシ・固定 IP が必要 → NLB",
+    "tags": ["elb", "alb", "nlb", "overview"],
+    "url": "https://docs.aws.amazon.com/elasticloadbalancing/index.html"
+  },
+  {
+    "title": "ALB のルーティングルールとは",
+    "body": "ALB は L7（アプリケーション層）でルーティングを行う。リクエストの内容に応じてターゲットを振り分けられる。\n\n**パスベースルーティング：**\n- `/api/*` → API サーバーのターゲットグループ\n- `/static/*` → S3 のターゲットグループ\n\n**ホストベースルーティング：**\n- `api.example.com` → API ターゲットグループ\n- `www.example.com` → Web ターゲットグループ\n\n**固定レスポンス：** メンテナンスページを返す",
+    "tags": ["elb", "alb", "routing"],
+    "url": "https://docs.aws.amazon.com/elasticloadbalancing/latest/application/listener-update-rules.html"
+  },
+  {
+    "title": "ターゲットグループとヘルスチェック",
+    "body": "**ターゲットグループ** — ロードバランサーがリクエストを転送するターゲットの集合（EC2・Lambda・IP アドレス）。\n\n**ヘルスチェック** — 定期的にターゲットの死活確認を行う。失敗したターゲットはルーティング対象から外れる。\n\n設定項目：\n- **プロトコル・パス** — `HTTP /health`\n- **チェック間隔** — デフォルト 30 秒\n- **閾値** — 何回連続成功/失敗で healthy/unhealthy にするか",
+    "tags": ["elb", "target-group", "health-check"],
+    "url": "https://docs.aws.amazon.com/elasticloadbalancing/latest/application/target-group-health-checks.html"
+  }
+]

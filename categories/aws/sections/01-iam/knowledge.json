@@ -1,0 +1,26 @@
+[
+  {
+    "title": "IAM（Identity and Access Management）とは",
+    "body": "AWSリソースへのアクセスを安全に制御するためのサービス。**誰が（Authentication）** 何を **できるか（Authorization）** を定義する。\n\n主な構成要素：\n- **ユーザー** — 個人に対応するエンティティ\n- **グループ** — 複数ユーザーをまとめて管理\n- **ロール** — サービスや一時的なアクセスに使用\n- **ポリシー** — 許可/拒否するアクションを JSON で定義",
+    "tags": ["iam", "overview", "security"],
+    "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html"
+  },
+  {
+    "title": "IAMポリシーとは",
+    "body": "AWS リソースに対する許可・拒否を JSON で記述したドキュメント。\n\n```json\n{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": \"s3:GetObject\",\n      \"Resource\": \"arn:aws:s3:::my-bucket/*\"\n    }\n  ]\n}\n```\n\n種類：\n- **マネージドポリシー** — AWS 管理またはカスタム\n- **インラインポリシー** — ユーザー/グループ/ロールに直接埋め込む",
+    "tags": ["iam", "policy"],
+    "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html"
+  },
+  {
+    "title": "IAMロールとは",
+    "body": "特定のユーザーではなく、**一時的な権限**を付与するための仕組み。EC2 インスタンスや Lambda 関数など AWS サービスがリソースにアクセスする際に使用する。\n\n**信頼ポリシー（Trust Policy）** — 誰がこのロールを引き受けられるかを定義\n\n**ユースケース：**\n- EC2 インスタンスが S3 にアクセスする\n- Lambda が DynamoDB を読み書きする\n- 別の AWS アカウントからのアクセス許可（クロスアカウント）",
+    "tags": ["iam", "role"],
+    "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html"
+  },
+  {
+    "title": "最小権限の原則（Principle of Least Privilege）",
+    "body": "タスクを実行するために**必要最小限の権限のみ**を付与するセキュリティ原則。IAM 設計の基本。\n\n**実践方法：**\n- ワイルドカード（`*`）は避け、特定のリソース ARN を指定する\n- `Action` も最小限に絞る（`s3:*` より `s3:GetObject` が望ましい）\n- 定期的に IAM Access Analyzer で不要な権限を確認する\n- AWS マネージドポリシーより、カスタムポリシーで細かく制御する",
+    "tags": ["iam", "security", "best-practice"],
+    "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html"
+  }
+]

@@ -1,0 +1,66 @@
+[
+  {
+    "name": "aws iam create-user",
+    "description": "IAMユーザーを作成する",
+    "syntax": "aws iam create-user --user-name <name>",
+    "example": "aws iam create-user --user-name john-doe",
+    "tags": ["iam", "user", "create"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/iam/create-user.html"
+  },
+  {
+    "name": "aws iam list-users",
+    "description": "IAMユーザーの一覧を取得する",
+    "syntax": "aws iam list-users",
+    "example": "aws iam list-users --query 'Users[].UserName'",
+    "tags": ["iam", "user", "list"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/iam/list-users.html"
+  },
+  {
+    "name": "aws iam create-role",
+    "description": "IAMロールを作成する",
+    "syntax": "aws iam create-role --role-name <name> --assume-role-policy-document file://<policy.json>",
+    "example": "aws iam create-role --role-name MyRole --assume-role-policy-document file://trust-policy.json",
+    "tags": ["iam", "role", "create"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/iam/create-role.html"
+  },
+  {
+    "name": "aws iam attach-user-policy",
+    "description": "IAMユーザーにマネージドポリシーをアタッチする",
+    "syntax": "aws iam attach-user-policy --user-name <name> --policy-arn <arn>",
+    "example": "aws iam attach-user-policy --user-name john-doe --policy-arn arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess",
+    "tags": ["iam", "user", "policy"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/iam/attach-user-policy.html"
+  },
+  {
+    "name": "aws iam attach-role-policy",
+    "description": "IAMロールにマネージドポリシーをアタッチする",
+    "syntax": "aws iam attach-role-policy --role-name <name> --policy-arn <arn>",
+    "example": "aws iam attach-role-policy --role-name MyRole --policy-arn arn:aws:iam::aws:policy/AmazonEKSClusterPolicy",
+    "tags": ["iam", "role", "policy"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/iam/attach-role-policy.html"
+  },
+  {
+    "name": "aws iam create-access-key",
+    "description": "IAMユーザーのアクセスキーを作成する",
+    "syntax": "aws iam create-access-key --user-name <name>",
+    "example": "aws iam create-access-key --user-name john-doe",
+    "tags": ["iam", "access-key", "credentials"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/iam/create-access-key.html"
+  },
+  {
+    "name": "aws iam get-user",
+    "description": "IAMユーザーの詳細情報を取得する",
+    "syntax": "aws iam get-user --user-name <name>",
+    "example": "aws iam get-user --user-name john-doe",
+    "tags": ["iam", "user", "get"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/iam/get-user.html"
+  },
+  {
+    "name": "aws iam list-attached-user-policies",
+    "description": "IAMユーザーにアタッチされたポリシー一覧を取得する",
+    "syntax": "aws iam list-attached-user-policies --user-name <name>",
+    "example": "aws iam list-attached-user-policies --user-name john-doe",
+    "tags": ["iam", "user", "policy", "list"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/iam/list-attached-user-policies.html"
+  }
+]

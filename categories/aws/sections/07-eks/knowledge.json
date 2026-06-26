@@ -1,0 +1,20 @@
+[
+  {
+    "title": "EKS（Elastic Kubernetes Service）とは",
+    "body": "AWS のマネージド Kubernetes サービス。Kubernetes コントロールプレーン（API Server・etcd）を AWS が管理する。\n\n**特徴：**\n- コントロールプレーンの高可用性を AWS が保証\n- AWS サービス（IAM・VPC・ALB・EBS）と深く統合\n- `kubectl` でそのまま操作できる\n- ワーカーノードの選択肢: **マネージドノードグループ** / **Fargate** / **セルフマネージド**",
+    "tags": ["eks", "overview", "kubernetes"],
+    "url": "https://docs.aws.amazon.com/eks/index.html"
+  },
+  {
+    "title": "IRSA（IAM Roles for Service Accounts）とは",
+    "body": "Kubernetes の **Service Account** に IAM ロールを紐づける仕組み。Pod が AWS サービス（S3・DynamoDB など）にアクセスする際に使用する。\n\n**仕組み：**\n1. IAM OIDC プロバイダーを EKS クラスターに関連付け\n2. IAM ロールの信頼ポリシーに Service Account を指定\n3. Pod の Service Account に IAM ロール ARN をアノテーションで指定\n\n**メリット：** ノード単位でなく Pod 単位で最小権限を付与できる",
+    "tags": ["eks", "iam", "irsa", "security"],
+    "url": "https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html"
+  },
+  {
+    "title": "EKS マネージドノードグループとは",
+    "body": "ワーカーノード（EC2 インスタンス）を AWS が管理する仕組み。ノードのプロビジョニング・更新・ドレインを自動化する。\n\n**特徴：**\n- Auto Scaling Group で管理\n- ノードの更新時はローリングアップデートを自動実施\n- On-Demand / Spot インスタンスを選択可能\n\n**vs Fargate：**\n- マネージドノードグループ → EC2 管理をある程度 AWS に任せる\n- Fargate → サーバーレスで Pod を実行（EC2 不要）",
+    "tags": ["eks", "nodegroup", "ec2"],
+    "url": "https://docs.aws.amazon.com/eks/latest/userguide/managed-node-groups.html"
+  }
+]

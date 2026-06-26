@@ -1,0 +1,50 @@
+[
+  {
+    "name": "aws eks list-clusters",
+    "description": "EKSクラスターの一覧を取得する",
+    "syntax": "aws eks list-clusters",
+    "example": "aws eks list-clusters",
+    "tags": ["eks", "cluster", "list"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/eks/list-clusters.html"
+  },
+  {
+    "name": "aws eks describe-cluster",
+    "description": "EKSクラスターの詳細情報を取得する",
+    "syntax": "aws eks describe-cluster --name <cluster-name>",
+    "example": "aws eks describe-cluster --name my-cluster",
+    "tags": ["eks", "cluster", "describe"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/eks/describe-cluster.html"
+  },
+  {
+    "name": "aws eks update-kubeconfig",
+    "description": "EKSクラスターへ接続するための kubeconfig を更新する",
+    "syntax": "aws eks update-kubeconfig --name <cluster-name> [--region <region>]",
+    "example": "aws eks update-kubeconfig --name my-cluster --region ap-northeast-1",
+    "tags": ["eks", "kubeconfig", "kubectl"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/eks/update-kubeconfig.html"
+  },
+  {
+    "name": "aws eks list-nodegroups",
+    "description": "EKSクラスターのノードグループ一覧を取得する",
+    "syntax": "aws eks list-nodegroups --cluster-name <cluster-name>",
+    "example": "aws eks list-nodegroups --cluster-name my-cluster",
+    "tags": ["eks", "nodegroup", "list"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/eks/list-nodegroups.html"
+  },
+  {
+    "name": "aws eks create-nodegroup",
+    "description": "EKSクラスターにマネージドノードグループを作成する",
+    "syntax": "aws eks create-nodegroup --cluster-name <cluster> --nodegroup-name <name> --node-role <iam-arn> --subnets <subnet-ids>",
+    "example": "aws eks create-nodegroup --cluster-name my-cluster --nodegroup-name workers --node-role arn:aws:iam::123:role/NodeRole --subnets subnet-abc subnet-def",
+    "tags": ["eks", "nodegroup", "create"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/eks/create-nodegroup.html"
+  },
+  {
+    "name": "aws eks list-addons",
+    "description": "EKSクラスターにインストールされているアドオン一覧を取得する",
+    "syntax": "aws eks list-addons --cluster-name <cluster-name>",
+    "example": "aws eks list-addons --cluster-name my-cluster",
+    "tags": ["eks", "addon", "list"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/eks/list-addons.html"
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "title": "RDS（Relational Database Service）とは",
+    "body": "AWS のマネージドリレーショナルデータベースサービス。OS パッチ・バックアップ・フェイルオーバーを AWS が管理する。\n\n**対応エンジン：**\n- MySQL / MariaDB\n- PostgreSQL\n- Oracle\n- SQL Server\n- Amazon Aurora（MySQL/PostgreSQL 互換の独自エンジン）\n\n**Aurora の特徴：** 通常の MySQL の最大 5 倍のスループット、ストレージの自動拡張",
+    "tags": ["rds", "overview"],
+    "url": "https://docs.aws.amazon.com/rds/index.html"
+  },
+  {
+    "title": "Multi-AZ 配置とは",
+    "body": "**異なるアベイラビリティゾーン（AZ）にスタンバイレプリカを配置**し、障害時に自動フェイルオーバーする機能。\n\n**特徴：**\n- プライマリとスタンバイは**同期レプリケーション**\n- フェイルオーバーは自動（通常 1〜2 分）\n- スタンバイは読み取りには使用できない（Read Replica とは異なる）\n- 本番環境では必須の設定\n\n**vs Read Replica：**\n- Multi-AZ → 可用性のため\n- Read Replica → 読み取りスケールのため",
+    "tags": ["rds", "multi-az", "high-availability"],
+    "url": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html"
+  },
+  {
+    "title": "RDS スナップショットとは",
+    "body": "DBインスタンスの**ポイントインタイムバックアップ**。\n\n**自動スナップショット：** 毎日自動取得（保持期間: 1〜35日）\n**手動スナップショット：** 任意のタイミングで作成・永続保持\n\n**ユースケース：**\n- 本番データを別環境に復元してテスト\n- リージョン間コピーで DR 対策\n- 削除前の最終バックアップ",
+    "tags": ["rds", "snapshot", "backup"],
+    "url": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_CreateSnapshot.html"
+  }
+]

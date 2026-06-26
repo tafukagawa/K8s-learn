@@ -1,0 +1,50 @@
+[
+  {
+    "name": "aws rds describe-db-instances",
+    "description": "RDS DBインスタンスの一覧と詳細情報を取得する",
+    "syntax": "aws rds describe-db-instances [--db-instance-identifier <id>]",
+    "example": "aws rds describe-db-instances --db-instance-identifier mydb",
+    "tags": ["rds", "instance", "list"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/rds/describe-db-instances.html"
+  },
+  {
+    "name": "aws rds create-db-instance",
+    "description": "新しいRDS DBインスタンスを作成する",
+    "syntax": "aws rds create-db-instance --db-instance-identifier <id> --db-instance-class <class> --engine <engine> --master-username <user> --master-user-password <pass> --allocated-storage <gb>",
+    "example": "aws rds create-db-instance --db-instance-identifier mydb --db-instance-class db.t3.micro --engine mysql --master-username admin --master-user-password secret --allocated-storage 20",
+    "tags": ["rds", "instance", "create"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/rds/create-db-instance.html"
+  },
+  {
+    "name": "aws rds stop-db-instance",
+    "description": "RDS DBインスタンスを一時停止する（最大7日間）",
+    "syntax": "aws rds stop-db-instance --db-instance-identifier <id>",
+    "example": "aws rds stop-db-instance --db-instance-identifier mydb",
+    "tags": ["rds", "instance", "stop"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/rds/stop-db-instance.html"
+  },
+  {
+    "name": "aws rds create-db-snapshot",
+    "description": "DBインスタンスの手動スナップショットを作成する",
+    "syntax": "aws rds create-db-snapshot --db-instance-identifier <id> --db-snapshot-identifier <snapshot-id>",
+    "example": "aws rds create-db-snapshot --db-instance-identifier mydb --db-snapshot-identifier mydb-snapshot-2026",
+    "tags": ["rds", "snapshot", "backup"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/rds/create-db-snapshot.html"
+  },
+  {
+    "name": "aws rds restore-db-instance-from-db-snapshot",
+    "description": "スナップショットからDBインスタンスを復元する",
+    "syntax": "aws rds restore-db-instance-from-db-snapshot --db-instance-identifier <new-id> --db-snapshot-identifier <snapshot-id>",
+    "example": "aws rds restore-db-instance-from-db-snapshot --db-instance-identifier mydb-restored --db-snapshot-identifier mydb-snapshot-2026",
+    "tags": ["rds", "snapshot", "restore"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/rds/restore-db-instance-from-db-snapshot.html"
+  },
+  {
+    "name": "aws rds modify-db-instance",
+    "description": "DBインスタンスの設定を変更する",
+    "syntax": "aws rds modify-db-instance --db-instance-identifier <id> [--apply-immediately] [options]",
+    "example": "aws rds modify-db-instance --db-instance-identifier mydb --db-instance-class db.t3.small --apply-immediately",
+    "tags": ["rds", "instance", "modify"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/rds/modify-db-instance.html"
+  }
+]

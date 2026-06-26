@@ -1,0 +1,20 @@
+[
+  {
+    "title": "AWS Lambda とは",
+    "body": "**サーバーレス**のコード実行サービス。サーバーの管理不要で、コードをアップロードして実行できる。イベント（HTTP リクエスト・S3 イベント・タイマーなど）をトリガーに実行される。\n\n**特徴：**\n- 使用した実行時間のみ課金（月 100 万リクエストまで無料）\n- 自動スケーリング\n- 対応ランタイム: Node.js, Python, Go, Java, .NET, Ruby\n- 最大タイムアウト: **15 分**\n- 最大メモリ: **10,240 MB**",
+    "tags": ["lambda", "overview", "serverless"],
+    "url": "https://docs.aws.amazon.com/lambda/index.html"
+  },
+  {
+    "title": "Lambda ハンドラーとは",
+    "body": "Lambda 関数のエントリポイントとなる関数。イベントとコンテキストを受け取り、処理結果を返す。\n\n**Python の例：**\n```python\ndef handler(event, context):\n    print(event)  # トリガーからのデータ\n    return {\n        'statusCode': 200,\n        'body': 'Hello World'\n    }\n```\n\n**event** — トリガーから渡されるデータ（API Gateway なら HTTP リクエスト情報）\n**context** — 実行環境の情報（残り実行時間など）",
+    "tags": ["lambda", "handler", "code"],
+    "url": "https://docs.aws.amazon.com/lambda/latest/dg/python-handler.html"
+  },
+  {
+    "title": "Lambda レイヤーとは",
+    "body": "複数の Lambda 関数で共有できる**ライブラリ・依存関係のパッケージ**。\n\n**メリット：**\n- 関数のデプロイパッケージを小さくできる\n- 共通ライブラリを一元管理できる\n- 1 関数に最大 5 つのレイヤーをアタッチ可能\n\n**構成：**\n```\nmy-layer.zip\n  └── python/\n        └── lib/\n              └── python3.x/\n                    └── site-packages/\n                          └── requests/\n```",
+    "tags": ["lambda", "layer", "dependency"],
+    "url": "https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html"
+  }
+]

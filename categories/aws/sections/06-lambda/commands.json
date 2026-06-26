@@ -1,0 +1,50 @@
+[
+  {
+    "name": "aws lambda list-functions",
+    "description": "Lambda関数の一覧を取得する",
+    "syntax": "aws lambda list-functions",
+    "example": "aws lambda list-functions --query 'Functions[].FunctionName'",
+    "tags": ["lambda", "function", "list"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/lambda/list-functions.html"
+  },
+  {
+    "name": "aws lambda invoke",
+    "description": "Lambda関数を同期的に実行する",
+    "syntax": "aws lambda invoke --function-name <name> [--payload <json>] <output-file>",
+    "example": "aws lambda invoke --function-name my-function --payload '{\"key\":\"value\"}' response.json",
+    "tags": ["lambda", "function", "invoke"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/lambda/invoke.html"
+  },
+  {
+    "name": "aws lambda update-function-code",
+    "description": "Lambda関数のコードをZIPファイルまたはS3から更新する",
+    "syntax": "aws lambda update-function-code --function-name <name> --zip-file fileb://<file.zip>",
+    "example": "aws lambda update-function-code --function-name my-function --zip-file fileb://function.zip",
+    "tags": ["lambda", "function", "update", "deploy"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/lambda/update-function-code.html"
+  },
+  {
+    "name": "aws lambda get-function",
+    "description": "Lambda関数の設定と情報を取得する",
+    "syntax": "aws lambda get-function --function-name <name>",
+    "example": "aws lambda get-function --function-name my-function",
+    "tags": ["lambda", "function", "get"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/lambda/get-function.html"
+  },
+  {
+    "name": "aws lambda delete-function",
+    "description": "Lambda関数を削除する",
+    "syntax": "aws lambda delete-function --function-name <name>",
+    "example": "aws lambda delete-function --function-name my-old-function",
+    "tags": ["lambda", "function", "delete"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/lambda/delete-function.html"
+  },
+  {
+    "name": "aws lambda update-function-configuration",
+    "description": "Lambda関数のタイムアウト・メモリ・環境変数などを更新する",
+    "syntax": "aws lambda update-function-configuration --function-name <name> [--timeout <sec>] [--memory-size <mb>]",
+    "example": "aws lambda update-function-configuration --function-name my-function --timeout 30 --memory-size 512",
+    "tags": ["lambda", "function", "configure"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/lambda/update-function-configuration.html"
+  }
+]

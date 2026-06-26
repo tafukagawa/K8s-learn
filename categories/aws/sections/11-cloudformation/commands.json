@@ -1,0 +1,58 @@
+[
+  {
+    "name": "aws cloudformation list-stacks",
+    "description": "CloudFormationスタックの一覧を取得する",
+    "syntax": "aws cloudformation list-stacks [--stack-status-filter <status>]",
+    "example": "aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE UPDATE_COMPLETE",
+    "tags": ["cloudformation", "stack", "list"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/cloudformation/list-stacks.html"
+  },
+  {
+    "name": "aws cloudformation create-stack",
+    "description": "CloudFormationスタックを作成する",
+    "syntax": "aws cloudformation create-stack --stack-name <name> --template-body file://<template.yaml> [--parameters <params>]",
+    "example": "aws cloudformation create-stack --stack-name my-stack --template-body file://template.yaml --parameters ParameterKey=Env,ParameterValue=prod",
+    "tags": ["cloudformation", "stack", "create"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/cloudformation/create-stack.html"
+  },
+  {
+    "name": "aws cloudformation update-stack",
+    "description": "既存のCloudFormationスタックを更新する",
+    "syntax": "aws cloudformation update-stack --stack-name <name> --template-body file://<template.yaml>",
+    "example": "aws cloudformation update-stack --stack-name my-stack --template-body file://template.yaml",
+    "tags": ["cloudformation", "stack", "update"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/cloudformation/update-stack.html"
+  },
+  {
+    "name": "aws cloudformation delete-stack",
+    "description": "CloudFormationスタックと作成したリソースを削除する",
+    "syntax": "aws cloudformation delete-stack --stack-name <name>",
+    "example": "aws cloudformation delete-stack --stack-name my-stack",
+    "tags": ["cloudformation", "stack", "delete"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/cloudformation/delete-stack.html"
+  },
+  {
+    "name": "aws cloudformation describe-stack-events",
+    "description": "スタックのイベント履歴を取得する（デプロイ状況の確認）",
+    "syntax": "aws cloudformation describe-stack-events --stack-name <name>",
+    "example": "aws cloudformation describe-stack-events --stack-name my-stack --query 'StackEvents[].{Status:ResourceStatus,Resource:LogicalResourceId}'",
+    "tags": ["cloudformation", "stack", "events"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/cloudformation/describe-stack-events.html"
+  },
+  {
+    "name": "aws cloudformation validate-template",
+    "description": "CloudFormationテンプレートの構文を検証する",
+    "syntax": "aws cloudformation validate-template --template-body file://<template.yaml>",
+    "example": "aws cloudformation validate-template --template-body file://template.yaml",
+    "tags": ["cloudformation", "template", "validate"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/cloudformation/validate-template.html"
+  },
+  {
+    "name": "aws cloudformation create-change-set",
+    "description": "スタックへの変更内容を事前に確認するチェンジセットを作成する",
+    "syntax": "aws cloudformation create-change-set --stack-name <name> --change-set-name <cs-name> --template-body file://<template.yaml>",
+    "example": "aws cloudformation create-change-set --stack-name my-stack --change-set-name my-changes --template-body file://template.yaml",
+    "tags": ["cloudformation", "change-set", "preview"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/cloudformation/create-change-set.html"
+  }
+]

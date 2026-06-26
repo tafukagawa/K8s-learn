@@ -1,0 +1,20 @@
+[
+  {
+    "title": "CloudFormation とは",
+    "body": "AWS リソースを**テンプレート（YAML/JSON）**で定義し、インフラを自動的にプロビジョニング・管理するサービス（Infrastructure as Code）。\n\n**メリット：**\n- インフラをコードとして管理（バージョン管理・レビュー可能）\n- 繰り返し同じ構成を再現できる\n- 依存関係を自動解決してリソースを作成\n- スタック削除で作成したリソースを一括削除",
+    "tags": ["cloudformation", "overview", "iac"],
+    "url": "https://docs.aws.amazon.com/cloudformation/index.html"
+  },
+  {
+    "title": "CloudFormation テンプレートの構造",
+    "body": "```yaml\nAWSTemplateFormatVersion: '2010-09-09'\nDescription: My Stack\n\nParameters:  # 入力パラメータ\n  EnvName:\n    Type: String\n    Default: dev\n\nResources:   # 作成するリソース（必須）\n  MyBucket:\n    Type: AWS::S3::Bucket\n    Properties:\n      BucketName: !Sub '${EnvName}-my-bucket'\n\nOutputs:     # スタックの出力値\n  BucketName:\n    Value: !Ref MyBucket\n```\n\n**主要セクション：** Parameters / Resources / Outputs / Mappings / Conditions",
+    "tags": ["cloudformation", "template", "yaml"],
+    "url": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-anatomy.html"
+  },
+  {
+    "title": "チェンジセットとは",
+    "body": "スタックを**実際に更新する前に変更内容をプレビュー**する機能。\n\n**フロー：**\n1. `create-change-set` — 変更セットを作成\n2. `describe-change-set` — 変更内容を確認（追加・変更・削除されるリソース）\n3. `execute-change-set` — 問題なければ実行\n\n**重要な変更種別：**\n- `Add` — 新規リソース作成\n- `Modify` — 既存リソース更新（`Replacement: True` の場合はリソース再作成 → ダウンタイムに注意）\n- `Remove` — リソース削除",
+    "tags": ["cloudformation", "change-set", "deployment"],
+    "url": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-changesets.html"
+  }
+]

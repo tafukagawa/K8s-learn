@@ -1,0 +1,20 @@
+[
+  {
+    "title": "ECR（Elastic Container Registry）とは",
+    "body": "AWS のマネージドコンテナイメージレジストリ。Docker Hub のような存在だが、AWS IAM と統合しているため安全にイメージを管理できる。\n\n**特徴：**\n- プライベートリポジトリ（デフォルト）\n- イメージの脆弱性スキャン機能あり\n- EKS・ECS・Lambda と深く統合\n- ライフサイクルポリシーで古いイメージを自動削除",
+    "tags": ["ecr", "overview", "docker"],
+    "url": "https://docs.aws.amazon.com/ecr/index.html"
+  },
+  {
+    "title": "ECR への Docker イメージ push 手順",
+    "body": "```bash\n# 1. ECR にログイン\naws ecr get-login-password --region ap-northeast-1 \\\n  | docker login --username AWS --password-stdin \\\n    <ACCOUNT_ID>.dkr.ecr.ap-northeast-1.amazonaws.com\n\n# 2. イメージをビルド\ndocker build -t my-app .\n\n# 3. ECR 用にタグ付け\ndocker tag my-app:latest \\\n  <ACCOUNT_ID>.dkr.ecr.ap-northeast-1.amazonaws.com/my-app:latest\n\n# 4. push\ndocker push \\\n  <ACCOUNT_ID>.dkr.ecr.ap-northeast-1.amazonaws.com/my-app:latest\n```",
+    "tags": ["ecr", "docker", "push"],
+    "url": "https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html"
+  },
+  {
+    "title": "ECR ライフサイクルポリシーとは",
+    "body": "古いイメージを**自動的に削除**するルールを定義する機能。リポジトリのストレージコストを管理する。\n\n**例（直近 10 イメージ以外を削除）：**\n```json\n{\n  \"rules\": [{\n    \"rulePriority\": 1,\n    \"selection\": {\n      \"tagStatus\": \"any\",\n      \"countType\": \"imageCountMoreThan\",\n      \"countNumber\": 10\n    },\n    \"action\": { \"type\": \"expire\" }\n  }]\n}\n```",
+    "tags": ["ecr", "lifecycle", "cost"],
+    "url": "https://docs.aws.amazon.com/AmazonECR/latest/userguide/LifecyclePolicies.html"
+  }
+]

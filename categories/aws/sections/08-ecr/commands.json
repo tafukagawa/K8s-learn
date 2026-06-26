@@ -1,0 +1,50 @@
+[
+  {
+    "name": "aws ecr describe-repositories",
+    "description": "ECRリポジトリの一覧と情報を取得する",
+    "syntax": "aws ecr describe-repositories",
+    "example": "aws ecr describe-repositories --query 'repositories[].repositoryName'",
+    "tags": ["ecr", "repository", "list"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/ecr/describe-repositories.html"
+  },
+  {
+    "name": "aws ecr create-repository",
+    "description": "新しいECRリポジトリを作成する",
+    "syntax": "aws ecr create-repository --repository-name <name>",
+    "example": "aws ecr create-repository --repository-name my-app",
+    "tags": ["ecr", "repository", "create"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/ecr/create-repository.html"
+  },
+  {
+    "name": "aws ecr get-login-password",
+    "description": "ECRへのdockerログイン用パスワードを取得する",
+    "syntax": "aws ecr get-login-password --region <region> | docker login --username AWS --password-stdin <account-id>.dkr.ecr.<region>.amazonaws.com",
+    "example": "aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin 123456789.dkr.ecr.ap-northeast-1.amazonaws.com",
+    "tags": ["ecr", "docker", "login", "push"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/ecr/get-login-password.html"
+  },
+  {
+    "name": "aws ecr list-images",
+    "description": "ECRリポジトリ内のイメージ一覧を取得する",
+    "syntax": "aws ecr list-images --repository-name <name>",
+    "example": "aws ecr list-images --repository-name my-app",
+    "tags": ["ecr", "image", "list"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/ecr/list-images.html"
+  },
+  {
+    "name": "aws ecr batch-delete-image",
+    "description": "ECRリポジトリからイメージを一括削除する",
+    "syntax": "aws ecr batch-delete-image --repository-name <name> --image-ids imageTag=<tag>",
+    "example": "aws ecr batch-delete-image --repository-name my-app --image-ids imageTag=old-tag",
+    "tags": ["ecr", "image", "delete"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/ecr/batch-delete-image.html"
+  },
+  {
+    "name": "aws ecr put-lifecycle-policy",
+    "description": "ECRリポジトリにライフサイクルポリシーを設定する（古いイメージの自動削除）",
+    "syntax": "aws ecr put-lifecycle-policy --repository-name <name> --lifecycle-policy-text file://<policy.json>",
+    "example": "aws ecr put-lifecycle-policy --repository-name my-app --lifecycle-policy-text file://lifecycle.json",
+    "tags": ["ecr", "lifecycle", "cleanup"],
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/ecr/put-lifecycle-policy.html"
+  }
+]

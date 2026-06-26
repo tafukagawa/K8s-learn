@@ -42,6 +42,7 @@ function setupIpc() {
   ipcMain.handle('shell:openExternal', (_, url: string) => shell.openExternal(url))
   ipcMain.handle('ai:checkOllama', () => aiHandlers.checkOllama())
   ipcMain.handle('ai:generateCloze', (_, knowledgeId: number) => aiHandlers.generateCloze(knowledgeId))
+  ipcMain.handle('ai:gradeAnswers', (_, requests) => aiHandlers.gradeAnswers(requests))
 }
 
 function createWindow() {

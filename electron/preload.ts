@@ -30,6 +30,7 @@ const api: IpcApi = {
   ai: {
     checkOllama: () => ipcRenderer.invoke('ai:checkOllama'),
     generateCloze: (knowledgeId: number) => ipcRenderer.invoke('ai:generateCloze', knowledgeId),
+    gradeAnswers: (requests) => ipcRenderer.invoke('ai:gradeAnswers', requests),
   },
 }
 

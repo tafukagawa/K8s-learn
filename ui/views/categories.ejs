@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="ja">
+<head><meta charset="utf-8"><title>Categories</title></head>
+<body>
+  <h1>Categories</h1>
+  <% if (error) { %>
+    <p><%= error %></p>
+  <% } else { %>
+    <table border="1" cellpadding="6">
+      <tr><th>ID</th><th>Name</th><th>Slug</th></tr>
+      <% categories.forEach(function(c) { %>
+        <tr>
+          <td><%= c.id %></td>
+          <td><a href="/categories/<%= c.id %>/commands"><%= c.name %></a></td>
+          <td><%= c.slug %></td>
+        </tr>
+      <% }) %>
+    </table>
+  <% } %>
+</body>
+</html>

@@ -1,4 +1,6 @@
 import { describe, it, expect } from 'vitest'
+import fs from 'node:fs'
+import os from 'node:os'
 import path from 'node:path'
 import { buildData } from '../src/data'
 
@@ -28,5 +30,19 @@ describe('buildData', () => {
         tags: ['k8s'], url: '', isCustom: false, cloze: null,
       },
     ])
+  })
+
+  it('strips a leading UTF-8 BOM before parsing meta.json', () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'bom-fixture-'))
+    const catDir = path.join(tmpDir, 'bomcat')
+    fs.mkdirSync(catDir, { recursive: true })
+    fs.writeFileSync(
+      path.join(catDir, 'meta.json'),
+      '﻿' + JSON.stringify({ name: 'BOM Test' })
+    )
+
+    expect(() => buildData(tmpDir)).not.toThrow()
+    const db = buildData(tmpDir)
+    expect(db.categories[0].name).toBe('BOM Test')
   })
 })

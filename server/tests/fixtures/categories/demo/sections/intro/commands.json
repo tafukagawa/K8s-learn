@@ -1,0 +1,10 @@
+[
+  {
+    "name": "echo hi",
+    "description": "prints hi",
+    "syntax": "echo hi",
+    "example": "echo hi",
+    "tags": ["demo"],
+    "url": ""
+  }
+]

@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-learning-app-api
+  namespace: k8s-learning-app-api
+  labels:
+    app: k8s-learning-app-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8s-learning-app-api
+  template:
+    metadata:
+      labels:
+        app: k8s-learning-app-api
+    spec:
+      containers:
+        - name: api
+          image: ghcr.io/tafukagawa/k8s-learning-app-api:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          volumeMounts:
+            - name: progress-data
+              mountPath: /data
+      volumes:
+        - name: progress-data
+          persistentVolumeClaim:
+            claimName: progress-data

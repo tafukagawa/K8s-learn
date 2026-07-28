@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ja">
+<head><meta charset="utf-8"><title>Commands</title></head>
+<body>
+  <h1>Commands (category <%= categoryId %>)</h1>
+  <p><a href="/">&larr; back to categories</a></p>
+  <% if (error) { %>
+    <p><%= error %></p>
+  <% } else { %>
+    <table border="1" cellpadding="6">
+      <tr><th>Name</th><th>Description</th><th>Syntax</th><th>Example</th><th>Progress</th></tr>
+      <% commands.forEach(function(cmd) { %>
+        <tr>
+          <td><%= cmd.name %></td>
+          <td><%= cmd.description %></td>
+          <td><%= cmd.syntax %></td>
+          <td><%= cmd.example %></td>
+          <td><%= cmd.progress ? cmd.progress.status : 'unseen' %></td>
+        </tr>
+      <% }) %>
+    </table>
+  <% } %>
+</body>
+</html>

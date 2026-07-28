@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: k8s-learning-app-ui
   namespace: k8s-learning-app-api
-  labals:
+  labels:
     app: k8s-learning-app-ui
 spec:
   replicas: 1

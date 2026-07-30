@@ -24,6 +24,7 @@ AWSハンズオン(`C:\Users\fukagawa\aws`のARCHITECTURE.md参照)の当初設�
 - Traefikの既存Ingress(`k8s/ingress.yaml`)は一切変更しない。Kongは既存のIngress/Traefikとは完全に独立した、別経路の入口として並存する
 - Traefikは既にホストの80/443番を使用しているため、KongのLoadBalancer Serviceには別ポート(Kongのデフォルトであるプロキシポート8000)を割り当てる。アクセスは`http://localhost:8000/`で、ホスト名ルーティング(`k8s-learning-app-api.localhost`)はKong自身の`Route`定義(`hosts`フィールド)で継続する(`curl`は`-H "Host: k8s-learning-app-api.localhost"`でHost指定)
 - `ui`Pod(`ui/`)から`api`Serviceへの内部通信(クラスタ内部DNS経由)はKongを経由しない。信頼境界内のサービス間通信はゲートウェイを通さない、という現実によくある構成パターンをそのまま踏襲する
+- UIへの外部アクセスも、Kong経由(`http://k8s-learning-app-ui.localhost:8000/`)を追加する(2026-07-30スコープ追加)。既存のTraefik Ingress(`k8s/ui-ingress.yaml`、ポート80)は削除せず並存させ、両方の経路からUIにアクセスできる状態にする。UI用のRouteにはplugin(key-auth等)を一切適用しない(単純なリバースプロキシとして通すのみ)
 
 ## コンポーネント
 
@@ -59,6 +60,15 @@ services:
           add:
             headers:
               - "X-Powered-By:Kong-APIGW"
+  - name: ui-service
+    url: http://k8s-learning-app-ui
+    routes:
+      - name: ui-route
+        hosts:
+          - k8s-learning-app-ui.localhost
+        paths:
+          - /
+        strip_path: false
 consumers:
   - username: demo-user
     keyauth_credentials:
@@ -100,7 +110,8 @@ consumers:
 - APIキー付きでcurl(`-i`でヘッダーを確認) → `200`+`X-Powered-By: Kong-APIGW`ヘッダーを確認
 - 1分間に6回連続リクエストをスクリプトまたは手動連打 → 6回目で`429`を確認
 - 既存の`http://localhost/`(ポート80、Traefik Ingress経由、Kongを経由しない既存経路)が今まで通りAPIキーなしで動作することを確認(Kongが既存経路に影響を与えていないことの裏付け)
-- `ui`経由のページ(`http://k8s-learning-app-ui.localhost/`)も今まで通りAPIキーなしで正常に表示されることを確認
+- `curl -H "Host: k8s-learning-app-ui.localhost" http://localhost:8000/` → UI用Routeにはpluginを付けていないので、APIキーなしでそのまま`200`が返ることを確認
+- 既存の`http://k8s-learning-app-ui.localhost/`(ポート80、Traefik Ingress経由)も引き続き動作することを確認(UIは2経路とも生きている状態)
 
 ## テスト方針
 
@@ -115,7 +126,6 @@ Kong自体は宣言的YAML設定なので、単体テスト(vitest等)は書か�
 ## スコープ外(今回含めない)
 
 - Kong Ingress Controller(KIC)としての導入(今回はスタンドアロンのKong Gatewayを`type: LoadBalancer`のServiceで直接公開する形にとどめ、KongにIngressリソース自体を管理させることはしない)
-- UI側のルーティングをKong経由にすること(引き続きTraefik Ingress経由のまま)
 - Postgres/DBモードでの動的なAdmin API操作
 - Redis等を使った複数レプリカ間で共有されるrate-limiting
 

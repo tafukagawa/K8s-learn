@@ -8,7 +8,7 @@ data:
     _format_version: "3.0"
     services:
     - name: api-service
-      url: http://k8s-learning-app-api.k8s-learning-app-api.svc.cluster.local
+      url: http://k8s-learning-app-api.k8s-learning-app-api.svc.cluster.local.
       routes: 
         - name: api-route
           hosts: 
@@ -33,7 +33,7 @@ data:
               headers:
                 - "X-Powered-By:Kong-APIGW"
     - name: ui-service
-      url: http://k8s-learning-app-ui.k8s-learning-app-api.svc.cluster.local
+      url: http://k8s-learning-app-ui.k8s-learning-app-api.svc.cluster.local.
       routes:
         - name: ui-route
           hosts:

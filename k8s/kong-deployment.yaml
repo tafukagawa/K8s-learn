@@ -27,6 +27,8 @@ spec:
               value: "0.0.0.0:8000"
             - name: KONG_STATUS_LISTEN
               value: "0.0.0.0:8100"
+            - name: KONG_DNS_ORDER
+              value: "LAST,A,CNAME"
           ports:
             - containerPort: 8000
               name: proxy
